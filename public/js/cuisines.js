@@ -20,7 +20,7 @@
     return `<a class="cuisine" data-cuisine="${key}" href="result.html?cuisine=${key}">
       <span class="cuisine__photo"><img src="${App.photo(cover, 640, 480)}" alt="${cover.name}" width="640" height="480" loading="lazy"></span>
       <span class="cuisine__text">
-        <span class="cuisine__name">${cuisine.name}</span>
+        <span class="cuisine__name">${App.cuisineLabel(key)}</span>
         <span class="cuisine__desc">${cuisine.desc}</span>
       </span>
     </a>`;
@@ -49,7 +49,7 @@
 
   function resetSlot() {
     resetSlotColor();
-    fillReel(reelCuisine, keys.map((k) => FOOD.CUISINES[k].name));
+    fillReel(reelCuisine, keys.map((k) => App.cuisineLabel(k)));
     fillReel(reelDish, FOOD.DISHES.slice(0, 5).map((d) => d.name));
     moveReel(reelCuisine, 1, false);
     moveReel(reelDish, 1, false);
@@ -71,7 +71,7 @@
     const pool = FOOD.DISHES.filter((d) => d.cuisine === cuisine);
     const dish = App.pickDish(pool);
     const cuisineName = FOOD.CUISINES[cuisine].name;
-    const cuisineLabels = keys.map((k) => FOOD.CUISINES[k].name);
+    const cuisineLabels = keys.map((k) => App.cuisineLabel(k));
     const dishLabels = [...pool]
       .sort((a, b) => b.meals.includes(meal) - a.meals.includes(meal))
       .map((d) => d.name);
@@ -81,7 +81,7 @@
 
     if (App.reduceMotion()) {
       slot.dataset.cuisine = cuisine;
-      moveReel(reelCuisine, stopIndex(cuisineLabels, cuisineName), false);
+      moveReel(reelCuisine, stopIndex(cuisineLabels, App.cuisineLabel(cuisine)), false);
       fillReel(reelDish, dishLabels);
       moveReel(reelDish, stopIndex(dishLabels, dish.name), false);
       status.textContent = `${cuisineName}: ${dish.name}`;
@@ -92,7 +92,7 @@
 
     status.textContent = 'Đang quay nền ẩm thực...';
     void reelCuisine.offsetHeight;
-    moveReel(reelCuisine, stopIndex(cuisineLabels, cuisineName), true);
+    moveReel(reelCuisine, stopIndex(cuisineLabels, App.cuisineLabel(cuisine)), true);
     await App.wait(SPIN_MS);
 
     // Chỉ nạp cuộn món sau khi cuộn ẩm thực dừng, nếu không sẽ lộ kết quả.

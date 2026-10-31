@@ -9,7 +9,7 @@
     `<button class="pill" type="button" data-group="${group}" data-value="${value}" aria-pressed="${value === 'all'}">${label}</button>`).join('');
 
   document.getElementById('filter-cuisine').innerHTML =
-    pills('cuisine', Object.entries(FOOD.CUISINES).map(([k, c]) => [k, c.name]));
+    pills('cuisine', Object.keys(FOOD.CUISINES).map((k) => [k, App.cuisineLabel(k)]));
   document.getElementById('filter-meal').innerHTML =
     pills('meal', Object.entries(FOOD.MEALS).map(([k, m]) => [k, m.label]));
 
@@ -25,7 +25,7 @@
       return `<li><a class="dish" data-cuisine="${d.cuisine}" href="${App.dishUrl(d)}">
         <span class="dish__photo"><img src="${App.photo(d, 560, 420)}" alt="${d.name}" width="560" height="420" loading="lazy"></span>
         <span class="dish__name">${d.name}</span>
-        <span class="dish__meta">${FOOD.CUISINES[d.cuisine].name} · ${meals}</span>
+        <span class="dish__meta">${App.cuisineLabel(d.cuisine)} · ${meals}</span>
       </a></li>`;
     }).join('');
   }

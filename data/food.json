@@ -33,32 +33,32 @@
   },
   "CUISINES": {
     "viet": {
-      "name": "🇻🇳 Việt Nam",
+      "name": "Việt Nam",
       "cover": "pho-bo",
       "desc": "Món quen cho mọi bữa trong ngày."
     },
     "nhat": {
-      "name": "🇯🇵 Nhật Bản",
+      "name": "Nhật Bản",
       "cover": "ramen",
       "desc": "Sushi, ramen và cơm nắm."
     },
     "han": {
-      "name": "🇰🇷 Hàn Quốc",
+      "name": "Hàn Quốc",
       "cover": "bibimbap",
       "desc": "Tteokbokki, gà rán, kimbap."
     },
     "trung": {
-      "name": "🇨🇳 Trung Hoa",
+      "name": "Trung Hoa",
       "cover": "dimsum",
       "desc": "Dimsum, mì hoành thánh, cơm chiên."
     },
     "thai": {
-      "name": "🇹🇭 Thái Lan",
+      "name": "Thái Lan",
       "cover": "pad-thai",
       "desc": "Chua cay, khác hẳn các nền còn lại."
     },
     "y": {
-      "name": "🇮🇹 Ý",
+      "name": "Ý",
       "cover": "pizza-margherita",
       "desc": "Pizza, mì Ý, món Âu dễ ăn nhất."
     }

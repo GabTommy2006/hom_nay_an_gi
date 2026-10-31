@@ -19,7 +19,8 @@
     document.title = `${dish.name} | Hôm nay ăn gì?`;
     $('dish-photo').src = App.photo(dish, 1200, 900);
     $('dish-photo').alt = dish.name;
-    $('dish-meta').textContent = `${FOOD.CUISINES[dish.cuisine].name} · ${FOOD.MEALS[mealKey].label}`;
+    $('dish-meta').innerHTML = App.cuisineLabel(dish.cuisine);
+    $('dish-meta').append(document.createTextNode(` · ${FOOD.MEALS[mealKey].label}`));
     $('dish-name').textContent = dish.name;
     $('dish-desc').textContent = dish.desc;
     $('btn-maps').href = App.mapsUrl(dish);

@@ -57,7 +57,13 @@ const App = (() => {
     });
   }
 
+  // Local SVG flags work even on platforms without flag emoji glyphs.
+  const cuisineLabel = (key) => {
+    const cuisine = FOOD.CUISINES[key];
+    return `<img class="country-flag" src="images/flags/${key}.svg" alt="" width="24" height="16" aria-hidden="true"> ${cuisine.name}`;
+  };
+
   renderChrome();
 
-  return { getMeal, randomItem, wait, reduceMotion, getLast, setLast, pickDish, photo, dishUrl, mapsUrl };
+  return { getMeal, randomItem, wait, reduceMotion, getLast, setLast, pickDish, photo, dishUrl, mapsUrl, cuisineLabel };
 })();
