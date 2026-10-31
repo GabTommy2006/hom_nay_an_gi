@@ -7,12 +7,13 @@ const App = (() => {
     { href: 'about.html', label: 'Giới thiệu' },
   ];
 
-  /** Bữa ăn theo giờ: 05:00 sáng, 10:30 trưa, 16:00 tối, 22:00 khuya. */
+  /** Bữa ăn theo giờ: 05:00 sáng, 11:00 trưa, 13:00 chiều, 18:00 tối, 22:00 khuya. */
   function getMeal(date = new Date()) {
     const h = date.getHours() + date.getMinutes() / 60;
-    if (h >= 5 && h < 10.5) return 'sang';
-    if (h >= 10.5 && h < 16) return 'trua';
-    if (h >= 16 && h < 22) return 'toi';
+    if (h >= 5 && h < 11) return 'sang';
+    if (h >= 11 && h < 13) return 'trua';
+    if (h >= 13 && h < 18) return 'chieu';
+    if (h >= 18 && h < 22) return 'toi';
     return 'khuya';
   }
 
