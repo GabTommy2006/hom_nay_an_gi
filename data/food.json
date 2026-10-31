@@ -83,7 +83,8 @@
       "cuisine": "viet",
       "meals": [
         "sang",
-        "khuya"
+        "khuya",
+        "chieu"
       ],
       "desc": "Ổ bánh mì giòn kẹp pate, chả lụa, rau thơm và đồ chua.",
       "photo": "photo-1600454309261-3dc9b7597637",
@@ -118,7 +119,8 @@
       "name": "Bánh xèo",
       "cuisine": "viet",
       "meals": [
-        "toi"
+        "toi",
+        "chieu"
       ],
       "desc": "Bánh giòn vàng nhân tôm thịt, cuốn rau sống chấm nước mắm.",
       "photo": "photo-1788927783922-8b1299701b45",
@@ -166,7 +168,8 @@
       "cuisine": "nhat",
       "meals": [
         "sang",
-        "khuya"
+        "khuya",
+        "chieu"
       ],
       "desc": "Cơm nắm tam giác bọc rong biển, nhân cá hồi hoặc mơ muối.",
       "photo": "photo-1757961047498-198b406685ed",
@@ -201,7 +204,8 @@
       "cuisine": "han",
       "meals": [
         "toi",
-        "khuya"
+        "khuya",
+        "chieu"
       ],
       "desc": "Bánh gạo dẻo sốt cay ngọt, thêm chả cá và trứng luộc.",
       "photo": "photo-1747228469541-f0e7f56e7ec7",
@@ -213,7 +217,8 @@
       "cuisine": "han",
       "meals": [
         "toi",
-        "khuya"
+        "khuya",
+        "chieu"
       ],
       "desc": "Gà chiên giòn phủ sốt cay ngọt hoặc tỏi mật ong.",
       "photo": "photo-1766589221562-e16eeacca795",
@@ -225,7 +230,8 @@
       "cuisine": "han",
       "meals": [
         "sang",
-        "trua"
+        "trua",
+        "chieu"
       ],
       "desc": "Cơm cuộn rong biển với trứng, rau củ và xúc xích.",
       "photo": "photo-1608731002187-d3448d224d18",
@@ -249,7 +255,8 @@
       "cuisine": "trung",
       "meals": [
         "sang",
-        "trua"
+        "trua",
+        "chieu"
       ],
       "desc": "Há cảo, xíu mại hấp nhỏ xinh nhân tôm thịt, ăn kèm trà nóng.",
       "photo": "photo-1763994679303-fa1f6a7bf687",
@@ -356,7 +363,8 @@
       "cuisine": "thai",
       "meals": [
         "sang",
-        "khuya"
+        "khuya",
+        "chieu"
       ],
       "desc": "Xôi nếp dẻo rưới nước cốt dừa, ăn cùng xoài chín.",
       "photo": "photo-1705234384751-84081009588e",
@@ -415,7 +423,8 @@
       "cuisine": "y",
       "meals": [
         "sang",
-        "trua"
+        "trua",
+        "chieu"
       ],
       "desc": "Bánh mì nướng giòn phủ cà chua, tỏi và dầu ô liu.",
       "photo": "photo-1786918517795-c3abeee741c2",
