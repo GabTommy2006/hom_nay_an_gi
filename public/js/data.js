@@ -9,12 +9,12 @@ const FOOD = {
   },
 
   CUISINES: {
-    viet: { name: 'Việt Nam', cover: 'pho-bo', desc: 'Món quen cho mọi bữa trong ngày.' },
-    nhat: { name: 'Nhật Bản', cover: 'ramen', desc: 'Sushi, ramen và cơm nắm.' },
-    han: { name: 'Hàn Quốc', cover: 'bibimbap', desc: 'Tteokbokki, gà rán, kimbap.' },
-    trung: { name: 'Trung Hoa', cover: 'dimsum', desc: 'Dimsum, mì hoành thánh, cơm chiên.' },
-    thai: { name: 'Thái Lan', cover: 'pad-thai', desc: 'Chua cay, khác hẳn các nền còn lại.' },
-    y: { name: 'Ý', cover: 'pizza-margherita', desc: 'Pizza, mì Ý, món Âu dễ ăn nhất.' },
+    viet: { name: '🇻🇳 Việt Nam', cover: 'pho-bo', desc: 'Món quen cho mọi bữa trong ngày.' },
+    nhat: { name: '🇯🇵 Nhật Bản', cover: 'ramen', desc: 'Sushi, ramen và cơm nắm.' },
+    han: { name: '🇰🇷 Hàn Quốc', cover: 'bibimbap', desc: 'Tteokbokki, gà rán, kimbap.' },
+    trung: { name: '🇨🇳 Trung Hoa', cover: 'dimsum', desc: 'Dimsum, mì hoành thánh, cơm chiên.' },
+    thai: { name: '🇹🇭 Thái Lan', cover: 'pad-thai', desc: 'Chua cay, khác hẳn các nền còn lại.' },
+    y: { name: '🇮🇹 Ý', cover: 'pizza-margherita', desc: 'Pizza, mì Ý, món Âu dễ ăn nhất.' },
   },
 
   /* photo: mã ảnh trên Unsplash, by: tác giả (hiện ở trang Giới thiệu), crop: điểm cắt ảnh nếu cần. */
