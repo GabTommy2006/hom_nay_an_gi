@@ -30,9 +30,8 @@
       const meals = d.meals.map((m) => FOOD.MEALS[m].label).join(', ');
       return `<li><a class="dish" data-cuisine="${d.cuisine}" href="${App.dishUrl(d)}">
         <span class="dish__photo"><img src="${App.photo(d, 560, 420)}" alt="${d.name}" width="560" height="420" loading="lazy"></span>
-        <span class="dish__name">${d.name}</span>
+        <span class="dish__heading"><span class="dish__name">${d.name}</span>${isVegetarian(d) ? `<span class="vegetarian-badge dish__diet" title="Áp dụng cho phiên bản nguyên liệu được mô tả trên website; thành phần tại từng quán có thể khác.">${leafIcon} Ăn chay</span>` : ''}</span>
         <span class="dish__meta">${App.cuisineLabel(d.cuisine)} · ${meals}</span>
-        ${isVegetarian(d) ? `<span class="vegetarian-badge dish__diet" title="Áp dụng cho phiên bản nguyên liệu được mô tả trên website; thành phần tại từng quán có thể khác.">${leafIcon} Ăn chay</span>` : ''}
       </a></li>`;
     }).join('');
   }

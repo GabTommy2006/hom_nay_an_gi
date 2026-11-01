@@ -14,7 +14,37 @@
   <a class="skip" href="#main">Bỏ qua đến nội dung chính</a>
   <header class="site-header wrap" data-header></header>
   <main id="main" class="wrap">
-    <article class="recipe-pending">
+    <article class="recipe-detail" id="recipe-detail" hidden>
+      <a class="recipe-pending__back" id="detail-back" href="dishes.html">← Quay lại món vừa chọn</a>
+      <div class="recipe-hero">
+        <div class="recipe-hero__photo"><img id="detail-photo" alt="" width="1000" height="750"><span class="recipe-photo-caption">Ảnh minh họa món ăn</span></div>
+        <div class="recipe-hero__intro">
+          <p class="result__meta" id="detail-meta"></p>
+          <h1 id="detail-name"></h1>
+          <span class="vegetarian-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 4C8 2 2 10 7 16c6 5 14-2 13-12ZM4 21l11-11"/></svg>Ăn chay</span>
+          <p class="recipe-hero__desc" id="detail-desc"></p>
+          <dl class="recipe-facts" id="recipe-facts"></dl>
+          <p class="recipe-soak" id="recipe-soak" hidden></p>
+          <a class="btn btn--primary" href="#recipe-method">Bắt đầu nấu ↓</a>
+        </div>
+      </div>
+      <div class="recipe-layout">
+        <section class="recipe-ingredients" aria-labelledby="ingredients-title">
+          <h2 id="ingredients-title">Nguyên liệu</h2>
+          <p class="recipe-help" id="ingredients-help"></p>
+          <ul id="recipe-ingredients"></ul>
+          <p class="recipe-help" id="ingredients-progress" role="status" aria-live="polite"></p>
+          <button class="recipe-reset" id="ingredients-reset" type="button">Bỏ đánh dấu tất cả</button>
+        </section>
+        <section class="recipe-method" id="recipe-method" aria-labelledby="method-title" tabindex="-1">
+          <h2 id="method-title">Cùng vào bếp</h2>
+          <ol id="recipe-steps"></ol>
+          <aside class="recipe-tip" aria-labelledby="tip-title"><h3 id="tip-title">Một chút mẹo nhỏ</h3><p id="recipe-tip"></p></aside>
+          <div class="recipe-source"><p>Biên soạn tiếng Việt, điều chỉnh cho khẩu phần bên dưới từ nguồn tham khảo; thời gian là ước tính.</p><a id="recipe-source" target="_blank" rel="noopener noreferrer"></a></div>
+        </section>
+      </div>
+    </article>
+    <article class="recipe-pending" id="recipe-pending">
       <a class="recipe-pending__back" id="recipe-back" href="dishes.html">← Về danh sách món ăn</a>
       <p id="recipe-meta" class="result__meta"></p>
       <h1 id="recipe-name">Công thức nấu ăn</h1>
@@ -53,6 +83,7 @@
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/recipes.js"></script>
   <script src="js/recipe.js"></script>
 </body>
 </html>
