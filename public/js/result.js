@@ -49,7 +49,9 @@
     $('dish-photo').src = App.photo(dish, 1200, 900);
     $('dish-photo').alt = dish.name;
     $('dish-meta').innerHTML = App.cuisineLabel(dish.cuisine);
-    $('dish-meta').append(document.createTextNode(` · ${FOOD.MEALS[mealKey].label}`));
+    $('result-meal').innerHTML = App.mealIcon(mealKey);
+    $('result-meal').append(document.createTextNode(FOOD.MEALS[mealKey].label));
+    $('result-meal').hidden = false;
     $('vegetarian-badge').hidden = dish.vegetarianReview?.status !== 'reviewed';
     $('dish-name').textContent = dish.name;
     $('dish-desc').textContent = dish.desc;
@@ -71,6 +73,7 @@
     const id = ++spinId;
     const dish = App.pickDish(pool);
     $('vegetarian-badge').hidden = true;
+    $('result-meal').hidden = true;
     card.classList.remove('is-spinning', 'is-revealing', 'is-bounce');
     card.removeAttribute('aria-busy');
     if (App.reduceMotion()) return show(dish);

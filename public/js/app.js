@@ -63,7 +63,16 @@ const App = (() => {
     return `<img class="country-flag" src="images/flags/${key}.svg" alt="" width="24" height="16" aria-hidden="true"> ${cuisine.name}`;
   };
 
+  const mealPaths = {
+    sang: '<path d="M3 17h18M5 13a7 7 0 0 1 14 0M12 2v3M3 6l2 2M21 6l-2 2M2 13h2M20 13h2M7 21h10"/>',
+    trua: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/>',
+    chieu: '<path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5ZM17 9h2a3 3 0 0 1 0 6h-2M3 22h16M8 2v2M13 2v2"/>',
+    toi: '<path d="M20 15a8 8 0 0 1-11-11 8 8 0 1 0 11 11Z"/>',
+    khuya: '<path d="M15 4a7 7 0 1 0 5 11 7 7 0 0 1-5-11ZM19 2v4M17 4h4M22 8v2M21 9h2"/>',
+  };
+  const mealIcon = key => `<svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${mealPaths[key]}</svg>`;
+
   renderChrome();
 
-  return { getMeal, randomItem, wait, reduceMotion, getLast, setLast, pickDish, photo, dishUrl, mapsUrl, cuisineLabel };
+  return { getMeal, randomItem, wait, reduceMotion, getLast, setLast, pickDish, photo, dishUrl, mapsUrl, cuisineLabel, mealIcon };
 })();

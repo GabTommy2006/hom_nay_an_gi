@@ -13,7 +13,7 @@
   document.getElementById('filter-cuisine').innerHTML =
     pills('cuisine', Object.keys(FOOD.CUISINES).map((k) => [k, App.cuisineLabel(k)]));
   document.getElementById('filter-meal').innerHTML =
-    pills('meal', Object.entries(FOOD.MEALS).map(([k, m]) => [k, m.label]));
+    pills('meal', Object.entries(FOOD.MEALS).map(([k, m]) => [k, `${App.mealIcon(k)} ${m.label}`]));
   document.getElementById('filter-diet').innerHTML =
     pills('diet', [['vegetarian', `${leafIcon} Món chay`]]);
 
@@ -27,11 +27,12 @@
     empty.hidden = dishes.length > 0;
     document.getElementById('diet-note').hidden = filters.diet !== 'vegetarian';
     grid.innerHTML = dishes.map((d) => {
-      const meals = d.meals.map((m) => FOOD.MEALS[m].label).join(', ');
+      const meals = d.meals.map(m => `<span class="meal-tag">${App.mealIcon(m)}<span>${FOOD.MEALS[m].label}</span></span>`).join('');
       return `<li><a class="dish" data-cuisine="${d.cuisine}" href="${App.dishUrl(d)}">
         <span class="dish__photo"><img src="${App.photo(d, 560, 420)}" alt="${d.name}" width="560" height="420" loading="lazy"></span>
         <span class="dish__heading"><span class="dish__name">${d.name}</span>${isVegetarian(d) ? `<span class="vegetarian-badge dish__diet" title="Áp dụng cho phiên bản nguyên liệu được mô tả trên website; thành phần tại từng quán có thể khác.">${leafIcon} Ăn chay</span>` : ''}</span>
-        <span class="dish__meta">${App.cuisineLabel(d.cuisine)} · ${meals}</span>
+        <span class="dish__meta">${App.cuisineLabel(d.cuisine)}</span>
+        <span class="dish__meals" role="group" aria-label="Bữa ăn phù hợp">${meals}</span>
       </a></li>`;
     }).join('');
   }

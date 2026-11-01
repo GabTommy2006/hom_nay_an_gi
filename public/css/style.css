@@ -490,6 +490,9 @@ body[data-cuisine] { background: var(--soft); }
 .filters__note { max-width: 65ch; color: var(--muted); font-size: .8125rem; }
 .filters__note[hidden] { display: none; }
 .pill[data-group="diet"] { display: inline-flex; align-items: center; gap: .375rem; }
+.pill[data-group="meal"] { display: inline-flex; align-items: center; gap: .375rem; }
+#btn-maps { gap: .5rem; }
+.google-maps-icon { display: inline-block; width: 20px; height: 20px; flex: 0 0 20px; background: currentColor; -webkit-mask: url('../images/brands/google-maps.png') center / contain no-repeat; mask: url('../images/brands/google-maps.png') center / contain no-repeat; }
 .pill[data-value="vegetarian"] { --accent: #285a32; --on-accent: #fff; }
 .dish__heading { display: flex; flex-wrap: wrap; align-items: center; gap: .375rem .5rem; }
 .dish__diet { flex-shrink: 0; width: fit-content; }
@@ -536,6 +539,10 @@ body[data-cuisine] { background: var(--soft); }
 .dish__name { font: 800 1.1875rem/1.2 var(--font-display); letter-spacing: -.01em; }
 .dish:hover .dish__name { color: var(--accent); }
 .dish__meta { color: var(--muted); font-size: .875rem; line-height: 1.4; }
+.dish__meals { display: flex; flex-wrap: wrap; align-items: center; gap: .375rem; margin-top: .5rem; }
+.meal-tag { display: inline-flex; align-items: center; gap: .25rem; padding: .25rem .5rem; border-radius: 999px; background: color-mix(in srgb, var(--ink) 6%, var(--bg)); color: var(--muted); font-size: .75rem; font-weight: 500; line-height: 1.4; white-space: nowrap; }
+.meal-tag .action-icon { width: 13px; height: 13px; }
+.meal-tag[hidden] { display: none; }
 
 /* ---------- Trang Giới thiệu ---------- */
 .about { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(3rem, 7vw, 5.5rem); }
@@ -706,6 +713,13 @@ body[data-cuisine] { background: var(--soft); }
 .recipe-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(2rem, 6vw, 5rem); margin-top: clamp(2.5rem, 6vw, 5rem); align-items: start; }
 .recipe-layout h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: .75rem; }
 .recipe-help { font-size: .875rem; color: var(--muted); }
+.serving-control { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; margin-block: 1rem .75rem; font-size: .9375rem; font-weight: 700; }
+.serving-control__stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.serving-control__stepper button { width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--accent); font: 700 1.25rem var(--font-body); cursor: pointer; transition: background-color .18s, color .18s; }
+.serving-control__stepper button:not(:disabled):hover, .serving-control__stepper button:focus-visible { background: var(--accent); color: var(--on-accent); }
+.serving-control__stepper button:focus-visible { outline-offset: -3px; }
+.serving-control__stepper button:disabled { color: var(--muted); opacity: .45; cursor: default; }
+.serving-control__stepper output { min-width: 2rem; text-align: center; font-variant-numeric: tabular-nums; }
 .recipe-ingredients ul { margin-block: 1rem; }
 .recipe-ingredients li { border-bottom: 1px solid var(--line); }
 .recipe-ingredients label { display: flex; align-items: start; gap: .75rem; padding-block: .875rem; cursor: pointer; min-height: 48px; }
@@ -720,6 +734,18 @@ body[data-cuisine] { background: var(--soft); }
 .recipe-method li::marker { color: var(--accent); font: 800 1.375rem var(--font-display); }
 .recipe-method h3 { font: 700 1.125rem/1.4 var(--font-body); margin: 0 0 .5rem; }
 .recipe-method li p { max-width: 65ch; }
+.recipe-method__progress { margin-top: 1rem; }
+.recipe-method__progress label { font-size: .8125rem; font-weight: 700; }
+.recipe-method__progress p { margin-top: .25rem; color: var(--muted); font-size: .875rem; }
+.recipe-method__progress progress { display: block; width: 100%; height: 6px; margin-top: .75rem; border: 0; border-radius: 999px; overflow: hidden; background: var(--line); accent-color: var(--accent); }
+.recipe-method__progress progress::-webkit-progress-bar { background: var(--line); border-radius: 999px; }
+.recipe-method__progress progress::-webkit-progress-value { background: var(--accent); border-radius: 999px; }
+.recipe-method__progress progress::-moz-progress-bar { background: var(--accent); border-radius: 999px; }
+.recipe-method h3 label { display: flex; align-items: center; gap: .625rem; min-height: 44px; cursor: pointer; }
+.recipe-method h3 input { width: 18px; height: 18px; margin: 0; flex-shrink: 0; accent-color: var(--accent); }
+.recipe-method li.is-complete h3 span { color: var(--muted); text-decoration: line-through; }
+.recipe-method li.is-complete::marker { color: var(--muted); }
+.recipe-method > .recipe-reset { margin-bottom: 1rem; }
 .recipe-tip { border-top: 1px solid var(--line); padding-top: 1.25rem; }
 .recipe-tip p { color: var(--muted); }
 .recipe-source { font-size: .8125rem; color: var(--muted); margin-top: 1.5rem; }
