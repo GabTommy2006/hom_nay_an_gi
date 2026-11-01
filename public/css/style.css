@@ -343,11 +343,17 @@ body[data-cuisine] { background: var(--soft); }
 .result.is-spinning .result__next { visibility: hidden; }
 .result__next { margin-top: 1.125rem; border-top: 1px solid var(--line); padding-top: 1rem; }
 .result__next h2 { font: 700 .9375rem/1.5 var(--font-body); letter-spacing: normal; }
-.delivery-options__links { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: .5rem; }
+.delivery-options__links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .625rem; margin-top: .5rem; }
 .result__next .btn { min-height: 44px; padding: .5rem .875rem; font-size: .875rem; border-width: 1px; }
-.delivery-link { gap: .5rem; }
-.delivery-link--grab { color: #086b38; border-color: currentColor; }
-.delivery-link--shopee { color: #b33a18; border-color: currentColor; }
+.result__next .delivery-link { justify-content: space-between; gap: .5rem; min-height: 54px; border-color: var(--line); border-radius: 12px; background: var(--surface); color: var(--muted); padding: .5rem .875rem; }
+.delivery-link__brand { display: flex; align-items: center; justify-content: flex-start; min-width: 0; height: 34px; }
+.delivery-link__brand img { width: 90px; height: 32px; object-fit: contain; }
+.delivery-link--grab .delivery-link__brand img { width: 104px; height: 24px; }
+.delivery-link__brand .brand-grab-dark { display: none; }
+.action-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+.result__next .delivery-link:hover { border-color: var(--muted); background: var(--bg); }
+.result__next a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.recipe-link { gap: .5rem; color: var(--accent); }
 .delivery-options__note { margin-top: .625rem; color: var(--muted); font-size: .8125rem; max-width: 48ch; }
 .cook-option { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: 1rem; }
 .cook-option .btn { margin-top: 0; }
@@ -360,11 +366,11 @@ body[data-cuisine] { background: var(--soft); }
 .recipe-pending__message p { color: var(--muted); max-width: 60ch; }
 .recipe-pending .result__actions { margin-top: 1.5rem; }
 @media (prefers-color-scheme: dark) {
-  .delivery-link--grab { color: #70d69c; }
-  .delivery-link--shopee { color: #ffa17f; }
+  .delivery-link__brand .brand-grab-light { display: none; }
+  .delivery-link__brand .brand-grab-dark { display: block; }
 }
 @media (max-width: 380px) {
-  .delivery-options__links { flex-direction: column; }
+  .delivery-options__links { grid-template-columns: minmax(0, 1fr); }
 }
 .result__photo { position: relative; isolation: isolate; }
 .result__photo::after {
@@ -516,6 +522,54 @@ body[data-cuisine] { background: var(--soft); }
   .mood { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .specimen { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Phản hồi tương tác đồng bộ ---------- */
+.btn, .pill, .surprise {
+  transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease);
+}
+.pill[data-value="viet"] { --accent: var(--c-viet); }
+.pill[data-value="nhat"] { --accent: var(--c-nhat); }
+.pill[data-value="han"] { --accent: var(--c-han); }
+.pill[data-value="trung"] { --accent: var(--c-trung); }
+.pill[data-value="thai"] { --accent: var(--c-thai); }
+.pill[data-value="y"] { --accent: var(--c-y); }
+.btn:not(:disabled):focus-visible,
+.pill:not(:disabled):focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.btn--primary:not(:disabled):focus-visible,
+.surprise:not(:disabled):focus-visible {
+  background: color-mix(in srgb, var(--accent) 82%, var(--ink));
+}
+.delivery-link--grab { --delivery-color: #008a3d; }
+.delivery-link--shopee { --delivery-color: #d84320; }
+.result__next .delivery-link:focus-visible {
+  background: color-mix(in srgb, var(--delivery-color) 12%, var(--surface));
+  border-color: var(--delivery-color);
+  color: var(--ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn:not(:disabled):hover,
+  .pill:not(:disabled):hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .btn--primary:not(:disabled):hover,
+  .pill[aria-pressed="true"]:not(:disabled):hover,
+  .surprise:not(:disabled):hover {
+    background: color-mix(in srgb, var(--accent) 82%, var(--ink));
+    border-color: color-mix(in srgb, var(--accent) 82%, var(--ink));
+    color: var(--on-accent);
+  }
+  .result__next .delivery-link:hover {
+    background: color-mix(in srgb, var(--delivery-color) 12%, var(--surface));
+    border-color: var(--delivery-color);
+    color: var(--ink);
+  }
 }
 
 /* ---------- Giảm chuyển động ---------- */
