@@ -9,6 +9,8 @@
     return `<img src="${App.photo(dish, wide ? 960 : 560, 560)}" alt="${dish.name}" loading="lazy">`;
   }).join('');
 
-  document.getElementById('credits').innerHTML = FOOD.DISHES.map((d) =>
-    `<li>${d.name}: <a href="https://unsplash.com/@${d.by}" rel="noopener">@${d.by}</a></li>`).join('');
+  document.getElementById('credits').innerHTML = FOOD.DISHES.map(d => d.by
+    ? `<li>${d.name}: <a href="https://unsplash.com/@${d.by}" rel="noopener">@${d.by}</a></li>`
+    : `<li>${d.name}: <a href="${d.imageSource.url}" rel="noopener">${d.imageSource.label}</a></li>`).join('');
+  document.getElementById('credits-summary').textContent = `Xem nguồn ảnh cho ${FOOD.DISHES.length} món`;
 })();

@@ -34,7 +34,8 @@
   $('detail-meal').innerHTML = App.mealIcon(mealKey);
   $('detail-meal').append(document.createTextNode(FOOD.MEALS[mealKey].label));
   $('detail-meal').hidden = false;
-  $('detail-vegetarian').hidden = dish.vegetarianReview?.status !== 'reviewed';
+  $('detail-vegetarian').hidden = !App.isVegetarian(dish);
+  $('detail-vegetarian').title = App.vegetarianNote(dish);
   $('detail-name').textContent = dish.name;
   $('detail-desc').textContent = dish.desc;
   let servings = recipe.servings;

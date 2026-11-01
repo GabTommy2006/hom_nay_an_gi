@@ -52,7 +52,8 @@
     $('result-meal').innerHTML = App.mealIcon(mealKey);
     $('result-meal').append(document.createTextNode(FOOD.MEALS[mealKey].label));
     $('result-meal').hidden = false;
-    $('vegetarian-badge').hidden = dish.vegetarianReview?.status !== 'reviewed';
+    $('vegetarian-badge').hidden = !App.isVegetarian(dish);
+    $('vegetarian-badge').title = App.vegetarianNote(dish);
     $('dish-name').textContent = dish.name;
     $('dish-desc').textContent = dish.desc;
     $('btn-maps').href = App.mapsUrl(dish);
@@ -60,6 +61,7 @@
     $('btn-recipe').hidden = false;
     $('result-live').textContent = `Hôm nay ăn: ${dish.name}`;
     App.setLast(dish.id);
+    document.dispatchEvent(new CustomEvent('dishselected', { detail: { dishId: dish.id } }));
   }
 
   function showEmpty(title, text) {
@@ -70,6 +72,7 @@
   }
 
   async function spin() {
+    document.dispatchEvent(new Event('dishspinstart'));
     const id = ++spinId;
     const dish = App.pickDish(pool);
     $('vegetarian-badge').hidden = true;

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tất cả món ăn | Hôm nay ăn gì?</title>
-  <meta name="description" content="Xem toàn bộ 30 món ăn của 6 nền ẩm thực, lọc theo ẩm thực và bữa ăn.">
+  <meta name="description" content="Khám phá món ăn, bánh và đồ uống; lọc theo ẩm thực, bữa ăn và quán liên kết.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='%23C2410C'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,13 +17,20 @@
   <header class="site-header wrap" data-header></header>
 
   <main id="main" class="page wrap">
-    <h1>Tất cả món ăn <span id="count">(30)</span></h1>
+    <h1>Tất cả món ăn <span id="count" aria-live="polite"></span></h1>
+    <p class="catalog-intro">Chọn món, tìm quán hoặc tự vào bếp. Có cả bánh, ăn vặt và đồ uống cho những lúc muốn đổi vị.</p>
+    <form class="catalog-search" role="search" id="dish-search-form">
+      <label class="sr-only" for="dish-search">Tìm theo tên món</label>
+      <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg>
+      <input id="dish-search" type="search" placeholder="Tìm mì Quảng, cà phê, bánh…" autocomplete="off" maxlength="150">
+    </form>
 
     <div class="filters">
       <div class="filters__row" id="filter-cuisine" role="group" aria-label="Lọc theo ẩm thực"></div>
       <div class="filters__row" id="filter-meal" role="group" aria-label="Lọc theo bữa ăn"></div>
       <div class="filters__row" id="filter-diet" role="group" aria-label="Lọc món ăn chay"></div>
-      <p class="filters__note" id="diet-note" hidden>Chỉ hiển thị phiên bản món đã rà soát thành phần ăn chay. Nguyên liệu tại từng quán có thể khác.</p>
+      <div class="filters__row" id="filter-linked" role="group" aria-label="Lọc theo quán liên kết"></div>
+      <p class="filters__note" id="diet-note" hidden>Gồm công thức đã rà soát và món được quán giới thiệu là chay. Hãy kiểm tra nguyên liệu, nước dùng và sốt khi gọi món.</p>
     </div>
 
     <ul class="dish-grid" id="dish-grid"></ul>
@@ -45,6 +52,7 @@
         <nav class="site-footer__nav" aria-label="Điều hướng cuối trang">
           <a href="cuisines.html">Khám phá ẩm thực</a>
           <a href="dishes.html">Tất cả món ăn</a>
+          <a href="restaurants.html">Quán ăn</a>
           <a href="about.html">Về tụi mình</a>
           <a href="about.html#sources">Nguồn ảnh</a>
         </nav>

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
 import { handleDishes } from './routes/dish.routes.js';
+import { handleRestaurants } from './routes/restaurant.routes.js';
 import { getFood } from './models/food.model.js';
 
 const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
@@ -12,6 +13,7 @@ export const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (await handleDishes(req, res, url)) return;
+    if (await handleRestaurants(req, res, url)) return;
     if (url.pathname.startsWith('/api/')) {
       res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({ message: 'API không tồn tại.' }));

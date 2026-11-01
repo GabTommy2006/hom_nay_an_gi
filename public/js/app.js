@@ -4,6 +4,7 @@ const App = (() => {
   const NAV = [
     { href: 'cuisines.html', label: 'Ẩm thực' },
     { href: 'dishes.html', label: 'Tất cả món ăn' },
+    { href: 'restaurants.html', label: 'Quán ăn' },
     { href: 'about.html', label: 'Giới thiệu' },
   ];
 
@@ -34,7 +35,7 @@ const App = (() => {
     return randomItem(tiers.find((t) => t.length));
   }
 
-  const photo = (dish, w, h) =>
+  const photo = (dish, w, h) => dish.imageUrl ||
     `https://images.unsplash.com/${dish.photo}?auto=format&fit=crop&w=${w}&h=${h}&q=70${dish.crop || ''}`;
   const dishUrl = (dish) => `result.html?dish=${dish.id}`;
   const mapsUrl = (dish) =>
@@ -119,6 +120,7 @@ const App = (() => {
   // Local SVG flags work even on platforms without flag emoji glyphs.
   const cuisineLabel = (key) => {
     const cuisine = FOOD.CUISINES[key];
+    if (cuisine.icon === 'globe') return `<svg class="action-icon cuisine-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6h14M5 18h14"/></svg> ${cuisine.name}`;
     return `<img class="country-flag" src="images/flags/${key}.svg" alt="" width="24" height="16" aria-hidden="true"> ${cuisine.name}`;
   };
 
@@ -133,5 +135,10 @@ const App = (() => {
 
   renderChrome();
 
-  return { getMeal, randomItem, wait, reduceMotion, getLast, setLast, pickDish, photo, dishUrl, mapsUrl, cuisineLabel, mealIcon };
+  const isVegetarian = dish => ['reviewed', 'source-declared'].includes(dish.vegetarianReview?.status);
+  const vegetarianNote = dish => dish.vegetarianReview?.status === 'source-declared'
+    ? 'Theo thông tin món chay của quán; vui lòng kiểm tra nguyên liệu, nước dùng và sốt khi gọi món.'
+    : 'Áp dụng cho phiên bản nguyên liệu được mô tả trên website; thành phần tại từng quán có thể khác.';
+
+  return { getMeal, randomItem, wait, reduceMotion, getLast, setLast, pickDish, photo, dishUrl, mapsUrl, cuisineLabel, mealIcon, isVegetarian, vegetarianNote };
 })();

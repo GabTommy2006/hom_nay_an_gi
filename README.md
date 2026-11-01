@@ -19,10 +19,15 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 - server/views/: dành sẵn cho template nếu sau này cần; View hiện tại vẫn là public/, không dùng EJS.
 - database/migrations/, database/seeds/: dành cho cấu trúc và dữ liệu khởi tạo database sau này.
 - scripts/, tests/: dành cho công cụ bảo trì và kiểm thử khi triển khai backend.
-- data/food.json: dữ liệu mẫu 30 món, ẩm thực và bữa ăn.
+- data/food.json: 105 món/bánh/đồ uống, 7 nhóm ẩm thực và các bữa ăn; 78 món có quán liên kết trực tiếp.
 - docs/DEVELOPMENT.md: hướng dẫn triển khai tiếp.
 
 ## API hiện có
+
+- `restaurants.html`: danh sách thử 105 địa điểm Đà Nẵng từ Excel, có tìm kiếm/lọc/phân trang và chi tiết.
+- `GET /api/restaurants`: danh sách quán (q, category, meal, priceTier, page, pageSize).
+- `GET /api/restaurants/dn-013`: chi tiết một địa điểm.
+- Dữ liệu và nguồn ảnh: `docs/RESTAURANT-DATA.md`; kiểm tra bằng `node --test tests/restaurants.test.js`.
 
 - GET /api/dishes
 - GET /api/dishes?cuisine=viet&meal=sang
@@ -30,4 +35,4 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 
 Khi chạy Node.js, /js/data.js được tạo từ data/food.json để giao diện và API dùng chung dữ liệu. Sửa dữ liệu mẫu tại data/food.json. public/js/data.js là bản dự phòng cũ cho chế độ xem tĩnh, không tự đồng bộ; nên dùng npm start.
 
-Chưa có database thật, công thức, đăng nhập/admin hoặc tích hợp đơn hàng.
+Đã có hai công thức frontend và danh bạ địa điểm đọc từ JSON qua backend MVC. Chưa có database SQL, đăng nhập/admin hoặc tích hợp đơn hàng.
