@@ -32,16 +32,16 @@
           <section class="delivery-options" aria-labelledby="delivery-title">
             <h2 id="delivery-title">Đặt món qua</h2>
             <div class="delivery-options__links">
-              <a class="btn delivery-link delivery-link--grab" href="https://food.grab.com/vn/vi/" target="_blank" rel="noopener noreferrer" aria-label="Mở GrabFood (tab mới)">
+              <a class="btn delivery-link delivery-link--grab" data-delivery="grab" aria-haspopup="dialog" aria-controls="delivery-dialog" href="https://food.grab.com/vn/vi/" target="_blank" rel="noopener noreferrer" aria-label="Chọn khu vực để tìm món trên GrabFood">
                 <span class="delivery-link__brand"><img class="brand-grab-light" src="images/brands/grabfood-green.png" alt="GrabFood" width="100" height="24"><img class="brand-grab-dark" src="images/brands/grabfood-white.png" alt="" aria-hidden="true" width="100" height="24"></span>
                 <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
               </a>
-              <a class="btn delivery-link delivery-link--shopee" href="https://shopeefood.vn/" target="_blank" rel="noopener noreferrer" aria-label="Mở ShopeeFood (tab mới)">
+              <a class="btn delivery-link delivery-link--shopee" data-delivery="shopee" aria-haspopup="dialog" aria-controls="delivery-dialog" href="https://shopeefood.vn/" target="_blank" rel="noopener noreferrer" aria-label="Chọn khu vực để tìm món trên ShopeeFood">
                 <span class="delivery-link__brand"><img src="images/brands/shopeefood.png" alt="ShopeeFood" width="90" height="34"></span>
                 <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
               </a>
             </div>
-            <p class="delivery-options__note">Mở nền tảng để tìm món và chọn địa chỉ giao hàng.</p>
+            <p class="delivery-options__note">Chọn khu vực trước khi mở nền tảng đặt món.</p>
           </section>
           <section class="cook-option" aria-labelledby="cook-title">
             <h2 id="cook-title">Muốn tự tay làm món này?</h2>
@@ -58,8 +58,43 @@
     </section>
   </main>
 
+  <dialog class="delivery-dialog" id="delivery-dialog" aria-labelledby="delivery-dialog-title" aria-describedby="delivery-dialog-description">
+    <div class="delivery-dialog__body">
+      <div class="delivery-dialog__header">
+        <img id="delivery-dialog-logo" class="delivery-dialog__logo" src="images/brands/grabfood-green.png" alt="GrabFood" width="110" height="36">
+        <button class="btn delivery-dialog__close" id="delivery-dialog-close" type="button" aria-label="Đóng chọn khu vực">Đóng</button>
+      </div>
+      <h2 id="delivery-dialog-title">Bạn muốn tìm món ở đâu?</h2>
+      <p id="delivery-dialog-description"></p>
+      <form id="delivery-region-form">
+        <label for="delivery-region">Tỉnh / Thành phố</label>
+        <div class="region-select-wrap">
+          <select id="delivery-region" name="region" aria-describedby="delivery-region-hint" required>
+            <option value="">Chọn tỉnh / thành phố</option>
+          </select>
+          <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <p class="delivery-dialog__hint" id="delivery-region-hint">63 tỉnh/thành theo địa giới cũ trước sáp nhập. Danh sách này không xác nhận phạm vi giao hàng.</p>
+        <div class="delivery-dialog__query" id="delivery-query-section" hidden>
+          <label for="delivery-query">Từ khóa để tìm món</label>
+          <div class="delivery-dialog__copy-row">
+            <input id="delivery-query" readonly>
+            <button class="btn" id="delivery-copy" type="button">Sao chép</button>
+          </div>
+        </div>
+        <p class="delivery-dialog__guidance" id="delivery-guidance">Chọn khu vực để tiếp tục.</p>
+        <button class="btn btn--primary delivery-dialog__submit" id="delivery-continue" type="submit" disabled>Mở nền tảng để tìm món ↗</button>
+        <a class="delivery-dialog__web" id="delivery-web-search" hidden target="_blank" rel="noopener noreferrer">Tìm món trên web theo khu vực ↗</a>
+        <p class="delivery-dialog__hint">Bạn sẽ chọn địa chỉ giao hàng cụ thể và tìm món trên nền tảng. Liên kết mở trong tab mới.</p>
+        <p class="delivery-dialog__feedback" id="delivery-feedback" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </dialog>
+
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/result.js"></script>
+  <script src="js/regions.js"></script>
+  <script src="js/delivery.js"></script>
 </body>
 </html>

@@ -42,6 +42,7 @@
   }
 
   function show(dish) {
+    card.dataset.dishId = dish.id;
     const mealKey = dish.meals.includes(meal) ? meal : dish.meals[0];
     document.body.dataset.cuisine = dish.cuisine;
     document.title = `${dish.name} | Hôm nay ăn gì?`;
