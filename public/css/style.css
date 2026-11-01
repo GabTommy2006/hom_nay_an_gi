@@ -379,6 +379,13 @@ body[data-cuisine] { background: var(--soft); }
 .result__photo { overflow: hidden; border-radius: var(--radius); background: var(--line); }
 .result__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity .3s; }
 .result__meta { color: var(--muted); font-weight: 500; }
+.result__meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; }
+.vegetarian-badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .55rem; border: 1px solid #bbd9b7; border-radius: 999px; background: #eaf3e7; color: #285a32; font-size: .75rem; font-weight: 700; line-height: 1.4; white-space: nowrap; }
+.vegetarian-badge svg { flex-shrink: 0; }
+.vegetarian-badge[hidden] { display: none; }
+@media (prefers-color-scheme: dark) {
+  .vegetarian-badge { background: #233829; color: #b4dfae; border-color: #416647; }
+}
 .result h1 { margin-top: .375rem; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.12; overflow-wrap: anywhere; }
 .result__desc { max-width: 42ch; margin-top: .75rem; color: var(--muted); font-size: 1rem; }
 .result__actions { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: 1.25rem; }

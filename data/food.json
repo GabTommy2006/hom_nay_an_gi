@@ -368,7 +368,21 @@
       ],
       "desc": "Xôi nếp dẻo rưới nước cốt dừa, ăn cùng xoài chín.",
       "photo": "photo-1705234384751-84081009588e",
-      "by": "markuswinkler"
+      "by": "markuswinkler",
+      "vegetarianReview": {
+        "status": "reviewed",
+        "scope": "Phiên bản xôi nếp, xoài, nước cốt dừa, đường, muối và mè; không thêm nguyên liệu động vật.",
+        "ingredients": [
+          "gạo nếp",
+          "xoài",
+          "nước cốt dừa",
+          "đường",
+          "muối",
+          "mè"
+        ],
+        "source": "https://www.bbcgoodfood.com/recipes/sticky-rice-mango",
+        "reviewedAt": "2026-11-01"
+      }
     },
     {
       "id": "pizza-margherita",
@@ -428,7 +442,21 @@
       ],
       "desc": "Bánh mì nướng giòn phủ cà chua, tỏi và dầu ô liu.",
       "photo": "photo-1786918517795-c3abeee741c2",
-      "by": "culinarissimo"
+      "by": "culinarissimo",
+      "vegetarianReview": {
+        "status": "reviewed",
+        "scope": "Phiên bản bánh mì cà chua, tỏi và dầu ô liu được mô tả; không thêm thịt, cá, phô mai hoặc mỡ động vật.",
+        "ingredients": [
+          "bánh mì không mỡ động vật",
+          "cà chua",
+          "tỏi",
+          "dầu ô liu",
+          "húng quế",
+          "muối"
+        ],
+        "source": "https://www.tesco.com/recipes/en-GB/recipe/tomato-and-basil-bruschetta/cooking",
+        "reviewedAt": "2026-11-01"
+      }
     }
   ]
 }
