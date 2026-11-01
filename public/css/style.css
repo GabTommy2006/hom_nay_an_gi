@@ -261,9 +261,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .cuisine:active { transform: scale(.98); }
 .cuisine__photo { display: block; overflow: hidden; }
 .cuisine__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .6s var(--ease); }
-.cuisine:hover img { transform: scale(1.05); }
+.cuisine:hover .cuisine__photo img { transform: scale(1.05); }
 .cuisine__text { display: grid; gap: .125rem; padding: .875rem 1rem 1rem; }
-.country-flag { display: inline-block; width: 1.5rem; height: 1rem; object-fit: contain; border-radius: 3px; vertical-align: -.08em; flex-shrink: 0; }
+.country-flag { display: inline-block; width: 24px; height: 16px; min-width: 24px; max-width: none; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 3px; vertical-align: -.08em; flex: 0 0 24px; }
 .cuisine__name { color: var(--accent); font: 800 clamp(1.25rem, 2.4vw, 1.625rem)/1.15 var(--font-display); letter-spacing: -.02em; }
 .cuisine__desc { color: var(--muted); font-size: .9375rem; line-height: 1.4; }
 
@@ -493,7 +493,7 @@ body[data-cuisine] { background: var(--soft); }
 .dish { display: grid; gap: .125rem; text-decoration: none; }
 .dish__photo { display: block; overflow: hidden; margin-bottom: .5rem; border-radius: var(--radius); background: var(--line); }
 .dish__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .6s var(--ease); }
-.dish:hover img { transform: scale(1.05); }
+.dish:hover .dish__photo img { transform: scale(1.05); }
 .dish__name { font: 800 1.1875rem/1.2 var(--font-display); letter-spacing: -.01em; }
 .dish:hover .dish__name { color: var(--accent); }
 .dish__meta { color: var(--muted); font-size: .875rem; line-height: 1.4; }
