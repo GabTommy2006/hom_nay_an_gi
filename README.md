@@ -10,10 +10,15 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 
 ## Cấu trúc
 
-- public/: toàn bộ HTML/CSS/JS gửi xuống trình duyệt.
+- public/: tầng View, toàn bộ HTML/CSS/JS gửi xuống trình duyệt (không dùng EJS).
 - server/app.js: HTTP server và phục vụ file tĩnh.
-- server/routes/dishes.js: API danh sách, lọc và chi tiết món.
-- server/repositories/: tầng đọc dữ liệu, thay bằng truy vấn database sau.
+- server/routes/dish.routes.js: ánh xạ URL và HTTP method sang controller.
+- server/controllers/dish.controller.js: nhận yêu cầu và trả JSON cho frontend.
+- server/models/: tầng Model đọc/lọc dữ liệu, thay bằng truy vấn database sau.
+- server/config/, middleware/, services/, validators/, utils/: khung chuẩn bị cho backend; mỗi thư mục có hướng dẫn trách nhiệm.
+- server/views/: dành sẵn cho template nếu sau này cần; View hiện tại vẫn là public/, không dùng EJS.
+- database/migrations/, database/seeds/: dành cho cấu trúc và dữ liệu khởi tạo database sau này.
+- scripts/, tests/: dành cho công cụ bảo trì và kiểm thử khi triển khai backend.
 - data/food.json: dữ liệu mẫu 30 món, ẩm thực và bữa ăn.
 - docs/DEVELOPMENT.md: hướng dẫn triển khai tiếp.
 

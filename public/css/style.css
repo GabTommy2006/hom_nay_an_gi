@@ -334,12 +334,75 @@ body[data-cuisine] { background: var(--soft); }
 .result__photo { overflow: hidden; border-radius: var(--radius); background: var(--line); }
 .result__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity .3s; }
 .result__meta { color: var(--muted); font-weight: 500; }
-.result h1 { margin-top: .5rem; font-size: clamp(2.5rem, 5.5vw, 4.5rem); overflow-wrap: anywhere; }
-.result__desc { max-width: 42ch; margin-top: 1rem; color: var(--muted); font-size: 1.125rem; }
-.result__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.result h1 { margin-top: .375rem; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.12; overflow-wrap: anywhere; }
+.result__desc { max-width: 42ch; margin-top: .75rem; color: var(--muted); font-size: 1rem; }
+.result__actions { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: 1.25rem; }
+.result .result__actions .btn { min-height: 44px; padding: .625rem 1rem; font-size: .9375rem; }
 
 .result.is-spinning .result__actions { visibility: hidden; }
-.result.is-spinning .result__photo img { opacity: 0; }
+.result.is-spinning .result__next { visibility: hidden; }
+.result__next { margin-top: 1.125rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+.result__next h2 { font: 700 .9375rem/1.5 var(--font-body); letter-spacing: normal; }
+.delivery-options__links { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: .5rem; }
+.result__next .btn { min-height: 44px; padding: .5rem .875rem; font-size: .875rem; border-width: 1px; }
+.delivery-link { gap: .5rem; }
+.delivery-link--grab { color: #086b38; border-color: currentColor; }
+.delivery-link--shopee { color: #b33a18; border-color: currentColor; }
+.delivery-options__note { margin-top: .625rem; color: var(--muted); font-size: .8125rem; max-width: 48ch; }
+.cook-option { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: 1rem; }
+.cook-option .btn { margin-top: 0; }
+.btn[hidden] { display: none; }
+.recipe-pending { max-width: 44rem; margin-inline: auto; padding-block: clamp(2rem, 6vw, 5rem); }
+.recipe-pending__back { display: inline-block; margin-bottom: 2rem; color: var(--accent); text-underline-offset: .2em; }
+.recipe-pending h1 { margin-block: .5rem 1rem; font-size: clamp(2rem, 6vw, 3.5rem); }
+.recipe-pending__message { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.recipe-pending__message h2 { font-size: 1.375rem; margin-bottom: .75rem; }
+.recipe-pending__message p { color: var(--muted); max-width: 60ch; }
+.recipe-pending .result__actions { margin-top: 1.5rem; }
+@media (prefers-color-scheme: dark) {
+  .delivery-link--grab { color: #70d69c; }
+  .delivery-link--shopee { color: #ffa17f; }
+}
+@media (max-width: 380px) {
+  .delivery-options__links { flex-direction: column; }
+}
+.result__photo { position: relative; isolation: isolate; }
+.result__photo::after {
+  content: 'Đang chọn món…';
+  position: absolute;
+  z-index: 1;
+  inset: auto auto 1rem 50%;
+  transform: translateX(-50%);
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: .875rem;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s;
+}
+.result.is-spinning .result__photo::after { opacity: 1; }
+.result.is-spinning .result__photo img {
+  opacity: .65;
+  filter: blur(3px);
+  will-change: transform;
+  animation: photo-shuffle .4s ease-in-out infinite;
+}
+.result.is-revealing .result__photo img { animation: photo-settle .45s var(--ease) both; }
+@keyframes photo-shuffle {
+  0%, 100% { transform: scale(1.1) translateY(-2%); }
+  50% { transform: scale(1.1) translateY(2%); }
+}
+@keyframes photo-settle {
+  from { transform: scale(1.06); filter: blur(3px); opacity: .65; }
+  to { transform: scale(1); filter: blur(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .result.is-spinning { animation: none; }
+}
 .result.is-bounce { animation: bounce .3s ease-out; }
 @keyframes bounce {
   0% { transform: scale(.96); }
@@ -350,6 +413,13 @@ body[data-cuisine] { background: var(--soft); }
 @media (max-width: 767px) {
   .result { grid-template-columns: minmax(0, 1fr); }
   .result__actions .btn { flex: 1 1 100%; }
+}
+
+@media (min-width: 768px) {
+  .result { align-items: stretch; gap: clamp(1.5rem, 3.5vw, 3rem); }
+  .result > div:last-child { align-self: center; min-width: 0; }
+  .result__photo { position: relative; aspect-ratio: 4 / 3; }
+  .result__photo img { position: absolute; inset: 0; height: 100%; }
 }
 
 .empty { display: grid; gap: .75rem; justify-items: start; max-width: 46ch; padding-block: clamp(3rem, 8vw, 6rem); }

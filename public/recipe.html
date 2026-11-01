@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Công thức nấu | Hôm nay ăn gì?</title>
+  <meta name="description" content="Thông tin công thức của món ăn bạn vừa chọn.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Bỏ qua đến nội dung chính</a>
+  <header class="site-header wrap" data-header></header>
+  <main id="main" class="wrap">
+    <article class="recipe-pending">
+      <a class="recipe-pending__back" id="recipe-back" href="dishes.html">← Về danh sách món ăn</a>
+      <p id="recipe-meta" class="result__meta"></p>
+      <h1 id="recipe-name">Công thức nấu ăn</h1>
+      <p id="recipe-desc">Chọn một món để xem thông tin công thức.</p>
+      <div class="recipe-pending__message">
+        <h2 id="recipe-status">Chưa chọn món ăn</h2>
+        <p id="recipe-message">Bạn có thể tìm món trong danh sách hoặc để tụi mình chọn giúp nhé.</p>
+        <div class="result__actions">
+          <a class="btn btn--primary" href="dishes.html">Khám phá món ăn</a>
+          <a class="btn" id="recipe-maps" hidden target="_blank" rel="noopener noreferrer">Tìm quán gần đây</a>
+        </div>
+      </div>
+    </article>
+    <noscript><p>Bật JavaScript để xem thông tin món ăn.</p></noscript>
+  </main>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/recipe.js"></script>
+</body>
+</html>

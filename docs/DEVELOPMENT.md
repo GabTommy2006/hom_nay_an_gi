@@ -2,7 +2,7 @@
 
 ## Kiến trúc và quy ước
 
-Frontend HTML/CSS/JS gọi API cùng tên miền. Route xử lý HTTP, repository đọc/ghi dữ liệu. Khi nghiệp vụ phức tạp, thêm server/services/ cho xử lý nghiệp vụ và server/middleware/ cho xác thực, phân quyền, kiểm tra dữ liệu.
+Frontend HTML/CSS/JS gọi API cùng tên miền. Dự án chia theo MVC: public/ là View; server/routes/ ánh xạ URL sang controller; server/controllers/ nhận yêu cầu và trả JSON; server/models/ đọc/lọc dữ liệu. Khi nghiệp vụ phức tạp, thêm server/services/ và server/middleware/ cho xác thực, phân quyền, kiểm tra dữ liệu.
 
 Bộ khung dùng HTTP server có sẵn của Node.js để chạy ngay. Trước khi làm đăng nhập/upload, có thể chuyển tầng HTTP sang Express và dùng middleware được duy trì. Không tự viết thuật toán băm mật khẩu hoặc cơ chế phiên đăng nhập.
 
@@ -10,9 +10,9 @@ Chỉ public/ được phục vụ như file tĩnh. Không đặt mật khẩu, 
 
 ## 1. Nối database thật
 
-Xác định hệ quản trị và cấu trúc database có sẵn trước khi chọn thư viện. Không mặc định MySQL và không ghi đè dữ liệu cũ. Thêm pool kết nối, cấu hình qua biến môi trường, thay phần đọc JSON trong repository bằng truy vấn có tham số.
+Xác định hệ quản trị và cấu trúc database có sẵn trước khi chọn thư viện. Không mặc định MySQL và không ghi đè dữ liệu cũ. Thêm pool kết nối, cấu hình qua biến môi trường, thay phần đọc JSON trong model bằng truy vấn có tham số.
 
-Giữ hợp đồng dữ liệu hiện tại: id, name, cuisine, meals, desc, photo, by và crop tùy chọn. Ánh xạ tên cột tại repository. Giữ ID như pho-bo ổn định vì các URL hiện có dùng ID này. Nếu dùng ID số, thêm slug và xử lý ánh xạ rõ ràng.
+Giữ hợp đồng dữ liệu hiện tại: id, name, cuisine, meals, desc, photo, by và crop tùy chọn. Ánh xạ tên cột tại model. Giữ ID như pho-bo ổn định vì các URL hiện có dùng ID này. Nếu dùng ID số, thêm slug và xử lý ánh xạ rõ ràng.
 
 API công khai chỉ trả dữ liệu đã xuất bản và các trường được phép xem. Khi dữ liệu lớn, thêm phân trang; quay ngẫu nhiên cần endpoint riêng hoặc tập ID đầy đủ, tránh chỉ quay trên trang đầu.
 
@@ -78,3 +78,33 @@ Bản này chuyển người dùng sang nền tảng đặt món; không đồng
 6. Deploy: HTTPS, biến môi trường, sao lưu database và kho ảnh bền vững.
 
 Không cần giỏ hàng/thanh toán riêng để hoàn thành luồng chọn món → xem công thức hoặc mở quán đặt món.
+
+## Cấu trúc MVC đã chuẩn bị
+
+```text
+public/                          View đang dùng: HTML/CSS/JS
+server/
+  app.js                         Khởi tạo server và phục vụ website
+  config/                        Cấu hình, kết nối database sau này
+  routes/dish.routes.js           Ánh xạ URL/method sang controller
+  controllers/dish.controller.js  Nhận yêu cầu và trả JSON
+  models/                        Đọc/lọc dữ liệu; truy vấn database sau này
+  services/                      Nghiệp vụ phối hợp nhiều model
+  middleware/                    Xác thực, phân quyền, xử lý lỗi
+  validators/                    Kiểm tra dữ liệu đầu vào
+  utils/                         Hàm hỗ trợ dùng chung
+  views/                         Dành sẵn cho template, chưa sử dụng
+database/                       Migrations và seeds (ở gốc dự án)
+scripts/                         Công cụ nhập dữ liệu/bảo trì
+tests/                           Kiểm thử khi triển khai backend
+data/food.json                   Dữ liệu mẫu đang sử dụng
+```
+
+Luồng hiện tại: View → Route → Controller → Model → JSON → View.
+Khi có nghiệp vụ phức tạp: Route → Middleware/Validator → Controller → Service → Model.
+
+Các thư mục mới là bộ khung có tài liệu, chưa có đăng nhập, kết nối database, API ghi hoặc service nghiệp vụ. Không có một cấu trúc MVC duy nhất bắt buộc cho Node.js; dự án dùng quy ước trên để phân chia trách nhiệm nhất quán.
+
+View thực tế nằm trong public/. server/views/ chỉ dành sẵn nếu sau này chọn render template phía server; không sao chép HTML sang đó và không cần cài EJS. Mỗi module mới dùng tên nhất quán, ví dụ recipe.routes.js, recipe.controller.js, recipe.model.js; chỉ thêm recipe.service.js khi có nghiệp vụ cần tách.
+
+Khi chọn database, thêm server/config/database.js và gọi từ model. Không giữ thêm tầng repositories trùng trách nhiệm với model ở quy mô hiện tại.

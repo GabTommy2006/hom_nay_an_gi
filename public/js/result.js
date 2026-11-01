@@ -12,6 +12,34 @@
 
   let pool = FOOD.DISHES;
   let spinId = 0;
+  const photoCache = new Map();
+
+  function preloadPhoto(dish) {
+    const url = App.photo(dish, 1200, 900);
+    if (photoCache.has(url)) return photoCache.get(url);
+    const loading = new Promise(resolve => {
+      const photo = new Image();
+      let timer;
+      const finish = loaded => {
+        clearTimeout(timer);
+        photo.onload = photo.onerror = null;
+        if (!loaded) photoCache.delete(url);
+        resolve(loaded);
+      };
+      photo.onload = () => finish(true);
+      photo.onerror = () => finish(false);
+      timer = setTimeout(() => finish(false), 2000);
+      photo.src = url;
+    });
+    photoCache.set(url, loading);
+    return loading;
+  }
+
+  function showPreview(dish) {
+    $('dish-name').textContent = dish.name;
+    $('dish-photo').src = App.photo(dish, 1200, 900);
+    $('dish-photo').alt = dish.name;
+  }
 
   function show(dish) {
     const mealKey = dish.meals.includes(meal) ? meal : dish.meals[0];
@@ -24,6 +52,8 @@
     $('dish-name').textContent = dish.name;
     $('dish-desc').textContent = dish.desc;
     $('btn-maps').href = App.mapsUrl(dish);
+    $('btn-recipe').href = `recipe.html?dish=${encodeURIComponent(dish.id)}`;
+    $('btn-recipe').hidden = false;
     $('result-live').textContent = `Hôm nay ăn: ${dish.name}`;
     App.setLast(dish.id);
   }
@@ -38,24 +68,48 @@
   async function spin() {
     const id = ++spinId;
     const dish = App.pickDish(pool);
+    card.classList.remove('is-spinning', 'is-revealing', 'is-bounce');
+    card.removeAttribute('aria-busy');
     if (App.reduceMotion()) return show(dish);
 
-    new Image().src = App.photo(dish, 1200, 900);   // tải sẵn để ảnh hiện ngay khi dừng
-    card.classList.remove('is-bounce');
+    card.setAttribute('aria-busy', 'true');
+    $('result-live').textContent = 'Đang chọn món ăn...';
+    $('dish-meta').textContent = 'Đang chuẩn bị ảnh...';
+    $('btn-again').disabled = true;
+    // Load a small sample once; never change the name ahead of an unloaded image.
+    const candidates = [dish];
+    const remaining = pool.filter(item => item.id !== dish.id);
+    while (candidates.length < 5 && remaining.length) {
+      const next = App.randomItem(remaining);
+      candidates.push(next);
+      remaining.splice(remaining.indexOf(next), 1);
+    }
+    const loaded = await Promise.all(candidates.map(preloadPhoto));
+    if (id !== spinId) return;
+    const previews = candidates.filter((item, index) => loaded[index]);
+    if (!previews.length) {
+      card.removeAttribute('aria-busy');
+      $('btn-again').disabled = false;
+      return show(dish);
+    }
+    void card.offsetWidth;
     card.classList.add('is-spinning');
     $('dish-meta').textContent = 'Đang quay...';
     $('dish-desc').textContent = 'Chờ một chút nhé.';
 
     for (const ms of SCHEDULE) {
-      $('dish-name').textContent = App.randomItem(pool.filter((d) => d.name !== $('dish-name').textContent)).name;
+      const options = previews.filter(item => item.name !== $('dish-name').textContent);
+      showPreview(App.randomItem(options.length ? options : previews));
       await App.wait(ms);
       if (id !== spinId) return;
     }
 
     card.classList.remove('is-spinning');
+    card.removeAttribute('aria-busy');
+    $('btn-again').disabled = false;
     show(dish);
     void card.offsetWidth;
-    card.classList.add('is-bounce');
+    card.classList.add('is-revealing');
   }
 
   function init() {
