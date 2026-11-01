@@ -21,13 +21,15 @@
     <div class="filters">
       <div class="filters__row" id="filter-cuisine" role="group" aria-label="Lọc theo ẩm thực"></div>
       <div class="filters__row" id="filter-meal" role="group" aria-label="Lọc theo bữa ăn"></div>
+      <div class="filters__row" id="filter-diet" role="group" aria-label="Lọc món ăn chay"></div>
+      <p class="filters__note" id="diet-note" hidden>Chỉ hiển thị phiên bản món đã rà soát thành phần ăn chay. Nguyên liệu tại từng quán có thể khác.</p>
     </div>
 
     <ul class="dish-grid" id="dish-grid"></ul>
 
     <section class="empty" id="empty" hidden>
       <h2>Chưa có món nào như vậy</h2>
-      <p>Bạn thử đổi nền ẩm thực hoặc bữa ăn khác nhé.</p>
+      <p>Bạn thử đổi nền ẩm thực, bữa ăn hoặc bỏ lọc món chay nhé.</p>
       <button class="btn btn--primary" id="clear-filters" type="button">Bỏ lọc</button>
     </section>
   </main>

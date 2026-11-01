@@ -487,6 +487,14 @@ body[data-cuisine] { background: var(--soft); }
 
 /* ---------- Trang Tất cả món ăn ---------- */
 .filters { display: grid; gap: .5rem; margin-top: 1.5rem; }
+.filters__note { max-width: 65ch; color: var(--muted); font-size: .8125rem; }
+.filters__note[hidden] { display: none; }
+.pill[data-group="diet"] { display: inline-flex; align-items: center; gap: .375rem; }
+.pill[data-value="vegetarian"] { --accent: #285a32; --on-accent: #fff; }
+.dish__diet { justify-self: start; width: fit-content; margin-top: .375rem; }
+@media (prefers-color-scheme: dark) {
+  .pill[data-value="vegetarian"] { --accent: #b4dfae; --on-accent: #18251b; }
+}
 .filters__row {
   display: flex;
   gap: .5rem;
