@@ -29,8 +29,7 @@
   --spin-ease: cubic-bezier(.15, .85, .25, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+:root[data-theme="dark"] {
     --bg: #131416;
     --surface: #1C1D20;
     --ink: #F2F2EE;
@@ -46,6 +45,24 @@
     --c-thai: #C3A4EE;
     --c-y: #63CF92;
   }
+
+@media (prefers-color-scheme: dark) {:root:not([data-theme]) {
+    --bg: #131416;
+    --surface: #1C1D20;
+    --ink: #F2F2EE;
+    --muted: #A9ABB2;
+    --line: #2E3035;
+    --on-accent: #131416;
+
+    --brand: #FF8F54;
+    --c-viet: #F583A8;
+    --c-nhat: #94B4F0;
+    --c-han: #FF8E80;
+    --c-trung: #E8AE44;
+    --c-thai: #C3A4EE;
+    --c-y: #63CF92;
+  }
+
 }
 
 /* Mỗi nơi chỉ có một màu nhấn: đổi chủ đề bằng cách gắn data-cuisine. */
@@ -383,8 +400,10 @@ body[data-cuisine] { background: var(--soft); }
 .vegetarian-badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .55rem; border: 1px solid #bbd9b7; border-radius: 999px; background: #eaf3e7; color: #285a32; font-size: .75rem; font-weight: 700; line-height: 1.4; white-space: nowrap; }
 .vegetarian-badge svg { flex-shrink: 0; }
 .vegetarian-badge[hidden] { display: none; }
-@media (prefers-color-scheme: dark) {
-  .vegetarian-badge { background: #233829; color: #b4dfae; border-color: #416647; }
+:root[data-theme="dark"] .vegetarian-badge { background: #233829; color: #b4dfae; border-color: #416647; }
+
+@media (prefers-color-scheme: dark) {:root:not([data-theme]) .vegetarian-badge { background: #233829; color: #b4dfae; border-color: #416647; }
+
 }
 .result h1 { margin-top: .375rem; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.12; overflow-wrap: anywhere; }
 .result__desc { max-width: 42ch; margin-top: .75rem; color: var(--muted); font-size: 1rem; }
@@ -417,9 +436,10 @@ body[data-cuisine] { background: var(--soft); }
 .recipe-pending__message h2 { font-size: 1.375rem; margin-bottom: .75rem; }
 .recipe-pending__message p { color: var(--muted); max-width: 60ch; }
 .recipe-pending .result__actions { margin-top: 1.5rem; }
-@media (prefers-color-scheme: dark) {
-  .delivery-link__brand .brand-grab-light { display: none; }
-  .delivery-link__brand .brand-grab-dark { display: block; }
+:root[data-theme="dark"] .delivery-link__brand .brand-grab-light { display: none; }:root[data-theme="dark"] .delivery-link__brand .brand-grab-dark { display: block; }
+
+@media (prefers-color-scheme: dark) {:root:not([data-theme]) .delivery-link__brand .brand-grab-light { display: none; }:root:not([data-theme]) .delivery-link__brand .brand-grab-dark { display: block; }
+
 }
 @media (max-width: 380px) {
   .delivery-options__links { grid-template-columns: minmax(0, 1fr); }
@@ -496,8 +516,10 @@ body[data-cuisine] { background: var(--soft); }
 .pill[data-value="vegetarian"] { --accent: #285a32; --on-accent: #fff; }
 .dish__heading { display: flex; flex-wrap: wrap; align-items: center; gap: .375rem .5rem; }
 .dish__diet { flex-shrink: 0; width: fit-content; }
-@media (prefers-color-scheme: dark) {
-  .pill[data-value="vegetarian"] { --accent: #b4dfae; --on-accent: #18251b; }
+:root[data-theme="dark"] .pill[data-value="vegetarian"] { --accent: #b4dfae; --on-accent: #18251b; }
+
+@media (prefers-color-scheme: dark) {:root:not([data-theme]) .pill[data-value="vegetarian"] { --accent: #b4dfae; --on-accent: #18251b; }
+
 }
 .filters__row {
   display: flex;
@@ -764,3 +786,46 @@ body[data-cuisine] { background: var(--soft); }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reel { transform: translateY(var(--end)); }
 }
+
+/* Explicit theme overrides the system color scheme, including native controls. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+.header-controls { display: flex; align-items: center; gap: .5rem; order: 2; }
+.theme-switcher { position: relative; }
+.theme-trigger { width: 44px; min-height: 44px; padding: 0; border-width: 1px; border-color: var(--line); }
+.theme-trigger .action-icon { animation: theme-icon-enter .22s var(--ease); }
+.theme-picker { position: absolute; z-index: 20; top: calc(100% + .5rem); right: 0; display: grid; gap: 3px; width: 190px; padding: 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 8px 24px rgb(0 0 0 / 12%); animation: theme-options-enter .16s var(--ease); }
+.theme-picker[hidden] { display: none; }
+.theme-choice { display: inline-flex; align-items: center; justify-content: flex-start; gap: .625rem; min-width: 44px; min-height: 44px; padding: .5rem .75rem; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font: 500 .875rem var(--font-body); cursor: pointer; transition: background-color .2s, color .2s; }
+.theme-choice[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.theme-choice .action-icon { transition: transform .25s var(--ease); }
+.theme-choice[aria-pressed="true"] .action-icon { transform: rotate(-10deg); }
+.theme-choice:focus-visible { outline-offset: -2px; }
+@media (hover: hover) { .theme-choice:not([aria-pressed="true"]):hover { background: var(--soft); color: var(--accent); } }
+@keyframes theme-options-enter { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes theme-icon-enter { from { opacity: 0; transform: rotate(-30deg) scale(.75); } to { opacity: 1; transform: rotate(0) scale(1); } }
+@media (prefers-reduced-motion: no-preference) {
+  :root.theme-switching body,
+  :root.theme-switching .site-header,
+  :root.theme-switching .site-footer,
+  :root.theme-switching .site-footer > .wrap,
+  :root.theme-switching .btn,
+  :root.theme-switching .pill,
+  :root.theme-switching .meal-tag,
+  :root.theme-switching .vegetarian-badge,
+  :root.theme-switching .delivery-dialog,
+  :root.theme-switching .delivery-dialog input,
+  :root.theme-switching .region-select-wrap select,
+  :root.theme-switching .recipe-facts,
+  :root.theme-switching .serving-control__stepper {
+    transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+  }
+  :root.theme-switching :is(h1, h2, h3, p, a, dt, dd, label, .dish__name, .dish__meta, .cuisine__name, .cuisine__desc) {
+    transition: color .3s ease, background-color .3s ease, border-color .3s ease;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-choice .action-icon { transition: none; transform: none; }
+}
+@media (min-width: 768px) { .site-header .nav { margin-left: auto; } }
+@media (max-width: 767px) { .site-header > .logo { margin-right: auto; } .site-header .nav { order: 3; } }

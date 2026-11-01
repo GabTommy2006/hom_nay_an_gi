@@ -45,11 +45,70 @@ const App = (() => {
     const header = document.querySelector('[data-header]');
     header.innerHTML = `
       <a class="logo" href="index.html">Hôm nay ăn gì?</a>
-      <button class="btn nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+      <div class="header-controls">
+        <div class="theme-switcher">
+          <button class="btn theme-trigger" type="button" aria-label="Chọn chế độ giao diện" aria-expanded="false" aria-controls="theme-options" title="Chọn chế độ giao diện"></button>
+          <div class="theme-picker" id="theme-options" role="group" aria-label="Chế độ giao diện" hidden>
+          <button class="theme-choice" data-theme-mode="light" type="button" aria-label="Chế độ sáng" title="Sáng" aria-pressed="false"><svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></svg><span>Sáng</span></button>
+          <button class="theme-choice" data-theme-mode="dark" type="button" aria-label="Chế độ tối" title="Tối" aria-pressed="false"><svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M20 15a8 8 0 0 1-11-11 8 8 0 1 0 11 11Z"/></svg><span>Tối</span></button>
+          <button class="theme-choice" data-theme-mode="system" type="button" aria-label="Theo hệ thống" title="Theo hệ thống" aria-pressed="false"><svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Theo hệ thống</span></button>
+        </div>
+        </div>
+        <button class="btn nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+      </div>
       <nav class="nav" id="nav" aria-label="Menu chính">
         <ul>${NAV.map((n) => `<li><a href="${n.href}"${n.href === page ? ' aria-current="page"' : ''}>${n.label}</a></li>`).join('')}</ul>
       </nav>`;
     const toggle = header.querySelector('.nav-toggle');
+    const themeChoices = header.querySelectorAll('[data-theme-mode]');
+    const themeSwitcher = header.querySelector('.theme-switcher');
+    const themeTrigger = header.querySelector('.theme-trigger');
+    const themeOptions = header.querySelector('.theme-picker');
+    const closeTheme = (restoreFocus = false) => {
+      themeOptions.hidden = true;
+      themeTrigger.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) themeTrigger.focus();
+    };
+    themeTrigger.addEventListener('click', () => {
+      const opening = themeOptions.hidden;
+      themeOptions.hidden = !opening;
+      themeTrigger.setAttribute('aria-expanded', String(opening));
+    });
+    themeTrigger.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        themeOptions.hidden = false;
+        themeTrigger.setAttribute('aria-expanded', 'true');
+        (Array.from(themeChoices).find(button => button.dataset.themeMode === SiteTheme.getMode()) || themeChoices[0]).focus();
+      }
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!themeOptions.hidden && !themeSwitcher.contains(event.target)) closeTheme();
+    });
+    themeSwitcher.addEventListener('focusout', event => {
+      if (!themeSwitcher.contains(event.relatedTarget)) closeTheme();
+    });
+    themeSwitcher.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !themeOptions.hidden) {
+        event.preventDefault();
+        event.stopPropagation();
+        closeTheme(true);
+      }
+    });
+    const updateThemeButtons = () => {
+      const mode = SiteTheme.getMode();
+      themeChoices.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.themeMode === mode)));
+      const selected = Array.from(themeChoices).find(button => button.dataset.themeMode === mode);
+      themeTrigger.innerHTML = selected.querySelector('svg').outerHTML;
+      themeTrigger.title = 'Giao diện: ' + selected.textContent.trim();
+      themeTrigger.setAttribute('aria-label', themeTrigger.title + '. Chọn chế độ giao diện');
+    };
+    themeChoices.forEach(button => button.addEventListener('click', () => {
+      SiteTheme.setMode(button.dataset.themeMode);
+      closeTheme(true);
+    }));
+    document.addEventListener('themechange', updateThemeButtons);
+    updateThemeButtons();
     toggle.addEventListener('click', () => {
       const open = header.classList.toggle('is-open');
       toggle.setAttribute('aria-expanded', open);
