@@ -108,7 +108,11 @@ for (const [id, name, numbers, cuisine, desc] of additions) {
   };
   const existing = food.DISHES.findIndex(d => d.id === id);
   if (existing < 0) food.DISHES.push(dish);
-  else { assert.equal(food.DISHES[existing].source?.type, 'restaurant-catalog', `Would overwrite original ${id}`); food.DISHES[existing] = dish; }
+  else { assert.equal(food.DISHES[existing].source?.type, 'restaurant-catalog', `Would overwrite original ${id}`);
+    const previous = food.DISHES[existing];
+    if (previous.nutritionProfile) dish.nutritionProfile = previous.nutritionProfile;
+    if (previous.nutritionReviews) dish.nutritionReviews = previous.nutritionReviews;
+    food.DISHES[existing] = dish; }
   venues.forEach(r => associations.links.push({ dishId: id, restaurantId: r.id, type: 'dish', offering: name, evidence: r.name }));
 }
 for (const dish of food.DISHES) {

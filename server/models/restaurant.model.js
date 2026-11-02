@@ -7,11 +7,12 @@ export async function getRestaurantData() {
 export async function getDishRestaurantLinks() {
   return JSON.parse(await readFile(new URL('../../data/dish-restaurants.json', import.meta.url), 'utf8'));
 }
-export async function findRestaurants({ q = '', category = '', meal = '', priceTier = '', dishId = '', page = 1, pageSize = 12 } = {}) {
+export async function findRestaurants({ q = '', category = '', meal = '', priceTier = '', dishId = '', nutrition = '', page = 1, pageSize = 12 } = {}) {
   const { restaurants, importedAt } = await getRestaurantData();
   const associations = dishId ? (await getDishRestaurantLinks()).links.filter(link => link.dishId === dishId) : [];
   const query = normalize(q.trim());
   const filtered = restaurants.filter(r =>
+    (!nutrition || r.nutritionReviews?.some(review => review.key === nutrition && review.status === 'verified' && review.source && review.basis)) &&
     (!dishId || associations.some(link => link.restaurantId === r.id)) &&
     (!query || normalize(`${r.name} ${r.address} ${r.area}`).includes(query)) &&
     (!category || r.category === category) &&

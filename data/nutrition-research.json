@@ -1,0 +1,82 @@
+{
+  "checkedAt": "2026-11-02",
+  "policy": {
+    "low-sugar": {
+      "solidMaxGPer100g": 5,
+      "liquidMaxGPer100ml": 2.5,
+      "source": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/nutrition-claims_en"
+    },
+    "low-energy": {
+      "solidMaxKcalPer100g": 40,
+      "liquidMaxKcalPer100ml": 20,
+      "source": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/nutrition-claims_en"
+    },
+    "low-carb": {
+      "enabled": false,
+      "reason": "Không có định nghĩa thống nhất cho từng món. Không dùng ngưỡng của chế độ ăn cả ngày cho một món.",
+      "source": "https://www.gov.uk/government/publications/sacn-report-lower-carbohydrate-diets-for-type-2-diabetes"
+    }
+  },
+  "profiles": [
+    {
+      "dishId": "ca-phe-dac-san",
+      "scope": "Chỉ cà phê đen pha nước, không đường, sữa, kem hay siro.",
+      "sourceLabel": "University of Rochester Medical Center",
+      "source": "https://www.urmc.rochester.edu/encyclopedia/content?contentid=14209-1&contenttypeid=76",
+      "serving": "1 cốc 8 US fl oz (khoảng 237 ml)",
+      "values": {
+        "energyKcal": 2.37,
+        "sugarsG": 0,
+        "carbohydrateG": 0
+      },
+      "reviews": [
+        {
+          "key": "low-sugar",
+          "basis": "Nguồn ghi 0 g đường/cốc; dưới ngưỡng 2,5 g/100 ml cho đồ uống."
+        },
+        {
+          "key": "low-energy",
+          "basis": "2,37 kcal/8 US fl oz, xấp xỉ 1 kcal/100 ml; dưới ngưỡng 20 kcal/100 ml."
+        }
+      ],
+      "foodForm": "liquid",
+      "servingQuantity": 236.588,
+      "servingUnit": "ml",
+      "dataNote": "Số liệu tham khảo do University of Rochester Medical Center công bố; các giá trị 0 có thể đã làm tròn."
+    },
+    {
+      "dishId": "bo-bit-tet",
+      "scope": "Chỉ thịt bò vai nạc nướng nguyên vị, không sốt, đường ướp, bánh mì hay khoai ăn kèm.",
+      "sourceLabel": "USDA ARS · Retail Beef Cuts, Release 3.01 (2013), trang 31",
+      "source": "https://www.ars.usda.gov/ARSUserFiles/80400525/Data/Beef/Retail_Beef_Cuts03.pdf#page=34",
+      "serving": "100 g thịt bò vai nạc nướng (shoulder steak, boneless, select; NDB 13946)",
+      "values": {
+        "energyKcal": 169,
+        "sugarsG": 0,
+        "carbohydrateG": 0
+      },
+      "reviews": [
+        {
+          "key": "low-sugar",
+          "basis": "Nguồn ghi 0 g đường/100 g thịt nạc nướng; dưới ngưỡng 5 g/100 g cho thức ăn rắn."
+        }
+      ],
+      "foodForm": "solid",
+      "servingQuantity": 100,
+      "servingUnit": "g",
+      "dataNote": "USDA ghi đường và carbohydrate bằng 0 theo mã nguồn 7 (assumed zero); năng lượng theo mã 4 (imputed). Không phải xét nghiệm phần ăn tại quán."
+    }
+  ],
+  "notAssignedExamples": [
+    {
+      "dishId": "bruschetta",
+      "reason": "Alberta Health Services chỉ tính hỗn hợp cà chua, không gồm bánh mì; không khớp công thức hiện có.",
+      "source": "https://www.albertahealthservices.ca/assets/info/nutrition/if-nfs-tomato-bruschetta.pdf"
+    },
+    {
+      "dishId": "xoi-xoai",
+      "reason": "Công thức web đã điều chỉnh nguyên liệu/khẩu phần; không chuyển số liệu công thức khác sang."
+    }
+  ],
+  "limitations": "Đây là đối chiếu dữ liệu tham khảo cho phiên bản được mô tả, không phải xét nghiệm món tại quán, xác nhận toàn bộ quán hay lời khuyên giảm cân."
+}

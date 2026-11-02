@@ -703,7 +703,37 @@
           "dn-014"
         ]
       },
-      "linkedRestaurantCount": 1
+      "linkedRestaurantCount": 1,
+      "nutritionProfile": {
+        "dishId": "bo-bit-tet",
+        "scope": "Chỉ thịt bò vai nạc nướng nguyên vị, không sốt, đường ướp, bánh mì hay khoai ăn kèm.",
+        "sourceLabel": "USDA ARS · Retail Beef Cuts, Release 3.01 (2013), trang 31",
+        "source": "https://www.ars.usda.gov/ARSUserFiles/80400525/Data/Beef/Retail_Beef_Cuts03.pdf#page=34",
+        "serving": "100 g thịt bò vai nạc nướng (shoulder steak, boneless, select; NDB 13946)",
+        "values": {
+          "energyKcal": 169,
+          "sugarsG": 0,
+          "carbohydrateG": 0
+        },
+        "foodForm": "solid",
+        "servingQuantity": 100,
+        "servingUnit": "g",
+        "dataNote": "USDA ghi đường và carbohydrate bằng 0 theo mã nguồn 7 (assumed zero); năng lượng theo mã 4 (imputed). Không phải xét nghiệm phần ăn tại quán.",
+        "checkedAt": "2026-11-02",
+        "scopeType": "reference-variant"
+      },
+      "nutritionReviews": [
+        {
+          "key": "low-sugar",
+          "basis": "Nguồn ghi 0 g đường/100 g thịt nạc nướng; dưới ngưỡng 5 g/100 g cho thức ăn rắn.",
+          "status": "verified",
+          "scopeType": "reference-variant",
+          "scope": "Chỉ thịt bò vai nạc nướng nguyên vị, không sốt, đường ướp, bánh mì hay khoai ăn kèm.",
+          "source": "https://www.ars.usda.gov/ARSUserFiles/80400525/Data/Beef/Retail_Beef_Cuts03.pdf#page=34",
+          "criterionSource": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/nutrition-claims_en",
+          "checkedAt": "2026-11-02"
+        }
+      ]
     },
     {
       "id": "mam-com-gia-dinh",
@@ -1206,7 +1236,47 @@
           "dn-071"
         ]
       },
-      "linkedRestaurantCount": 3
+      "linkedRestaurantCount": 3,
+      "nutritionProfile": {
+        "dishId": "ca-phe-dac-san",
+        "scope": "Chỉ cà phê đen pha nước, không đường, sữa, kem hay siro.",
+        "sourceLabel": "University of Rochester Medical Center",
+        "source": "https://www.urmc.rochester.edu/encyclopedia/content?contentid=14209-1&contenttypeid=76",
+        "serving": "1 cốc 8 US fl oz (khoảng 237 ml)",
+        "values": {
+          "energyKcal": 2.37,
+          "sugarsG": 0,
+          "carbohydrateG": 0
+        },
+        "foodForm": "liquid",
+        "servingQuantity": 236.588,
+        "servingUnit": "ml",
+        "dataNote": "Số liệu tham khảo do University of Rochester Medical Center công bố; các giá trị 0 có thể đã làm tròn.",
+        "checkedAt": "2026-11-02",
+        "scopeType": "reference-variant"
+      },
+      "nutritionReviews": [
+        {
+          "key": "low-sugar",
+          "basis": "Nguồn ghi 0 g đường/cốc; dưới ngưỡng 2,5 g/100 ml cho đồ uống.",
+          "status": "verified",
+          "scopeType": "reference-variant",
+          "scope": "Chỉ cà phê đen pha nước, không đường, sữa, kem hay siro.",
+          "source": "https://www.urmc.rochester.edu/encyclopedia/content?contentid=14209-1&contenttypeid=76",
+          "criterionSource": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/nutrition-claims_en",
+          "checkedAt": "2026-11-02"
+        },
+        {
+          "key": "low-energy",
+          "basis": "2,37 kcal/8 US fl oz, xấp xỉ 1 kcal/100 ml; dưới ngưỡng 20 kcal/100 ml.",
+          "status": "verified",
+          "scopeType": "reference-variant",
+          "scope": "Chỉ cà phê đen pha nước, không đường, sữa, kem hay siro.",
+          "source": "https://www.urmc.rochester.edu/encyclopedia/content?contentid=14209-1&contenttypeid=76",
+          "criterionSource": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/nutrition-claims_en",
+          "checkedAt": "2026-11-02"
+        }
+      ]
     },
     {
       "id": "nuoc-mia-sau-rieng",

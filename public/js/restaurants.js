@@ -17,20 +17,35 @@
   if (dishName) $('restaurant-dish-filter').textContent = `Quán liên quan đến ${dishName} · Đà Nẵng`;
   $('restaurant-dish-filter').hidden = !dishName;
   const { make, safeLink, external, photo, mapsUrl } = RestaurantUI;
-  function populate(select, options, initialValue) {
-    options.forEach(value => {
-      const option = make('option', '', value);
-      option.value = value;
-      select.append(option);
-    });
-    select.value = options.includes(initialValue) ? initialValue : '';
+  const dropdowns = [];
+  const mealKeys = { Sáng: 'sang', Trưa: 'trua', Chiều: 'chieu', Tối: 'toi', Khuya: 'khuya' };
+  const svg = path => `<svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+  const categoryPaths = {
+    'Món chính': '<path d="M3 12h18M5 12a7 7 0 0 1 14 0M12 3v2M3 16h18"/>',
+    'Ăn vặt': '<path d="m5 4 14 16M4 11l7-7M13 20l7-7M7 7l3 3M14 14l3 3"/>',
+    'Cà phê & nước': '<path d="M4 8h12v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4ZM16 9h3a3 3 0 0 1 0 6h-3M8 2v3M12 2v3"/>',
+    'Bánh': '<path d="M4 11h16v10H4ZM4 15h16M7 11V8h10v3M12 8V4M11 3h2"/>',
+    'Ăn chay': '<path d="M20 4C8 2 3 9 7 15s13 1 13-11ZM4 21 15 10"/>',
+    'Hải sản': '<path d="M5 12c6-10 14-4 16 0-2 4-10 10-16 0ZM5 12l-3-4v8ZM16 10v1"/>',
+    'Fine dining': '<path d="M5 3v7M2 3v5q3 5 6 0V3M5 10v11M17 3v18M17 3q-7 8 0 10"/>',
+    'Ăn sáng': '<path d="M3 17h18M5 13a7 7 0 0 1 14 0M12 2v3M3 6l2 2M21 6l-2 2"/>'
+  };
+  function populate(trigger, options, initialValue, kind, title) {
+    const entries = [{ key: '', label: title, icon: kind === 'meal' ? App.mealIcon('trua') : svg(kind === 'price' ? '<circle cx="12" cy="12" r="9"/><path d="M15 7H9v10h6M7 14h10"/>' : categoryPaths['Món chính']) }, ...options.map(value => ({ key: kind === 'meal' ? mealKeys[value] : value, label: value, icon: kind === 'meal' ? App.mealIcon(mealKeys[value]) : svg(kind === 'price' ? '<circle cx="12" cy="12" r="9"/><path d="M15 7H9v10h6M7 14h10"/>' : categoryPaths[value]) }))];
+    const dropdown = CatalogFilters.createDropdown(trigger, $(trigger.id + '-options'), entries, kind, title, () => { page = 1; load(); });
+    dropdown.setValue(options.includes(initialValue) ? kind === 'meal' ? mealKeys[initialValue] : initialValue : '');
+    dropdowns.push(dropdown);
   }
+  const nutritionDropdown = Nutrition.setup('restaurant-nutrition', () => { page = 1; load(); });
+  nutritionDropdown.setValue(Nutrition.entries.some(entry => entry.key === initial.get('nutrition')) ? initial.get('nutrition') : 'all');
   function queryParams() {
     const p = new URLSearchParams({ page: String(page), pageSize: '12' });
     ['q', 'category', 'meal', 'priceTier'].forEach((key, index) => {
-      const value = controls[index].value.trim();
+      let value = (controls[index].value || '').trim();
+      if (key === 'meal') value = Object.keys(mealKeys).find(label => mealKeys[label] === value) || '';
       if (value) p.set(key, value);
     });
+    if ($('restaurant-nutrition').value !== 'all') p.set('nutrition', $('restaurant-nutrition').value);
     if (dishFilter) p.set('dish', dishFilter);
     return p;
   }
@@ -38,6 +53,7 @@
     request?.abort();
     const controller = new AbortController();
     request = controller;
+    Nutrition.note($('restaurant-nutrition').value);
     grid.setAttribute('aria-busy', 'true');
     grid.replaceChildren();
     $('restaurant-error').hidden = true;
@@ -55,9 +71,9 @@
       const data = await response.json();
       if (controller.signal.aborted) return;
       if (!facetsReady) {
-        populate(controls[1], data.facets.categories, initial.get('category'));
-        populate(controls[2], data.facets.meals, initial.get('meal'));
-        populate(controls[3], data.facets.priceTiers, initial.get('priceTier'));
+        populate(controls[1], data.facets.categories, initial.get('category'), 'category', 'Mọi nhóm món');
+        populate(controls[2], data.facets.meals, initial.get('meal'), 'meal', 'Mọi bữa ăn');
+        populate(controls[3], data.facets.priceTiers, initial.get('priceTier'), 'price', 'Mọi mức giá');
         facetsReady = true;
       }
       page = data.page;
@@ -123,11 +139,17 @@
       body.replaceChildren(heading, make('p', '', 'Đóng cửa sổ rồi thử lại nhé.'));
     }
   }
+  let searchTimer;
+  controls[0].addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { page = 1; load(); }, 250); });
   controls[0].value = initial.get('q') || '';
   $('restaurant-search').addEventListener('submit', event => { event.preventDefault(); page = 1; load(); });
   controls.slice(1).forEach(select => select.addEventListener('change', () => { page = 1; load(); }));
   function reset() {
+    clearTimeout(searchTimer);
     controls.forEach(control => { control.value = ''; });
+    dropdowns.forEach(dropdown => { dropdown.close(); dropdown.setValue(''); });
+    nutritionDropdown.close();
+    nutritionDropdown.setValue('all');
     dishFilter = '';
     $('restaurant-dish-filter').hidden = true;
     [...initial.keys()].forEach(key => initial.delete(key));

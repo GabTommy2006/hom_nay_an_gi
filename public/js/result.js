@@ -56,6 +56,18 @@
     $('vegetarian-badge').title = App.vegetarianNote(dish);
     $('dish-name').textContent = dish.name;
     $('dish-desc').textContent = dish.desc;
+    document.getElementById('result-nutrition')?.remove();
+    if (Nutrition.tags(dish).length) {
+      const nutrition = document.createElement('div');
+      nutrition.id = 'result-nutrition';
+      nutrition.className = 'result-nutrition';
+      nutrition.innerHTML = Nutrition.badges(dish) + Nutrition.scope(dish);
+      const source = document.createElement('a');
+      source.href = 'about.html#nutrition-' + dish.id;
+      source.textContent = 'Khẩu phần, tiêu chí và nguồn →';
+      nutrition.append(source);
+      $('dish-desc').after(nutrition);
+    }
     $('btn-maps').href = App.mapsUrl(dish);
     $('btn-recipe').href = `recipe.html?dish=${encodeURIComponent(dish.id)}`;
     $('btn-recipe').hidden = false;
@@ -75,6 +87,7 @@
     document.dispatchEvent(new Event('dishspinstart'));
     const id = ++spinId;
     const dish = App.pickDish(pool);
+    document.getElementById('result-nutrition')?.remove();
     $('vegetarian-badge').hidden = true;
     $('result-meal').hidden = true;
     card.classList.remove('is-spinning', 'is-revealing', 'is-bounce');

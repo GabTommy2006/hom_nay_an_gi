@@ -1,5 +1,31 @@
 /* Trang Giới thiệu: mood board và danh sách tác giả ảnh. */
 (() => {
+  const references = document.getElementById('nutrition-references');
+  FOOD.DISHES.filter(dish => dish.nutritionProfile).forEach(dish => {
+    const profile = dish.nutritionProfile;
+    const section = document.createElement('section');
+    section.id = 'nutrition-' + dish.id;
+    const heading = document.createElement('h3');
+    heading.textContent = dish.name;
+    section.append(heading);
+    const summary = document.createElement('p');
+    summary.textContent = profile.scope + ' Khẩu phần nguồn: ' + profile.serving + '. ' + profile.values.energyKcal + ' kcal; ' + profile.values.sugarsG + ' g đường; ' + profile.values.carbohydrateG + ' g carbohydrate. ' + profile.dataNote;
+    section.append(summary);
+    dish.nutritionReviews.forEach(review => {
+      const basis = document.createElement('p');
+      basis.textContent = review.basis;
+      section.append(basis);
+    });
+    const source = document.createElement('a');
+    source.href = profile.source;
+    source.target = '_blank';
+    source.rel = 'noopener noreferrer';
+    source.textContent = profile.sourceLabel + ' ↗';
+    const checked = document.createElement('p');
+    checked.textContent = 'Đối chiếu ngày 02/11/2026. Không xác nhận thực đơn hoặc toàn bộ quán liên kết.';
+    section.append(source, checked);
+    references.append(section);
+  });
   const MOOD = ['pho-bo', 'banh-xeo', 'ramen', 'bibimbap', 'pad-thai', 'pizza-margherita'];
   const byId = (id) => FOOD.DISHES.find((d) => d.id === id);
 

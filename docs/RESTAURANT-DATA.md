@@ -74,3 +74,14 @@ New dish meal tags are the union of supporting venue suggestions. “Cả ngày�
 Server and static frontend data are synchronized by the expansion script. All lists, random picks and cuisine reels use `FOOD.DISHES`, so the catalog is shared by the existing flows. The dish page adds accent-insensitive name search and a “Có quán liên kết” filter; this filter includes direct links, not the broader related-only variants.
 
 Run `node --test tests/dish-catalog.test.js tests/restaurants.test.js` to validate catalog consistency, new IDs, meals/images, association referential integrity, counts, original recipe badges and the restaurant API.
+
+
+### Nhãn ăn kiêng
+
+Rà soát nguồn ngày 02/11/2026: `data/nutrition-research.json` lưu tiêu chí, nguồn, số liệu, khẩu phần, điều kiện phiên bản và các trường hợp không thể áp dụng. `node scripts/apply-nutrition-reviews.mjs` đối chiếu ngưỡng rồi đồng bộ JSON và JS tĩnh. Script mở rộng món giữ metadata này.
+
+Đang có hai phiên bản tham khảo: cà phê đặc sản pha đen với nước, không phụ gia (ít đường, ít năng lượng); thịt bò vai nạc nướng nguyên vị, không sốt/món kèm (ít đường). Nhãn có dấu * và điều kiện hiện rõ trên thẻ và kết quả quay. Đây không phải xác nhận món quán bán hoặc xét nghiệm. USDA phân loại giá trị đường 0 của thịt bò là assumed zero, năng lượng là imputed; lưu rõ và trình bày trong nguồn tham khảo.
+
+Tiêu chí tham chiếu European Commission: đường ≤5g/100g rắn, ≤2,5g/100ml lỏng; năng lượng ≤40kcal/100g rắn, ≤20kcal/100ml lỏng. Không tự nhận là chứng nhận tại Việt Nam. Chưa gán ít tinh bột vì không có ngưỡng thống nhất cho món riêng lẻ; không chuyển ngưỡng một chế độ ăn thành ngưỡng món. Bruschetta AHS chỉ tính topping nên không gán cho bánh hiện tại. Không gán cho món khác khi thiếu công thức, khối lượng thành phẩm hoặc biến thể khớp nguồn.
+
+`nutritionReviews` yêu cầu key/status/source/basis; nhãn hiện tại có thêm scopeType `reference-variant`, scope, criterionSource, checkedAt. `nutritionProfile` chứa số liệu nguyên gốc, khẩu phần và dataNote. Không suy nhãn từ tên món hoặc tính chay, không lan truyền metadata từ món sang quán. Trang Giới thiệu có liên kết trực tiếp tới nguồn và cách đối chiếu.

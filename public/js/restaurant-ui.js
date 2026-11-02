@@ -46,6 +46,11 @@ const RestaurantUI = (() => {
     button.setAttribute('aria-controls', 'restaurant-detail');
     button.addEventListener('click', () => openDetail(record.id, button));
     heading.append(button);
+    if (typeof Nutrition !== 'undefined') {
+      const badges = make('span', 'restaurant-card__nutrition');
+      badges.innerHTML = Nutrition.badges(record);
+      heading.append(badges);
+    }
     const category = make('p', 'restaurant-card__category', record.category);
     const address = make('p', 'restaurant-card__address', record.address);
     const price = make('p', 'restaurant-card__price', record.priceLabel);
