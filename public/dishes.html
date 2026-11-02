@@ -19,19 +19,35 @@
   <main id="main" class="page wrap">
     <h1>Tất cả món ăn <span id="count" aria-live="polite"></span></h1>
     <p class="catalog-intro">Chọn món, tìm quán hoặc tự vào bếp. Có cả bánh, ăn vặt và đồ uống cho những lúc muốn đổi vị.</p>
-    <form class="catalog-search" role="search" id="dish-search-form">
-      <label class="sr-only" for="dish-search">Tìm theo tên món</label>
-      <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg>
-      <input id="dish-search" type="search" placeholder="Tìm mì Quảng, cà phê, bánh…" autocomplete="off" maxlength="150">
+    <form class="catalog-toolbar" role="search" id="dish-search-form">
+      <div class="catalog-search">
+        <label class="sr-only" for="dish-search">Tìm theo tên món</label>
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg>
+        <input id="dish-search" type="search" placeholder="Tìm món ăn, đồ uống…" autocomplete="off" maxlength="150">
+      </div>
+      <div class="catalog-select catalog-select--cuisine">
+        <button class="catalog-dropdown__trigger" id="filter-cuisine" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="filter-cuisine-options" aria-label="Lọc theo ẩm thực">
+          <span id="catalog-cuisine-icon" class="catalog-select__icon" aria-hidden="true"></span>
+          <span id="filter-cuisine-label">Mọi ẩm thực</span>
+          <svg class="catalog-dropdown__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="catalog-dropdown__list" id="filter-cuisine-options" role="listbox" aria-label="Chọn ẩm thực" hidden></div>
+      </div>
+      <div class="catalog-select catalog-select--meal">
+        <button class="catalog-dropdown__trigger" id="filter-meal" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="filter-meal-options" aria-label="Lọc theo bữa ăn">
+          <span id="catalog-meal-icon" class="catalog-select__icon" aria-hidden="true"></span>
+          <span id="filter-meal-label">Mọi bữa ăn</span>
+          <svg class="catalog-dropdown__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="catalog-dropdown__list" id="filter-meal-options" role="listbox" aria-label="Chọn bữa ăn" hidden></div>
+      </div>
+      <div class="catalog-quick-filters" role="group" aria-label="Lọc nhanh">
+        <button class="catalog-toggle" id="filter-diet" type="button" aria-pressed="false"><svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 4c-6-1-13 1-14 7-1 4 2 7 6 6 6-1 8-7 8-13Z"/><path d="M4 21 15 10"/></svg>Món chay</button>
+        <button class="catalog-toggle" id="filter-linked" type="button" aria-pressed="false" aria-label="Chỉ hiện món có quán liên kết"><svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v11h16V10M3 10l2-7h14l2 7M3 10q3 4 6 0 3 4 6 0 3 4 6 0M9 21v-7h6v7"/></svg>Có quán</button>
+        <button class="catalog-clear" id="catalog-clear" type="button" hidden>Xóa lọc</button>
+      </div>
     </form>
-
-    <div class="filters">
-      <div class="filters__row" id="filter-cuisine" role="group" aria-label="Lọc theo ẩm thực"></div>
-      <div class="filters__row" id="filter-meal" role="group" aria-label="Lọc theo bữa ăn"></div>
-      <div class="filters__row" id="filter-diet" role="group" aria-label="Lọc món ăn chay"></div>
-      <div class="filters__row" id="filter-linked" role="group" aria-label="Lọc theo quán liên kết"></div>
-      <p class="filters__note" id="diet-note" hidden>Gồm công thức đã rà soát và món được quán giới thiệu là chay. Hãy kiểm tra nguyên liệu, nước dùng và sốt khi gọi món.</p>
-    </div>
+    <p class="filters__note catalog-diet-note" id="diet-note" hidden>Gồm công thức đã rà soát và món được quán giới thiệu là chay. Hãy kiểm tra nguyên liệu, nước dùng và sốt khi gọi món.</p>
 
     <ul class="dish-grid" id="dish-grid"></ul>
 
