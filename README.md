@@ -35,4 +35,21 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 
 Khi chạy Node.js, /js/data.js được tạo từ data/food.json để giao diện và API dùng chung dữ liệu. Sửa dữ liệu mẫu tại data/food.json. public/js/data.js là bản dự phòng cũ cho chế độ xem tĩnh, không tự đồng bộ; nên dùng npm start.
 
-Đã có hai công thức frontend và danh bạ địa điểm đọc từ JSON qua backend MVC. Chưa có database SQL, đăng nhập/admin hoặc tích hợp đơn hàng.
+Đã có 14 công thức frontend và danh bạ địa điểm đọc từ JSON qua backend MVC. Chưa có database SQL, đăng nhập/admin hoặc tích hợp đơn hàng.
+
+
+### Yêu thích và công thức (frontend)
+
+Trang `favorites.html` lưu ID món/quán trong localStorage (`hnag:favorites:v1`) của trình duyệt hiện tại, không có tài khoản hay đồng bộ giữa thiết bị. Nút trái tim ở danh mục, kết quả, công thức và chi tiết quán; đồng bộ trạng thái giữa các tab cùng origin. Khi trình duyệt chặn ghi, giao diện báo lỗi và không hiện thành công giả. Quán tải qua API đọc hiện có; lỗi tải không xóa ID đã lưu.
+
+8 công thức: xôi xoài, bruschetta, phở bò phiên bản nhanh, Pad Thai tôm, pizza Margherita, onigiri cá ngừ, canh kim chi, risotto nấm. Sáu công thức bổ sung được biên soạn tiếng Việt với định lượng điều chỉnh, dẫn nguồn ở từng trang (Canada’s Food Guide, Good Food, Just One Cookbook, Maangchi, Diabetes UK). Không phải công thức xác nhận của quán; không tự lan truyền nhãn dinh dưỡng/chay. Tất cả dùng chung bộ chọn 1–12 người và đánh dấu bước nấu.
+
+
+Bổ sung đợt 03/11/2026: bún chả bản áp chảo, bánh xèo tôm thịt, bibimbap bản rau phổ biến, kimbap nhân xúc xích, mapo tofu giảm dầu/cay và Tom Yum tôm nước trong. Tổng 14 công thức. Nguồn và các điều chỉnh ghi ở từng trang; không đổi nhãn dinh dưỡng hoặc ăn chay.
+
+
+### Giao diện admin — chỉ frontend
+
+Mở `/admin-login.html` để vào bản xem thử, hoặc `/admin.html` để xem trực tiếp. Email/mật khẩu readonly là dữ liệu mẫu, không được gửi đi hoặc lưu lại. Chưa có xác thực hay phân quyền và không có API ghi.
+
+7 mục: tổng quan, quán, món, món tại quán, công thức, duyệt thông tin và tài khoản. Quán đọc bằng các endpoint GET hiện có; món và công thức đọc dữ liệu frontend. Tài khoản để trạng thái chưa kết nối, không tạo người dùng/thống kê giả. Form thêm/sửa lưu bản nháp riêng vào localStorage (`hnag:admin-drafts:v1`), khôi phục khi tải lại trên cùng trình duyệt. Có xóa bản nháp với bước xác nhận và đồng bộ giữa các tab. Nếu đọc/ghi bị lỗi, giao diện báo rõ và không báo lưu thành công giả. Không thay đổi file JSON, công thức công khai, trạng thái nhãn chay/dinh dưỡng hoặc liên kết đặt hàng thật. Bảng có tìm kiếm không dấu, lọc bản nháp, phân trang; dialog có kiểm tra trường, chống liên kết trùng, nguồn https, bàn phím và giao diện mobile/sáng/tối. Đường dẫn admin không được bảo vệ cho tới khi có backend.

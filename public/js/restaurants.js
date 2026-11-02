@@ -125,6 +125,9 @@
       }
       const actions = make('div', 'restaurant-detail__actions');
       actions.append(external('Tìm địa điểm trên Google Maps ↗', mapsUrl(record), 'btn btn--primary'));
+      const fullPage = make('a', 'btn', 'Xem trang quán →');
+      fullPage.href = 'restaurant.html?id=' + encodeURIComponent(record.id);
+      actions.append(fullPage);
       if (safeLink(record.website)) actions.append(external('Website quán ↗', safeLink(record.website), 'btn'));
       const note = make('p', 'restaurant-detail__note', 'Giá và thực đơn có thể thay đổi. Chưa có liên kết đặt món trực tiếp. Vui lòng kiểm tra lại trước khi ghé.');
       const source = make('p', 'restaurant-detail__source');

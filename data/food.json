@@ -464,7 +464,37 @@
       "desc": "Gạo Ý nấu sánh với nấm và phô mai parmesan.",
       "photo": "photo-1633964913295-ceb43826e7c9",
       "by": "robwicks",
-      "linkedRestaurantCount": 0
+      "linkedRestaurantCount": 0,
+      "nutritionProfile": {
+        "dishId": "risotto-nam",
+        "scope": "Chỉ phiên bản Mushroom risotto của Diabetes UK: gạo risotto, nấm, Parmesan và sữa chua Hy Lạp 0% béo, theo đúng công thức nguồn; không tính món kèm.",
+        "sourceLabel": "Diabetes UK · Mushroom risotto",
+        "source": "https://www.diabetes.org.uk/living-with-diabetes/recipes/mushroom-risotto",
+        "serving": "1 phần thành phẩm 306 g (công thức chia 3 phần)",
+        "values": {
+          "energyKcal": 282,
+          "sugarsG": 5.8,
+          "carbohydrateG": 49.4
+        },
+        "foodForm": "solid",
+        "servingQuantity": 306,
+        "servingUnit": "g",
+        "dataNote": "Số liệu cho toàn bộ phần risotto của công thức Diabetes UK, không gồm gợi ý ăn kèm. 49,4 g carbohydrate và 282 kcal/phần; không suy số liệu sang phiên bản khác hoặc món tại quán.",
+        "checkedAt": "2026-11-02",
+        "scopeType": "reference-variant"
+      },
+      "nutritionReviews": [
+        {
+          "key": "low-sugar",
+          "basis": "5,8 g đường/306 g thành phẩm ≈ 1,90 g/100 g, dưới ngưỡng 5 g/100 g. Nguồn cũng công bố Low sugar. Không có nghĩa là ít carbohydrate hay ít năng lượng.",
+          "status": "verified",
+          "scopeType": "reference-variant",
+          "scope": "Chỉ phiên bản Mushroom risotto của Diabetes UK: gạo risotto, nấm, Parmesan và sữa chua Hy Lạp 0% béo, theo đúng công thức nguồn; không tính món kèm.",
+          "source": "https://www.diabetes.org.uk/living-with-diabetes/recipes/mushroom-risotto",
+          "criterionSource": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/nutrition-claims_en",
+          "checkedAt": "2026-11-02"
+        }
+      ]
     },
     {
       "id": "bruschetta",

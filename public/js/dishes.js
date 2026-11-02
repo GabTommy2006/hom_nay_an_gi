@@ -70,14 +70,15 @@
     document.getElementById('diet-note').hidden = filters.diet !== 'vegetarian';
     grid.innerHTML = dishes.map((d) => {
       const meals = d.meals.map(m => `<span class="meal-tag">${App.mealIcon(m)}<span>${FOOD.MEALS[m].label}</span></span>`).join('');
-      return `<li><a class="dish" data-cuisine="${d.cuisine}" href="${App.dishUrl(d)}">
+      return `<li><article class="dish" data-cuisine="${d.cuisine}">
         <span class="dish__photo"><img src="${App.photo(d, 560, 420)}" alt="${d.name}" width="560" height="420" loading="lazy">${d.source?.type === 'restaurant-catalog' ? '<span class="dish__image-note">Ảnh minh họa</span>' : ''}</span>
-        <span class="dish__heading"><span class="dish__name">${d.name}</span>${Nutrition.badges(d)}${isVegetarian(d) ? `<span class="vegetarian-badge dish__diet" title="${App.vegetarianNote(d)}">${leafIcon} Ăn chay</span>` : ''}</span>
+        ${Favorites.button('dishes', d.id, d.name)}<span class="dish__heading"><a class="dish__name dish__main-link" href="${App.dishUrl(d)}">${d.name}</a>${Nutrition.badges(d)}${Nutrition.vegetarianBadge(d)}</span>
         ${Nutrition.scope(d)}
         <span class="dish__meta">${App.cuisineLabel(d.cuisine)}</span>
         <span class="dish__meals" role="group" aria-label="Bữa ăn phù hợp">${meals}</span>
         ${d.linkedRestaurantCount ? `<span class="dish__linked">${d.linkedRestaurantCount} địa điểm liên quan <span aria-hidden="true">→</span></span>` : ''}
-      </a></li>`;
+        ${RECIPES[d.id] ? `<a class="dish__recipe-link" href="recipe.html?dish=${d.id}">Xem công thức →</a>` : ''}
+      </article></li>`;
     }).join('');
   }
 

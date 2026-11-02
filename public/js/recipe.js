@@ -21,11 +21,14 @@
   $('recipe-message').textContent = 'Nguyên liệu và cách chế biến món này sẽ được bổ sung sau. Trong lúc chờ, bạn có thể tìm quán gần đây hoặc khám phá món khác.';
   $('recipe-maps').href = App.mapsUrl(dish);
   $('recipe-maps').hidden = false;
+  const save = document.createElement('div'); save.innerHTML = Favorites.button('dishes', dish.id, dish.name, true);
   const recipe = RECIPES[dish.id];
+  (recipe ? $('detail-name') : $('recipe-name')).after(save);
   if (!recipe) return;
   $('recipe-pending').hidden = true;
   $('recipe-detail').hidden = false;
   $('detail-back').href = App.dishUrl(dish);
+  $('detail-photo').addEventListener('error', () => { $('detail-photo').src = 'images/restaurants/placeholder.svg'; }, { once: true });
   $('detail-photo').src = App.photo(dish, 1000, 750);
   $('detail-photo').alt = dish.name;
   $('detail-meta').innerHTML = App.cuisineLabel(dish.cuisine);
@@ -36,6 +39,8 @@
   $('detail-meal').hidden = false;
   $('detail-vegetarian').hidden = !App.isVegetarian(dish);
   $('detail-vegetarian').title = App.vegetarianNote(dish);
+    $('detail-vegetarian').dataset.vegetarianDish = dish.id;
+    $('detail-vegetarian').setAttribute('aria-label', 'Ăn chay — xem nguyên liệu và xác minh của ' + dish.name);
   $('detail-name').textContent = dish.name;
   $('detail-desc').textContent = dish.desc;
   let servings = recipe.servings;

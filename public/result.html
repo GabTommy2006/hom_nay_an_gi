@@ -25,10 +25,10 @@
         <div class="result__meta-row">
           <p class="result__meta" id="dish-meta">Đang quay...</p>
           <span class="meal-tag" id="result-meal" hidden></span>
-          <span class="vegetarian-badge" id="vegetarian-badge" hidden title="Áp dụng cho phiên bản nguyên liệu được mô tả trên website; thành phần tại từng quán có thể khác.">
+          <button type="button" aria-haspopup="dialog" aria-controls="nutrition-dialog" class="vegetarian-badge" id="vegetarian-badge" hidden title="Áp dụng cho phiên bản nguyên liệu được mô tả trên website; thành phần tại từng quán có thể khác.">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4c-6-1-13 1-14 7-1 4 2 7 6 6 6-1 8-7 8-13Z"/><path d="M4 21 15 10"/></svg>
             Ăn chay
-          </span>
+          </button>
         </div>
         <h1 id="dish-name">Hôm nay ăn gì?</h1>
         <p class="result__desc" id="dish-desc">Chờ một chút nhé.</p>
@@ -125,6 +125,7 @@
           <a href="cuisines.html">Khám phá ẩm thực</a>
           <a href="dishes.html">Tất cả món ăn</a>
           <a href="restaurants.html">Quán ăn</a>
+          <a href="favorites.html">Yêu thích</a>
           <a href="about.html">Về tụi mình</a>
           <a href="about.html#sources">Nguồn ảnh</a>
         </nav>
@@ -137,6 +138,7 @@
   </footer>
 
   <script src="js/data.js"></script>
+  <script src="js/favorites.js"></script>
   <script src="js/app.js"></script>
   <script src="js/restaurant-ui.js"></script>
   <script src="js/result-restaurants.js"></script>

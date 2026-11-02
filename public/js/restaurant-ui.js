@@ -40,11 +40,8 @@ const RestaurantUI = (() => {
     const article = make('article', 'restaurant-card');
     const content = make('div', 'restaurant-card__content');
     const heading = make(headingTag);
-    const button = make('button', 'restaurant-card__title', record.name);
-    button.type = 'button';
-    button.setAttribute('aria-haspopup', 'dialog');
-    button.setAttribute('aria-controls', 'restaurant-detail');
-    button.addEventListener('click', () => openDetail(record.id, button));
+    const button = make('a', 'restaurant-card__title', record.name);
+    button.href = 'restaurant.html?id=' + encodeURIComponent(record.id);
     heading.append(button);
     if (typeof Nutrition !== 'undefined') {
       const badges = make('span', 'restaurant-card__nutrition');
@@ -65,15 +62,20 @@ const RestaurantUI = (() => {
     });
     const actions = make('div', 'restaurant-card__actions');
     actions.append(external('Tìm trên Maps ↗', mapsUrl(record), 'restaurant-map-link'));
-    const detail = make('button', 'restaurant-info-link', 'Thông tin →');
-    detail.type = 'button';
-    detail.setAttribute('aria-label', `Xem thông tin ${record.name}`);
-    detail.addEventListener('click', () => openDetail(record.id, detail));
+    const detail = make(onDetail ? 'button' : 'a', 'restaurant-info-link', onDetail ? 'Xem nhanh →' : 'Xem quán →');
+    if (onDetail) {
+      detail.type = 'button';
+      detail.setAttribute('aria-haspopup', 'dialog');
+      detail.setAttribute('aria-controls', 'restaurant-detail');
+      detail.setAttribute('aria-label', `Xem nhanh thông tin ${record.name}`);
+      detail.addEventListener('click', () => openDetail(record.id, detail));
+    } else detail.href = button.href;
     actions.append(detail);
     content.append(category, heading);
     if (record.dishMatch) content.append(make('p', 'restaurant-match', record.dishMatch.offering));
     content.append(address, price, make('p', 'restaurant-card__price-note', 'Khoảng giá tham khảo'), meals, actions);
     article.append(photo(record), content);
+    const save = make('div', 'restaurant-card__save'); save.innerHTML = Favorites.button('restaurants', record.id, record.name); article.append(save);
     li.append(article);
     return li;
   }

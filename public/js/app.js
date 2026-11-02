@@ -5,6 +5,7 @@ const App = (() => {
     { href: 'cuisines.html', label: 'Ẩm thực' },
     { href: 'dishes.html', label: 'Tất cả món ăn' },
     { href: 'restaurants.html', label: 'Quán ăn' },
+    { href: 'favorites.html', label: 'Yêu thích' },
     { href: 'about.html', label: 'Giới thiệu' },
   ];
 
@@ -42,7 +43,8 @@ const App = (() => {
     'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${dish.name} gần đây`);
 
   function renderChrome() {
-    const page = location.pathname.split('/').pop();
+    const currentPage = location.pathname.split('/').pop();
+    const page = currentPage === 'restaurant.html' ? 'restaurants.html' : currentPage;
     const header = document.querySelector('[data-header]');
     header.innerHTML = `
       <a class="logo" href="index.html">Hôm nay ăn gì?</a>

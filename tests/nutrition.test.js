@@ -28,10 +28,10 @@ test('restaurant nutrition filter preserves pagination totals and does not class
   }
 });
 
-test('published labels stay scoped to two source-matched variants and satisfy per-100-unit thresholds', async () => {
+test('published labels stay scoped to source-matched variants and satisfy per-100-unit thresholds', async () => {
   const food = JSON.parse(await readFile(new URL('../data/food.json', import.meta.url), 'utf8'));
   const research = JSON.parse(await readFile(new URL('../data/nutrition-research.json', import.meta.url), 'utf8'));
-  assert.deepEqual(food.DISHES.filter(d => nutrition.matches(d, 'low-sugar')).map(d => d.id).sort(), ['bo-bit-tet', 'ca-phe-dac-san']);
+  assert.deepEqual(food.DISHES.filter(d => nutrition.matches(d, 'low-sugar')).map(d => d.id).sort(), ['bo-bit-tet', 'ca-phe-dac-san', 'risotto-nam']);
   assert.deepEqual(food.DISHES.filter(d => nutrition.matches(d, 'low-energy')).map(d => d.id), ['ca-phe-dac-san']);
   assert.equal(food.DISHES.filter(d => nutrition.matches(d, 'low-carb')).length, 0);
   for (const dish of food.DISHES.filter(d => d.nutritionProfile)) {
@@ -51,4 +51,20 @@ test('published labels stay scoped to two source-matched variants and satisfy pe
   }
   assert.equal(nutrition.tags(food.DISHES.find(d => d.id === 'bruschetta')).length, 0);
   assert.equal(nutrition.tags(food.DISHES.find(d => d.id === 'xoi-xoai')).length, 0);
+});
+
+test('follow-up research does not silently label mismatched recipes or specific restaurant offerings', async () => {
+  const food = JSON.parse(await readFile(new URL('../data/food.json', import.meta.url), 'utf8'));
+  const research = JSON.parse(await readFile(new URL('../data/nutrition-research.json', import.meta.url), 'utf8'));
+  for (const id of new Set(research.followUpReview.decisions.filter(d => d.status === 'not-assigned').map(d => d.dishId))) {
+    const dish = food.DISHES.find(d => d.id === id);
+    assert.ok(dish, id);
+    assert.equal(nutrition.tags(dish).length, 0, id);
+  }
+  const risotto = food.DISHES.find(d => d.id === 'risotto-nam');
+  assert.equal(nutrition.matches(risotto, 'low-sugar'), true);
+  assert.equal(nutrition.matches(risotto, 'low-carb'), false);
+  assert.equal(nutrition.matches(risotto, 'low-energy'), false);
+  assert.equal(risotto.nutritionProfile.servingQuantity, 306);
+  assert.equal(risotto.nutritionProfile.values.sugarsG, 5.8);
 });

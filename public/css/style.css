@@ -1045,3 +1045,117 @@ body[data-cuisine] { background: var(--soft); }
 .nutrition-sources p { max-width: 72ch; }
 #nutrition-references > section { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--line); scroll-margin-top: 2rem; }
 #nutrition-references h3 { margin-bottom: .5rem; }
+
+/* A separate card link keeps nutrition buttons out of nested interactive elements. */
+.dish { position: relative; }
+.dish__main-link { color: inherit; text-decoration: none; }
+.dish__main-link::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
+.dish__main-link:focus-visible { outline: none; }
+.dish__main-link:focus-visible::after { outline: 2px solid var(--accent); outline-offset: 5px; }
+button.nutrition-badge { position: relative; z-index: 1; border: 1px solid transparent; font-family: var(--font-body); cursor: pointer; min-height: 30px; transition: background-color .18s, border-color .18s; }
+button.nutrition-badge:hover { background: color-mix(in srgb, var(--filter-color) 20%, var(--surface)); border-color: color-mix(in srgb, var(--filter-color) 45%, transparent); }
+button.nutrition-badge:focus-visible { outline: 2px solid var(--filter-color); outline-offset: 3px; }
+.nutrition-dialog-open { overflow: hidden; }
+.nutrition-dialog { width: min(580px, calc(100% - 2rem)); max-height: min(86dvh, 850px); padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.nutrition-dialog::backdrop { background: rgb(19 20 22 / 65%); }
+.nutrition-dialog[open] { animation: nutrition-dialog-in .18s var(--ease); }
+.nutrition-dialog__header { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--line); background: var(--surface); }
+.nutrition-dialog__header h2 { font-size: clamp(1.25rem, 4vw, 1.625rem); line-height: 1.25; margin: 0; }
+.nutrition-dialog__close { flex-shrink: 0; min-height: 44px; padding: .5rem .75rem; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; font: 500 .8125rem var(--font-body); cursor: pointer; }
+.nutrition-dialog__close:hover { background: var(--soft); border-color: var(--accent); }
+.nutrition-dialog__body { padding: 1.25rem 1.5rem 1.5rem; font-size: .875rem; line-height: 1.65; }
+.nutrition-dialog__label { display: flex; align-items: center; gap: .5rem; color: var(--filter-color); font-weight: 700; margin: 0 0 1.25rem; }
+.nutrition-dialog__body h3 { margin: 1.5rem 0 .375rem; font: 700 .9375rem var(--font-body); }
+.nutrition-dialog__body h3:first-of-type { margin-top: 0; }
+.nutrition-dialog__facts { display: grid; grid-template-columns: 1fr 1.5fr; gap: .625rem 1rem; padding-block: 1rem; margin: 1.25rem 0 0; border-block: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.nutrition-dialog__facts dt { color: var(--muted); }
+.nutrition-dialog__facts dd { margin: 0; }
+.nutrition-dialog__source { display: block; width: fit-content; margin-top: .5rem; color: var(--accent); text-underline-offset: .2em; overflow-wrap: anywhere; }
+.nutrition-dialog__note, .nutrition-dialog__checked { margin-top: 1rem; color: var(--muted); font-size: .75rem; }
+.nutrition-dialog__checked { margin-top: .375rem; }
+@keyframes nutrition-dialog-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 600px) { .nutrition-dialog__header { padding: .75rem 1rem; } .nutrition-dialog__body { padding: 1rem; } .nutrition-dialog__facts { grid-template-columns: 1fr; gap: .125rem; } .nutrition-dialog__facts dd { margin-bottom: .5rem; } button.nutrition-badge { min-height: 44px; } }
+@media (prefers-reduced-motion: reduce) { .nutrition-dialog[open] { animation: none; } button.nutrition-badge { transition: none; } }
+
+button.vegetarian-badge { position: relative; z-index: 1; border: 1px solid transparent; font-family: var(--font-body); cursor: pointer; min-height: 30px; transition: background-color .18s, border-color .18s; }
+button.vegetarian-badge:hover { background: color-mix(in srgb, #317141 18%, var(--surface)); border-color: currentColor; }
+button.vegetarian-badge:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.nutrition-dialog[data-nutrition="vegetarian"] { --filter-color: #285a32; }
+:root[data-theme="dark"] .nutrition-dialog[data-nutrition="vegetarian"] { --filter-color: #b4dfae; }
+.vegetarian-dialog__ingredients { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; padding-left: 1.125rem; list-style: disc; }
+.vegetarian-dialog__ingredients li { min-width: 40%; }
+@media (max-width: 600px) { button.vegetarian-badge { min-height: 44px; } }
+@media (prefers-reduced-motion: reduce) { button.vegetarian-badge { transition: none; } }
+
+/* Restaurant detail: a generous photograph and practical, source-limited information. */
+.venue-breadcrumb { display: flex; flex-wrap: wrap; gap: .5rem; font-size: .8125rem; color: var(--muted); margin-bottom: 1.5rem; }
+.venue-breadcrumb span:last-child { overflow-wrap: anywhere; }
+.venue-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
+.venue-hero .restaurant-photo { height: 100%; margin: 0; }
+.venue-hero .restaurant-photo img { width: 100%; height: clamp(320px, 33vw, 480px); object-fit: cover; }
+.venue-hero h1 { font-size: clamp(2rem, 3.5vw, 3.5rem); line-height: 1.1; margin: 0; text-wrap: balance; }
+.venue-category { color: var(--accent); font-weight: 700; margin-top: 1rem; font-size: .875rem; }
+.venue-address { margin-block: .75rem 1rem; color: var(--muted); }
+.venue-meal-note, .venue-truth-note { font-size: .75rem; color: var(--muted); margin-top: .5rem; }
+.venue-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .625rem; margin-block: 1.25rem .75rem; }
+.venue-actions .btn { font-size: .875rem; white-space: normal; text-align: center; }
+.venue-columns { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(250px, 1fr); gap: clamp(2rem, 5vw, 5rem); margin-top: clamp(2.5rem, 6vw, 5rem); }
+.venue-page h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.25; margin-bottom: .75rem; }
+.venue-dishes > p { color: var(--muted); font-size: .875rem; max-width: 62ch; }
+.venue-dish-list { margin-top: 1.5rem; }
+.venue-dish { position: relative; display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 1.25rem; padding-block: 1.25rem; border-top: 1px solid var(--line); }
+.venue-dish > img { width: 120px; height: 100px; border-radius: 12px; object-fit: cover; background: var(--line); }
+.venue-dish h3 { font-size: 1.125rem; margin: 0; }
+.venue-dish__link { color: var(--ink); text-decoration: none; }
+.venue-dish__link::after { content: ''; position: absolute; inset: 0; border-radius: 10px; }
+.venue-dish__link:focus-visible { outline: none; }
+.venue-dish__link:focus-visible::after { outline: 2px solid var(--accent); outline-offset: 3px; }
+.venue-dish:hover h3 { color: var(--accent); }
+.venue-dish__meta { color: var(--muted); font-size: .8125rem; margin-top: .375rem; }
+.venue-dish__hint, .venue-dish__offering { display: block; margin-top: .5rem; font-size: .75rem; color: var(--accent); }
+.venue-dish__badges { margin-top: .375rem; }
+.venue-visit { align-self: start; border-top: 1px solid var(--line); padding-top: 1.25rem; }
+.venue-visit dl { margin-block: 1.25rem 2rem; }
+.venue-visit dt { font-size: .75rem; color: var(--muted); margin-top: 1rem; }
+.venue-visit dd { margin: .25rem 0 0; font-size: .875rem; }
+.venue-visit h3 { font: 700 1rem var(--font-body); margin-bottom: .5rem; }
+.venue-visit > p, .venue-photo-source { color: var(--muted); font-size: .8125rem; }
+.venue-photo-source { margin-top: 1.5rem; }
+.venue-photo-source summary { cursor: pointer; min-height: 44px; padding-block: .625rem; }
+.venue-photo-source p { margin-block: .625rem; }
+.venue-related { padding-top: 2rem; margin-top: 3rem; border-top: 1px solid var(--line); }
+.venue-section-heading { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.venue-section-heading p, .venue-section-heading > a { font-size: .8125rem; color: var(--muted); }
+.venue-section-heading > a { color: var(--accent); }
+a.restaurant-card__title { display: inline-block; text-decoration: none; }
+@media (max-width: 760px) {
+  .venue-hero, .venue-columns { grid-template-columns: minmax(0, 1fr); }
+  .venue-hero .restaurant-photo img { height: clamp(230px, 60vw, 400px); }
+  .venue-columns { gap: 2rem; }
+  .venue-dish { grid-template-columns: 90px minmax(0, 1fr); gap: .875rem; }
+  .venue-dish > img { width: 90px; height: 90px; }
+  .venue-actions .btn { flex: 1 1 180px; }
+}
+
+.venue-hero .restaurant-photo { border-radius: 16px; overflow: hidden; }
+
+.favorite-button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; width: 44px; min-height: 44px; padding: .5rem; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); cursor: pointer; font: 500 .8125rem var(--font-body); position: relative; z-index: 2; }
+.favorite-button[aria-pressed="true"] { color: #a8324c; background: #fff1f3; border-color: #c27183; }
+.favorite-button[aria-pressed="true"] svg { fill: currentColor; }
+.favorite-button:hover { color: #a8324c; border-color: #a8324c; }
+.favorite-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.dish > .favorite-button { position: absolute; right: .625rem; top: .625rem; }
+.restaurant-card { position: relative; }
+.restaurant-card__save { position: absolute; top: .75rem; right: .75rem; }
+.favorite-button--text { width: auto; border-radius: 10px; padding-inline: .875rem; margin-block: .625rem; }
+.favorites-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: 1.5rem 1rem; }
+.favorites-page section { margin-top: 2rem; }
+.favorite-unavailable { padding: 1rem; border-block: 1px solid var(--line); }
+.favorite-feedback { position: fixed; z-index: 100; bottom: 1rem; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 2rem); padding: .75rem 1rem; border-radius: 10px; background: var(--ink); color: var(--surface); font-size: .875rem; box-shadow: 0 4px 16px rgb(0 0 0 / 15%); }
+.favorite-feedback:empty { display: none; }
+:root[data-theme="dark"] .favorite-button[aria-pressed="true"] { color: #ffafc1; background: #40202a; border-color: #b77283; }
+:root[data-theme="dark"] .favorite-button:hover { color: #ffafc1; border-color: #ffafc1; }
+
+.dish__recipe-link { position: relative; z-index: 1; width: fit-content; display: inline-block; padding-block: .625rem; color: var(--accent); font-size: .8125rem; text-underline-offset: .2em; }
+
+.favorites-page .restaurant-grid { margin-top: 1.25rem; }
