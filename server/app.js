@@ -5,6 +5,8 @@ import { readFile } from 'node:fs/promises';
 import { handleDishes } from './routes/dish.routes.js';
 import { handleRestaurants } from './routes/restaurant.routes.js';
 import { getFood } from './models/food.model.js';
+import { getRecipes } from './models/recipe.model.js';
+import { closeDatabase } from './config/database.js';
 
 const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -23,10 +25,13 @@ export const server = http.createServer(async (req, res) => {
       return res.end();
     }
     // Keep existing synchronous frontend scripts working from the shared data source.
-    if (url.pathname === '/js/data.js') {
-      const food = await getFood();
+    if (url.pathname === '/js/data.js' || url.pathname === '/js/recipes.js') {
+      const isFood = url.pathname === '/js/data.js';
+      const data = await (isFood ? getFood() : getRecipes());
       res.writeHead(200, { 'Content-Type': mime['.js'] });
-      return res.end(req.method === 'HEAD' ? undefined : `const FOOD = ${JSON.stringify(food)};`);
+      // Escape HTML delimiters without changing the synchronous frontend contract.
+      const serialized = JSON.stringify(data).replace(/</g, '\\u003c');
+      return res.end(req.method === 'HEAD' ? undefined : `const ${isFood ? 'FOOD' : 'RECIPES'} = ${serialized};`);
     }
     const relative = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname);
     const filename = path.resolve(publicDir, '.' + relative);
@@ -41,14 +46,31 @@ export const server = http.createServer(async (req, res) => {
   } catch (error) {
     const missing = ['ENOENT', 'ENOTDIR', 'EISDIR'].includes(error.code);
     const invalid = error instanceof URIError;
-    if (!missing && !invalid) console.error(error);
+    if (urlIsDatabaseRequest(req.url) && !missing && !invalid) {
+      console.error('Database request failed:', /^[A-Z0-9_]+$/.test(error.code || '') ? error.code : 'DATABASE_ERROR');
+      if (req.url.startsWith('/api/')) {
+        res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': '5' });
+        return res.end(JSON.stringify({ message: 'Chưa kết nối được dữ liệu. Bạn vui lòng thử lại sau.' }));
+      }
+      res.writeHead(503, { 'Content-Type': mime['.js'], 'Retry-After': '5' });
+      return res.end('/* Database unavailable. Reload after connection is restored. */');
+    }
+    if (!missing && !invalid) console.error('Request failed.');
     res.writeHead(missing ? 404 : invalid ? 400 : 500, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end(missing ? 'Không tìm thấy trang.' : invalid ? 'Đường dẫn không hợp lệ.' : 'Lỗi máy chủ.');
   }
 });
 
+function urlIsDatabaseRequest(rawUrl) {
+  const pathname = rawUrl.split('?')[0];
+  return pathname.startsWith('/api/') || ['/js/data.js', '/js/recipes.js'].includes(pathname);
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const port = Number(process.env.PORT || 3000);
   const host = process.env.HOST || '127.0.0.1';
   server.listen(port, host, () => console.log(`Website: http://${host}:${port}`));
+  const shutdown = () => server.close(() => closeDatabase().finally(() => { process.exitCode = 0; }));
+  process.once('SIGINT', shutdown);
+  process.once('SIGTERM', shutdown);
 }

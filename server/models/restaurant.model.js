@@ -1,11 +1,25 @@
-import { readFile } from 'node:fs/promises';
+import { rows } from '../config/database.js';
+import { getDocument, ordered, optional } from './catalog-data.model.js';
 
 export const normalize = value => value.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
 export async function getRestaurantData() {
-  return JSON.parse(await readFile(new URL('../../data/restaurants.json', import.meta.url), 'utf8'));
+  const [restaurants,mealLinks,meals,metadata,order]=await Promise.all([
+    rows('SELECT * FROM restaurants'),
+    rows('SELECT restaurant_id,meal_id FROM restaurant_meals ORDER BY sort_order'),
+    rows('SELECT id,label FROM meals'),getDocument('restaurants'),getDocument('catalog-order-v1'),
+  ]);
+  const labels=new Map(meals.map(m=>[m.id,m.label]));
+  return {...metadata,restaurants:ordered(restaurants,order.restaurants).map(r=>{
+    const keys=mealLinks.filter(m=>m.restaurant_id===r.id).map(m=>m.meal_id);
+    const allDay=r.source_record.suggestedMeals?.includes('Cả ngày')&&keys.length===meals.length&&meals.every(m=>keys.includes(m.id));
+    const result={id:r.id,sourceNumber:r.source_record.sourceNumber,name:r.name,category:r.category,originalCategory:r.original_category,suggestedMeals:allDay?['Cả ngày']:keys.map(key=>labels.get(key)),priceLabel:r.price_label,priceTier:r.price_tier,address:r.address,area:r.area,verification:r.verification,photo:r.photo,source:r.provenance};
+    optional(result,'website',r.website);return result;
+  })};
 }
 export async function getDishRestaurantLinks() {
-  return JSON.parse(await readFile(new URL('../../data/dish-restaurants.json', import.meta.url), 'utf8'));
+  const [links,metadata,order]=await Promise.all([rows('SELECT dish_id,restaurant_id,match_type,offering,source_record FROM restaurant_dishes'),getDocument('associations'),getDocument('catalog-order-v1')]);
+  const records=links.map(r=>optional({id:r.dish_id+'/'+r.restaurant_id,dishId:r.dish_id,restaurantId:r.restaurant_id,type:r.match_type,offering:r.offering},'evidence',r.source_record.evidence));
+  return {...metadata,links:ordered(records,order.links).map(({id,...record})=>record)};
 }
 export async function findRestaurants({ q = '', category = '', meal = '', priceTier = '', dishId = '', nutrition = '', page = 1, pageSize = 12 } = {}) {
   const { restaurants, importedAt } = await getRestaurantData();

@@ -10,7 +10,7 @@ Chỉ public/ được phục vụ như file tĩnh. Không đặt mật khẩu, 
 
 ## 1. Nối database thật
 
-Xác định hệ quản trị và cấu trúc database có sẵn trước khi chọn thư viện. Không mặc định MySQL và không ghi đè dữ liệu cũ. Thêm pool kết nối, cấu hình qua biến môi trường, thay phần đọc JSON trong model bằng truy vấn có tham số.
+Đã dùng MySQL 8.4 LTS, pool mysql2 tại server/config/database.js và cấu hình riêng trong .env. Xem database/README.md để setup. Model đọc MySQL; không có fallback JSON khi kết nối lỗi. API trả 503, log chỉ có mã lỗi, không in truy vấn hoặc thông tin đăng nhập.
 
 Giữ hợp đồng dữ liệu hiện tại: id, name, cuisine, meals, desc, photo, by và crop tùy chọn. Ánh xạ tên cột tại model. Giữ ID như pho-bo ổn định vì các URL hiện có dùng ID này. Nếu dùng ID số, thêm slug và xử lý ánh xạ rõ ràng.
 
@@ -18,7 +18,7 @@ API công khai chỉ trả dữ liệu đã xuất bản và các trường đư
 
 ## 2. Chuyển frontend sang fetch
 
-Hiện server tạo const FOOD từ JSON để giữ các script đồng bộ cũ chạy được. Khi chuyển toàn bộ trang sang API mới bỏ cơ chế này và file data.js cũ.
+Hiện server tạo const FOOD và const RECIPES từ MySQL để giữ các script đồng bộ cũ chạy được. Khi chuyển toàn bộ trang sang API mới bỏ cơ chế này và file data.js cũ.
 
 Tạo public/js/api.js với hàm gọi fetch, kiểm tra response.ok và trả JSON. Trang gọi hàm trong async init(), hiển thị đang tải, await dữ liệu rồi mới render và kích hoạt nút quay. Xử lý danh sách rỗng, lỗi mạng và thử lại.
 
@@ -100,7 +100,7 @@ tests/                           Kiểm thử khi triển khai backend
 data/food.json                   Dữ liệu mẫu đang sử dụng
 ```
 
-Luồng hiện tại: View → Route → Controller → Model → JSON → View.
+Luồng hiện tại: View → Route → Controller → Model → MySQL → phản hồi JSON → View.
 Khi có nghiệp vụ phức tạp: Route → Middleware/Validator → Controller → Service → Model.
 
 Các thư mục mới là bộ khung có tài liệu, chưa có đăng nhập, kết nối database, API ghi hoặc service nghiệp vụ. Không có một cấu trúc MVC duy nhất bắt buộc cho Node.js; dự án dùng quy ước trên để phân chia trách nhiệm nhất quán.

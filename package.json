@@ -5,7 +5,17 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file-if-exists=.env server/app.js",
-    "dev": "node --watch --env-file-if-exists=.env server/app.js"
+    "dev": "node --watch --env-file-if-exists=.env server/app.js",
+    "test": "node scripts/test-mysql.mjs --suite",
+    "db:check": "node scripts/import-mysql.mjs --dry-run",
+    "db:setup": "node --env-file-if-exists=.env scripts/import-mysql.mjs --apply-schema",
+    "db:import": "node --env-file-if-exists=.env scripts/import-mysql.mjs",
+    "test:db": "node scripts/test-mysql.mjs"
   },
-  "engines": { "node": ">=22.9.0" }
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "dependencies": {
+    "mysql2": "^3.24.6"
+  }
 }

@@ -4,8 +4,9 @@ HTML/CSS/JavaScript + Node.js, không dùng EJS. Cần Node.js >=22.9.
 
 ## Chạy
 
-`npm start` rồi mở http://127.0.0.1:3000.
-`npm run dev` tự khởi động lại server khi sửa file. Không cần cài dependency cho bộ khung này.
+Lần đầu: `npm install`, tạo database/tài khoản và `.env` theo [database/README.md](database/README.md), rồi chạy `npm run db:setup`.
+`npm start` rồi mở http://127.0.0.1:3000. MySQL phải đang chạy.
+`npm run dev` tự khởi động lại server khi sửa file. Chạy `npm install` để cài dependency, gồm mysql2 cho công cụ database.
 Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 
 ## Cấu trúc
@@ -14,7 +15,7 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 - server/app.js: HTTP server và phục vụ file tĩnh.
 - server/routes/dish.routes.js: ánh xạ URL và HTTP method sang controller.
 - server/controllers/dish.controller.js: nhận yêu cầu và trả JSON cho frontend.
-- server/models/: tầng Model đọc/lọc dữ liệu, thay bằng truy vấn database sau.
+- server/models/: tầng Model đọc MySQL bằng pool mysql2, ánh xạ về định dạng dữ liệu frontend hiện có.
 - server/config/, middleware/, services/, validators/, utils/: khung chuẩn bị cho backend; mỗi thư mục có hướng dẫn trách nhiệm.
 - server/views/: dành sẵn cho template nếu sau này cần; View hiện tại vẫn là public/, không dùng EJS.
 - database/migrations/, database/seeds/: dành cho cấu trúc và dữ liệu khởi tạo database sau này.
@@ -33,9 +34,9 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 - GET /api/dishes?cuisine=viet&meal=sang
 - GET /api/dishes/pho-bo
 
-Khi chạy Node.js, /js/data.js được tạo từ data/food.json để giao diện và API dùng chung dữ liệu. Sửa dữ liệu mẫu tại data/food.json. public/js/data.js là bản dự phòng cũ cho chế độ xem tĩnh, không tự đồng bộ; nên dùng npm start.
+Khi chạy Node.js, `/js/data.js` và `/js/recipes.js` được tạo từ MySQL, giữ các biến FOOD/RECIPES để frontend không phải đổi. Các file JSON và bản JS trong public chỉ là nguồn seed/bản xem tĩnh; sửa chúng không cập nhật dữ liệu website chạy qua Node. Không có fallback JSON khi database lỗi; API trả HTTP 503 với thông báo chung.
 
-Đã có 14 công thức frontend và danh bạ địa điểm đọc từ JSON qua backend MVC. Chưa có database SQL, đăng nhập/admin hoặc tích hợp đơn hàng.
+Danh mục món/quán, liên kết, bữa ăn, nhãn và 14 công thức đã đọc từ MySQL 8.4 LTS qua backend MVC. Chưa có đăng nhập/admin thật hoặc tích hợp đơn hàng.
 
 
 ### Yêu thích và công thức (frontend)
@@ -61,3 +62,31 @@ Trang chủ mở rộng Tùy chọn ngay dưới Bất ngờ đi: chế độ ă
 
 
 Popup Bất ngờ đi ở trang Ẩm thực dùng chung `spin-options-ui.js` với trang chủ. Chỉ quay các nền ẩm thực có món khớp điều kiện, khóa điều kiện khi đang quay, không bỏ lọc khi hết món. Điều kiện đi theo URL sang kết quả/quay lại; Chỉnh tùy chọn trở về đúng popup.
+
+## Chuẩn bị MySQL
+
+Đã có `database/schema.sql`, công cụ kiểm tra/nhập và test MySQL thật. Xem [database/README.md](database/README.md) để tạo tài khoản riêng, cấu hình `.env` và nhập.
+
+- `npm run db:check`: kiểm tra nguồn, không kết nối database.
+- `npm run db:setup`: tạo schema trong DB_NAME và nhập dữ liệu ban đầu.
+- `npm run db:import`: nhập vào schema đã có; không ghi đè dữ liệu.
+- `npm test`: kiểm thử dữ liệu và Model/API trên instance MySQL tạm riêng.
+- `npm run test:db`: test MySQL 8.4 trên instance tạm riêng, không dùng dịch vụ/database của bạn.
+
+Frontend giữ nguyên giao diện; Model/API và các script dữ liệu động hiện đọc MySQL. Tài khoản runtime chỉ cần SELECT trên database dự án; dùng tài khoản nhập riêng khi chạy db:setup.
+
+## Người khác sử dụng như thế nào?
+
+- Thành viên phát triển: clone branch, cài Node.js/MySQL 8.4, `npm install`, dựng database và tài khoản riêng theo database/README.md, tạo `.env` của họ rồi chạy `npm run db:setup` và `npm start`. Không chia sẻ `.env` hay mật khẩu root. Mỗi máy có dữ liệu độc lập; Git đồng bộ code/schema/seed, không đồng bộ dữ liệu MySQL đã chỉnh.
+- Người truy cập website: chỉ mở URL, trình duyệt gọi Node API; không cần cài MySQL. Khi deploy, server và database phải online, server dùng biến môi trường riêng để kết nối database dùng chung. Database ở máy cá nhân không tự đi theo code lên Vercel.
+- Nếu nhóm cần dữ liệu chung, dùng một môi trường dev/staging được quản lý và tài khoản phù hợp, không công khai cổng database máy cá nhân.
+
+### Lấy branch backend về máy thành viên
+
+```powershell
+git clone --branch Update-web-4.0 https://github.com/GabTommy2006/hom_nay_an_gi.git
+cd hom_nay_an_gi
+npm ci
+```
+
+Nếu đã clone repo, dùng `git fetch origin` rồi chuyển sang `Update-web-4.0`; giữ lại hoặc commit thay đổi cá nhân trước khi chuyển branch. Sau đó làm theo [hướng dẫn database](database/README.md): tạo database/tài khoản, sao chép `.env.example` thành `.env`, điền mật khẩu riêng và chạy `npm run db:setup`. Khi hoàn tất, chạy `npm start`.
