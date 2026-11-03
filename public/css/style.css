@@ -393,7 +393,7 @@ body[data-cuisine] { background: var(--soft); }
   padding-block: clamp(1rem, 3vw, 2.5rem) clamp(3rem, 6vw, 5rem);
 }
 .result[hidden] { display: none; }
-.result__photo { overflow: hidden; border-radius: var(--radius); background: var(--line); }
+.result__photo { min-width: 0; width: 100%; overflow: hidden; border-radius: var(--radius); background: var(--line); }
 .result__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity .3s; }
 .result__meta { color: var(--muted); font-weight: 500; }
 .result__meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; }
@@ -488,12 +488,12 @@ body[data-cuisine] { background: var(--soft); }
   100% { transform: scale(1); }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .result { grid-template-columns: minmax(0, 1fr); }
   .result__actions .btn { flex: 1 1 100%; }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .result { align-items: stretch; gap: clamp(1.5rem, 3.5vw, 3rem); }
   .result > div:last-child { align-self: center; min-width: 0; }
   .result__photo { position: relative; aspect-ratio: 4 / 3; }

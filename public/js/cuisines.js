@@ -129,7 +129,10 @@
   slot.addEventListener('close',()=>document.getElementById('open-slot').focus());
 
   // Bấm ra ngoài hộp thì đóng. Đang quay thì không cho đóng bằng bất kỳ cách nào.
-  slot.addEventListener('click', (e) => { if (e.target === slot && !spinning) slot.close(); });
+  slot.addEventListener('click', e => {
+    const rect = slot.getBoundingClientRect();
+    if (e.target === slot && !spinning && (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom)) slot.close();
+  });
   slot.addEventListener('cancel', (e) => { if (spinning) e.preventDefault(); });
   slot.addEventListener('keydown', (e) => { if (e.key === 'Escape' && spinning) e.preventDefault(); });
 

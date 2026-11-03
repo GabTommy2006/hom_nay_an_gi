@@ -117,6 +117,24 @@ const App = (() => {
       toggle.setAttribute('aria-expanded', open);
       toggle.textContent = open ? 'Đóng' : 'Menu';
     });
+    const closeNav = (restoreFocus = false) => {
+      header.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = 'Menu';
+      if (restoreFocus) toggle.focus();
+    };
+    header.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && header.classList.contains('is-open')) {
+        event.preventDefault(); closeNav(true);
+      }
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!header.contains(event.target)) closeNav();
+    });
+    header.addEventListener('focusout', event => {
+      if (!header.contains(event.relatedTarget)) closeNav();
+    });
+    matchMedia('(min-width: 768px)').addEventListener('change', () => closeNav());
   }
 
   // Local SVG flags work even on platforms without flag emoji glyphs.
@@ -136,6 +154,14 @@ const App = (() => {
   const mealIcon = key => `<svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${mealPaths[key]}</svg>`;
 
   renderChrome();
+
+  // A failed remote photo keeps its space and never leaves a broken-image glyph.
+  document.addEventListener('error', event => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement) || !image.closest('main') || image.closest('.delivery-link, .delivery-dialog')) return;
+    if (image.classList.contains('country-flag') || image.src.endsWith('/images/restaurants/placeholder.svg')) return;
+    image.src = 'images/restaurants/placeholder.svg';
+  }, true);
 
   const isVegetarian = dish => ['reviewed', 'source-declared'].includes(dish.vegetarianReview?.status);
   const vegetarianNote = dish => dish.vegetarianReview?.status === 'source-declared'
