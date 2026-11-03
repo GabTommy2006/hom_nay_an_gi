@@ -1,5 +1,7 @@
-/* Public frontend preview. Drafts are stored separately in localStorage; no auth, API writes or production mutations. */
-(() => {
+/* Authenticated admin. Catalog edits remain device-local drafts until API writes are implemented. */
+(async () => {
+  const user=await AdminSession.ready;if(!user)return;
+  AdminDrafts.setAccount(user.id);
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
   const paths = {
@@ -19,7 +21,7 @@
     links:['Món tại quán','Liên kết món với đúng địa điểm; giá từng món độc lập với khoảng giá của quán.'],
     recipes:['Công thức','Nguyên liệu, khẩu phần, bước nấu và nguồn tham khảo.'],
     reviews:['Duyệt thông tin','Đọc căn cứ và ghi chú rà soát; không tự xác nhận nhãn từ tên món.'],
-    users:['Tài khoản','Giao diện dành cho quản lý tài khoản khi kết nối hệ thống đăng nhập.']
+    users:['Tài khoản','Danh sách tài khoản và vai trò hiện có. Chỉ admin được xem.']
   };
   const model = { dishes: structuredClone(FOOD.DISHES), restaurants: [], links: [], recipes: Object.entries(RECIPES).map(([id, recipe]) => ({ ...structuredClone(recipe), id, name: FOOD.DISHES.find(d => d.id === id)?.name || id })), reviews: [] };
   for (const dish of FOOD.DISHES) {
@@ -58,6 +60,19 @@
     return [title, esc(record.label), esc(record.status), record.source ? 'Có nguồn tham khảo' : 'Chưa có nguồn độc lập', badge(record), editButton(kind, record, 'Xem & ghi chú')];
   }
   const columns = { restaurants:['Địa điểm','Địa chỉ','Nhóm món','Khoảng giá','Trạng thái','Thao tác'], dishes:['Món ăn','Ẩm thực','Bữa gợi ý','Trạng thái','Thao tác'], recipes:['Công thức','Khẩu phần','Nội dung','Nguồn','Trạng thái','Thao tác'], links:['Món ăn','Địa điểm','Giá riêng / món','Phiên bản tại quán','Trạng thái','Thao tác'], reviews:['Món ăn','Nhãn','Căn cứ hiện tại','Nguồn','Trạng thái','Thao tác'] };
+  let userRequest=0;
+  async function renderUsers(){
+    const request=++userRequest;
+    $('admin-content').innerHTML='<section class="admin-empty"><h2>Đang tải tài khoản…</h2></section>';
+    try{
+      const response=await fetch('/api/admin/users',{credentials:'same-origin',cache:'no-store'});
+      if(response.status===401||response.status===403){await AdminSession.check();return;}
+      if(!response.ok)throw new Error();const data=await response.json();
+      if(section!=='users'||request!==userRequest)return;
+      $('admin-content').innerHTML=table(['Tên','Email','Vai trò'],data.items.map(item=>[esc(item.name),esc(item.email),item.role==='admin'?'Quản trị viên':'Người dùng']))+'<p class="admin-help">Hiển thị '+data.items.length+'/'+data.total+' tài khoản. Chưa có chức năng sửa quyền hoặc mật khẩu trên giao diện.</p>';
+    }catch{if(section==='users')$('admin-content').innerHTML='<section class="admin-empty"><h2>Chưa tải được tài khoản</h2><p>Kiểm tra kết nối rồi thử lại.</p><button class="btn" id="admin-users-retry">Thử lại</button></section>';}
+  }
+  document.addEventListener('click',event=>{if(event.target.closest('#admin-users-retry'))renderUsers();});
   function render() {
     $('admin-title').textContent = sections[section][0]; $('admin-description').textContent = sections[section][1];
     document.title = sections[section][0] + ' · Quản trị | Hôm nay ăn gì?';
@@ -69,7 +84,7 @@
     $('admin-toolbar').hidden = ['overview','users'].includes(section);
     $('admin-pagination').hidden = true;
     if (section === 'overview') return renderOverview();
-    if (section === 'users') { $('admin-content').innerHTML = '<section class="admin-empty"><h2>Chưa kết nối tài khoản</h2><p>Hiện chưa có dữ liệu người dùng, tài khoản admin hoặc phiên đăng nhập thật. Không hiển thị số lượng hay email người dùng giả.</p><a href="admin-login.html">Xem giao diện đăng nhập →</a><p class="admin-help">Khi có backend: tìm tài khoản, xem vai trò, khóa/mở và kiểm tra quyền ở server. Tài khoản admin đầu tiên sẽ được tạo bằng quy trình thiết lập riêng.</p></section>'; return; }
+    if (section === 'users') { renderUsers(); return; }
     if (['restaurants','links'].includes(section) && !loaded) { $('admin-content').innerHTML = '<section class="admin-empty"><h2>' + (loadError ? 'Chưa tải được dữ liệu quán' : 'Đang tải danh mục quán…') + '</h2><p>Các mục món ăn và công thức vẫn có thể xem. Chưa ghi hay thay đổi dữ liệu trên server.</p>' + (loadError ? '<button class="btn" data-retry>Thử tải lại</button>' : '') + '</section>'; return; }
     const normalize = value => value.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
     const query = normalize($('admin-search').value.trim()); const filter = $('admin-filter').value;

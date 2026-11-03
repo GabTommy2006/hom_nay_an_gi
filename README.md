@@ -36,7 +36,7 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 
 Khi chạy Node.js, `/js/data.js` và `/js/recipes.js` được tạo từ MySQL, giữ các biến FOOD/RECIPES để frontend không phải đổi. Các file JSON và bản JS trong public chỉ là nguồn seed/bản xem tĩnh; sửa chúng không cập nhật dữ liệu website chạy qua Node. Không có fallback JSON khi database lỗi; API trả HTTP 503 với thông báo chung.
 
-Danh mục món/quán, liên kết, bữa ăn, nhãn và 14 công thức đã đọc từ MySQL 8.4 LTS qua backend MVC. Chưa có đăng nhập/admin thật hoặc tích hợp đơn hàng.
+Danh mục món/quán, liên kết, bữa ăn, nhãn và 14 công thức đã đọc từ MySQL 8.4 LTS qua backend MVC. Đã có đăng nhập và phân quyền admin bằng MySQL; chưa có API ghi danh mục hoặc tích hợp đơn hàng.
 
 
 ### Yêu thích và công thức (frontend)
@@ -49,12 +49,11 @@ Trang `favorites.html` lưu ID món/quán trong localStorage (`hnag:favorites:v1
 Bổ sung đợt 03/11/2026: bún chả bản áp chảo, bánh xèo tôm thịt, bibimbap bản rau phổ biến, kimbap nhân xúc xích, mapo tofu giảm dầu/cay và Tom Yum tôm nước trong. Tổng 14 công thức. Nguồn và các điều chỉnh ghi ở từng trang; không đổi nhãn dinh dưỡng hoặc ăn chay.
 
 
-### Giao diện admin — chỉ frontend
+### Đăng nhập quản trị
 
-Mở `/admin-login.html` để vào bản xem thử, hoặc `/admin.html` để xem trực tiếp. Email/mật khẩu readonly là dữ liệu mẫu, không được gửi đi hoặc lưu lại. Chưa có xác thực hay phân quyền và không có API ghi.
+Đã có đăng nhập thật bằng Better Auth + MySQL, cookie HttpOnly và kiểm tra role admin ở server. Xem [docs/AUTH.md](docs/AUTH.md) để thiết lập secret, migration, quyền MySQL và tạo admin đầu tiên. Chạy `npm run admin:create -- email-cua-ban@example.com` trong terminal tương tác, hoặc thêm `--desktop` trên Windows; không có mật khẩu mẫu.
 
-7 mục: tổng quan, quán, món, món tại quán, công thức, duyệt thông tin và tài khoản. Quán đọc bằng các endpoint GET hiện có; món và công thức đọc dữ liệu frontend. Tài khoản để trạng thái chưa kết nối, không tạo người dùng/thống kê giả. Form thêm/sửa lưu bản nháp riêng vào localStorage (`hnag:admin-drafts:v1`), khôi phục khi tải lại trên cùng trình duyệt. Có xóa bản nháp với bước xác nhận và đồng bộ giữa các tab. Nếu đọc/ghi bị lỗi, giao diện báo rõ và không báo lưu thành công giả. Không thay đổi file JSON, công thức công khai, trạng thái nhãn chay/dinh dưỡng hoặc liên kết đặt hàng thật. Bảng có tìm kiếm không dấu, lọc bản nháp, phân trang; dialog có kiểm tra trường, chống liên kết trùng, nguồn https, bàn phím và giao diện mobile/sáng/tối. Đường dẫn admin không được bảo vệ cho tới khi có backend.
-
+Trang `admin.html` và API `/api/admin/*` yêu cầu admin. Tab Tài khoản đọc danh sách thật từ MySQL, không lộ password hash/token. Nội dung món/quán/công thức vẫn chỉ lưu bản nháp trên trình duyệt, tách theo ID tài khoản; chưa có API ghi danh mục. Đăng xuất thu hồi phiên trong MySQL.
 
 ### Tùy chọn quay bất ngờ
 
@@ -73,7 +72,7 @@ Popup Bất ngờ đi ở trang Ẩm thực dùng chung `spin-options-ui.js` v�
 - `npm test`: kiểm thử dữ liệu và Model/API trên instance MySQL tạm riêng.
 - `npm run test:db`: test MySQL 8.4 trên instance tạm riêng, không dùng dịch vụ/database của bạn.
 
-Frontend giữ nguyên giao diện; Model/API và các script dữ liệu động hiện đọc MySQL. Tài khoản runtime chỉ cần SELECT trên database dự án; dùng tài khoản nhập riêng khi chạy db:setup.
+Frontend giữ nguyên giao diện; Model/API và các script dữ liệu động hiện đọc MySQL. Runtime cần SELECT cho danh mục và quyền ghi trên bảng phiên/rate-limit theo docs/AUTH.md; dùng tài khoản nhập riêng khi chạy db:setup.
 
 ## Người khác sử dụng như thế nào?
 

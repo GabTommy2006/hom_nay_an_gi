@@ -7,6 +7,9 @@ import { handleRestaurants } from './routes/restaurant.routes.js';
 import { getFood } from './models/food.model.js';
 import { getRecipes } from './models/recipe.model.js';
 import { closeDatabase } from './config/database.js';
+import { handleAuth } from './routes/auth.routes.js';
+import { handleAdmin } from './routes/admin.routes.js';
+import { requireAdmin } from './middleware/auth.js';
 
 const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -14,6 +17,8 @@ const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=u
 export const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
+    if (await handleAuth(req, res, url)) return;
+    if (await handleAdmin(req, res, url)) return;
     if (await handleDishes(req, res, url)) return;
     if (await handleRestaurants(req, res, url)) return;
     if (url.pathname.startsWith('/api/')) {
@@ -40,6 +45,10 @@ export const server = http.createServer(async (req, res) => {
       res.writeHead(403);
       return res.end('Forbidden');
     }
+    if (filename === path.join(publicDir, 'admin.html')) {
+      if (!await requireAdmin(req, res, { page: true })) return;
+      res.setHeader?.('Cache-Control', 'no-store');
+    }
     const body = await readFile(filename);
     res.writeHead(200, { 'Content-Type': mime[path.extname(filename)] || 'application/octet-stream' });
     res.end(req.method === 'HEAD' ? undefined : body);
@@ -52,8 +61,8 @@ export const server = http.createServer(async (req, res) => {
         res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': '5' });
         return res.end(JSON.stringify({ message: 'Chưa kết nối được dữ liệu. Bạn vui lòng thử lại sau.' }));
       }
-      res.writeHead(503, { 'Content-Type': mime['.js'], 'Retry-After': '5' });
-      return res.end('/* Database unavailable. Reload after connection is restored. */');
+      res.writeHead(503, { 'Content-Type': req.url.split('?')[0].endsWith('.js') ? mime['.js'] : 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'Retry-After': '5' });
+      return res.end('/* Chưa kết nối được dữ liệu. Vui lòng thử lại sau. */');
     }
     if (!missing && !invalid) console.error('Request failed.');
     res.writeHead(missing ? 404 : invalid ? 400 : 500, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -63,7 +72,7 @@ export const server = http.createServer(async (req, res) => {
 
 function urlIsDatabaseRequest(rawUrl) {
   const pathname = rawUrl.split('?')[0];
-  return pathname.startsWith('/api/') || ['/js/data.js', '/js/recipes.js'].includes(pathname);
+  return pathname.startsWith('/api/') || ['/js/data.js', '/js/recipes.js', '/admin.html'].includes(pathname);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -1,6 +1,6 @@
 /* Isolated admin draft storage. Never writes public catalog data or authentication state. */
 const AdminDrafts = (() => {
-  const key = 'hnag:admin-drafts:v1';
+  let key = 'hnag:admin-drafts:v1';
   const kinds = ['dishes','restaurants','links','recipes','reviews'];
   const empty = () => Object.fromEntries(kinds.map(kind => [kind, []]));
   const string = value => typeof value === 'string';
@@ -54,5 +54,5 @@ const AdminDrafts = (() => {
     }
     return [...added,...originals.values()];
   }
-  return {key,kinds,read,save,clear,merge};
+  return {get key(){return key;},setAccount(id){if(!/^[0-9]+$/.test(String(id)))throw new Error('Invalid account');key='hnag:admin-drafts:v1:user:'+id;},kinds,read,save,clear,merge};
 })();

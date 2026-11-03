@@ -9,7 +9,7 @@ export function connectionConfig(env = process.env) {
   const port = Number(env.DB_PORT || 3306);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid DB_PORT.');
   return { host: env.DB_HOST || '127.0.0.1', port, user: env.DB_USER, password: env.DB_PASSWORD,
-    database: databaseName(env.DB_NAME || 'hom_nay_an_gi'), charset: 'utf8mb4', multipleStatements: false, connectTimeout: 10000,
+    database: databaseName(env.DB_NAME || 'hom_nay_an_gi'), charset: 'utf8mb4', timezone:'Z', multipleStatements: false, connectTimeout: 10000,
     ...(env.DB_SSL_CA ? {ssl:{ca:env.DB_SSL_CA, rejectUnauthorized:true}} : {}) };
 }
 let pool;

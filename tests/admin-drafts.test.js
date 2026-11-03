@@ -29,3 +29,17 @@ test('write failures are reported and clear deletes only the admin draft key',()
  const blocked={getItem:()=>null,setItem:()=>{throw Error('quota')},removeItem:()=>{throw Error('blocked')}};
  assert.ok(store.save('restaurants',{id:'x',name:'Quán',category:'Món'},blocked).error);assert.ok(store.clear(blocked).error);
 });
+
+
+test('admin drafts are scoped by authenticated account ID without moving legacy data', () => {
+  const storage = new Map();
+  const fake = {getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)};
+  const scope = vm.runInNewContext(readFileSync(new URL('../public/js/admin-drafts.js',import.meta.url),'utf8') + '; AdminDrafts;', {structuredClone});
+  const record={id:'test',name:'Món thử',cuisine:'viet',meals:['sang']};
+  scope.save('dishes',record,fake);
+  scope.setAccount('1');assert.equal(scope.read(fake).drafts.dishes.length,0);
+  scope.save('dishes',record,fake);scope.setAccount('2');assert.equal(scope.read(fake).drafts.dishes.length,0);
+  scope.setAccount('1');assert.equal(scope.read(fake).drafts.dishes.length,1);
+  assert.ok(storage.has('hnag:admin-drafts:v1'));
+  assert.throws(()=>scope.setAccount('../admin'));
+});

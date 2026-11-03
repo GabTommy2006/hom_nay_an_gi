@@ -1,6 +1,6 @@
 # Database MySQL 8.4 LTS
 
-Schema và seed đã có; Model/API, FOOD và RECIPES hiện đọc MySQL, giao diện giữ nguyên. Không có đăng nhập thật, không tạo admin mẫu và không tự chuyển yêu thích/bản nháp localStorage vào database.
+Schema và seed đã có; Model/API, FOOD và RECIPES hiện đọc MySQL, giao diện giữ nguyên. Đã có đăng nhập/phân quyền admin thật; không tạo admin mẫu và không tự chuyển yêu thích/bản nháp localStorage vào database.
 
 ## Dữ liệu nguồn
 
@@ -13,7 +13,7 @@ Schema và seed đã có; Model/API, FOOD và RECIPES hiện đọc MySQL, giao 
 
 ## Các bảng
 
-`schema.sql` có 18 bảng InnoDB:
+`schema.sql` có 18 bảng InnoDB cho danh mục; migration `002-admin-auth` bổ sung 4 bảng xác thực:
 
 - `meals`, `cuisines`, `dishes`, `dish_meals`: danh mục món.
 - `restaurants`, `restaurant_meals`, `restaurant_dishes`: quán, bữa gợi ý và liên kết món–quán.
@@ -123,9 +123,9 @@ Test kiểm tra DDL trên MySQL 8.4, nhập đủ dữ liệu/Unicode/nguồn, �
 
 Model/API đã đọc các cột/bảng quan hệ MySQL; không lấy lại giá trị vận hành từ source_record cũ. Dữ liệu provenance/greeting/sourceNumber chưa có cột riêng được lấy từ metadata JSON trong MySQL. Danh mục 105 bản ghi vẫn lọc/phân trang trong Model để giữ hành vi tìm không dấu hiện có; khi danh mục lớn hơn sẽ chuyển tìm kiếm/phân trang sang SQL.
 
-Bước tiếp theo là xác thực/phân quyền và API ghi. Admin hiện vẫn chỉ lưu bản nháp localStorage, chưa cập nhật database. Không tự nhập yêu thích hoặc bản nháp của trình duyệt.
+Đã có xác thực/phân quyền; bước tiếp theo là API ghi. Admin hiện vẫn chỉ lưu bản nháp localStorage, chưa cập nhật database. Không tự nhập yêu thích hoặc bản nháp của trình duyệt.
 
-## Tài khoản chỉ đọc cho runtime (khuyến nghị)
+## Tài khoản chỉ đọc danh mục
 
 Sau khi setup xong, quản trị viên có thể chạy bằng root trong Workbench:
 
@@ -134,4 +134,8 @@ CREATE USER 'hnag_app'@'localhost' IDENTIFIED BY 'MAT_KHAU_RIENG_CHO_RUNTIME';
 GRANT SELECT ON hom_nay_an_gi.* TO 'hnag_app'@'localhost';
 ```
 
-Sau đó đổi DB_USER/DB_PASSWORD trong `.env` sang tài khoản này, khởi động lại Node. Khi cần setup/migration, dùng thông tin tài khoản nhập có quyền DDL qua biến môi trường riêng. Không cấp quyền root cho ứng dụng. Phần đọc hiện tại chỉ cần SELECT; script seed cần các quyền import đã hướng dẫn ở trên.
+Sau đó đổi DB_USER/DB_PASSWORD trong `.env` sang tài khoản này, khởi động lại Node. Khi cần setup/migration, dùng thông tin tài khoản nhập có quyền DDL qua biến môi trường riêng. Không cấp quyền root cho ứng dụng. SELECT chỉ đủ để đọc danh mục. Đăng nhập/đăng xuất cần thêm quyền trên bảng auth theo docs/AUTH.md; script seed cần các quyền import đã hướng dẫn ở trên.
+
+## Migration đăng nhập quản trị
+
+`npm run db:setup` hiện áp dụng thêm `database/migrations/002-admin-auth.sql`: giữ bảng users và dữ liệu cũ, bổ sung các trường Better Auth, cho cột password_hash cũ nhận NULL, thêm auth_accounts/auth_sessions/auth_verifications/auth_rate_limits. Tổng 22 bảng. Không có tài khoản/mật khẩu được seed sẵn. Xem [docs/AUTH.md](../docs/AUTH.md) để tạo admin và cấp quyền runtime; tài khoản SELECT-only không đủ cho đăng nhập/đăng xuất.

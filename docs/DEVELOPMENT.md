@@ -44,7 +44,7 @@ Kiểm tra độ dài, số lượng bước/nguyên liệu, thời gian không 
 
 ## 4. Admin
 
-Các route dự kiến, CHƯA triển khai:
+Đã triển khai đăng nhập, đăng xuất, phiên và phân quyền; xem docs/AUTH.md. Các route ghi danh mục bên dưới là định hướng, chưa triển khai:
 
 - POST /api/auth/login
 - POST /api/auth/logout
