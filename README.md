@@ -53,3 +53,11 @@ Bổ sung đợt 03/11/2026: bún chả bản áp chảo, bánh xèo tôm thịt
 Mở `/admin-login.html` để vào bản xem thử, hoặc `/admin.html` để xem trực tiếp. Email/mật khẩu readonly là dữ liệu mẫu, không được gửi đi hoặc lưu lại. Chưa có xác thực hay phân quyền và không có API ghi.
 
 7 mục: tổng quan, quán, món, món tại quán, công thức, duyệt thông tin và tài khoản. Quán đọc bằng các endpoint GET hiện có; món và công thức đọc dữ liệu frontend. Tài khoản để trạng thái chưa kết nối, không tạo người dùng/thống kê giả. Form thêm/sửa lưu bản nháp riêng vào localStorage (`hnag:admin-drafts:v1`), khôi phục khi tải lại trên cùng trình duyệt. Có xóa bản nháp với bước xác nhận và đồng bộ giữa các tab. Nếu đọc/ghi bị lỗi, giao diện báo rõ và không báo lưu thành công giả. Không thay đổi file JSON, công thức công khai, trạng thái nhãn chay/dinh dưỡng hoặc liên kết đặt hàng thật. Bảng có tìm kiếm không dấu, lọc bản nháp, phân trang; dialog có kiểm tra trường, chống liên kết trùng, nguồn https, bàn phím và giao diện mobile/sáng/tối. Đường dẫn admin không được bảo vệ cho tới khi có backend.
+
+
+### Tùy chọn quay bất ngờ
+
+Trang chủ mở rộng Tùy chọn ngay dưới Bất ngờ đi: chế độ ăn, có công thức, có quán và số món khớp. Dùng chung `spin-filters.js` cho số lượng và tập món khi quay lại; `App.pickDish` chỉ ưu tiên bữa hiện tại bên trong tập đã lọc. Điều kiện nằm trong URL để tải lại và trở về sửa, không ghi vào dữ liệu hay backend. Không tự bỏ điều kiện khi hết món; khóa nút quay hoặc hiện trạng thái rỗng khi mở link kết quả trực tiếp.
+
+
+Popup Bất ngờ đi ở trang Ẩm thực dùng chung `spin-options-ui.js` với trang chủ. Chỉ quay các nền ẩm thực có món khớp điều kiện, khóa điều kiện khi đang quay, không bỏ lọc khi hết món. Điều kiện đi theo URL sang kết quả/quay lại; Chỉnh tùy chọn trở về đúng popup.

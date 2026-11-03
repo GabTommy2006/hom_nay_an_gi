@@ -13,6 +13,7 @@
   const btnClose = document.getElementById('slot-close');
   const status = document.getElementById('slot-status');
   let spinning = false;
+  let spinUI;
 
   document.getElementById('cuisine-grid').innerHTML = keys.map((key) => {
     const cuisine = FOOD.CUISINES[key];
@@ -24,7 +25,7 @@
         <span class="cuisine__desc">${cuisine.desc}</span>
       </span>
     </a>`;
-  }).join('') + `<button class="surprise" id="open-slot" type="button">
+  }).join('') + `<button class="surprise" id="open-slot" type="button" aria-haspopup="dialog" aria-controls="slot">
       <span class="surprise__name">Bất ngờ đi!</span>
       <span class="surprise__desc">Không chọn được? Để máy quay giúp bạn cả nền ẩm thực lẫn món ăn.</span>
     </button>`;
@@ -49,29 +50,34 @@
 
   function resetSlot() {
     resetSlotColor();
-    fillReel(reelCuisine, keys.map((k) => App.cuisineLabel(k)));
-    fillReel(reelDish, FOOD.DISHES.slice(0, 5).map((d) => d.name));
+    const eligible=spinUI.pool();
+    const availableKeys=keys.filter(key=>eligible.some(d=>d.cuisine===key));
+    fillReel(reelCuisine, availableKeys.length?availableKeys.map(k=>App.cuisineLabel(k)):['—']);
+    fillReel(reelDish, eligible.length?eligible.slice(0,5).map(d=>d.name):['Chưa có món phù hợp']);
     moveReel(reelCuisine, 1, false);
     moveReel(reelDish, 1, false);
-    status.textContent = 'Bấm Quay để máy chọn giúp bạn.';
-    btnSpin.disabled = false;
+    status.textContent = eligible.length?'Bấm Quay để chọn trong '+eligible.length+' món phù hợp.':'Chưa có món phù hợp. Hãy bỏ bớt điều kiện.';
+    spinUI.setLocked(false);
     btnClose.disabled = false;
   }
 
   async function spin() {
-    if (spinning) return;
+    if (spinning || !spinUI.pool().length) return;
     spinning = true;
+    spinUI.setLocked(true);
     btnSpin.disabled = true;
     btnClose.disabled = true;
     resetSlotColor();
 
     // Chọn trước, hai cuộn quay chỉ để trình diễn kết quả này.
     const meal = App.getMeal();
-    const cuisine = App.randomItem(keys);
-    const pool = FOOD.DISHES.filter((d) => d.cuisine === cuisine);
+    const eligible=spinUI.pool();
+    const availableKeys=keys.filter(key=>eligible.some(d=>d.cuisine===key));
+    const cuisine=App.randomItem(availableKeys);
+    const pool=eligible.filter(d=>d.cuisine===cuisine);
     const dish = App.pickDish(pool);
     const cuisineName = FOOD.CUISINES[cuisine].name;
-    const cuisineLabels = keys.map((k) => App.cuisineLabel(k));
+    const cuisineLabels = availableKeys.map((k) => App.cuisineLabel(k));
     const dishLabels = [...pool]
       .sort((a, b) => b.meals.includes(meal) - a.meals.includes(meal))
       .map((d) => d.name);
@@ -86,7 +92,7 @@
       moveReel(reelDish, stopIndex(dishLabels, dish.name), false);
       status.textContent = `${cuisineName}: ${dish.name}`;
       await App.wait(BLINK_MS);
-      location.href = App.dishUrl(dish);
+      const query=SpinFilters.params(spinUI.options);query.set('dish',dish.id);query.set('from','slot');location.href='result.html?'+query;
       return;
     }
 
@@ -107,16 +113,20 @@
     status.textContent = `Hôm nay ăn ${dish.name}!`;
     slot.classList.add('is-blinking');
     await App.wait(BLINK_MS);
-    location.href = App.dishUrl(dish);
+    const query=SpinFilters.params(spinUI.options);query.set('dish',dish.id);query.set('from','slot');location.href='result.html?'+query;
   }
 
-  document.getElementById('open-slot').addEventListener('click', () => {
+  spinUI=SpinOptionsUI.mount({button:btnSpin,label:'Quay',onChange:()=>{if(slot.open&&!spinning)resetSlot();}});
+  function openSlot() {
     slot.showModal();
     resetSlot();
-    btnSpin.focus();
-  });
+    (btnSpin.disabled?document.getElementById('spin-options-trigger'):btnSpin).focus();
+  }
+  document.getElementById('open-slot').addEventListener('click',openSlot);
+  if(location.hash==='#surprise')openSlot();
   btnSpin.addEventListener('click', spin);
   btnClose.addEventListener('click', () => slot.close());
+  slot.addEventListener('close',()=>document.getElementById('open-slot').focus());
 
   // Bấm ra ngoài hộp thì đóng. Đang quay thì không cho đóng bằng bất kỳ cách nào.
   slot.addEventListener('click', (e) => { if (e.target === slot && !spinning) slot.close(); });

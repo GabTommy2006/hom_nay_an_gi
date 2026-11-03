@@ -3,7 +3,7 @@
   const grid = document.getElementById('dish-grid');
   const empty = document.getElementById('empty');
   const count = document.getElementById('count');
-  const filters = { cuisine: 'all', meal: 'all', diet: 'all', linked: 'all', nutrition: 'all' };
+  const filters = { cuisine: 'all', meal: 'all', diet: 'all', linked: 'all', nutrition: 'all', recipe: 'all' };
   const search = document.getElementById('dish-search');
   const normalize = value => value.trim().toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
   const leafIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4c-6-1-13 1-14 7-1 4 2 7 6 6 6-1 8-7 8-13Z"/><path d="M4 21 15 10"/></svg>';
@@ -13,6 +13,8 @@
   const mealSelect = document.getElementById('filter-meal');
   const dietToggle = document.getElementById('filter-diet');
   const linkedToggle = document.getElementById('filter-linked');
+  const recipeToggle = document.getElementById('filter-recipe');
+  const hasRecipe = dish => Object.hasOwn(RECIPES, dish.id);
   const clearButton = document.getElementById('catalog-clear');
   const globe = '<svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>';
   const dropdowns = [];
@@ -42,6 +44,7 @@
     mealSelect.parentElement.dataset.active = String(filters.meal !== 'all');
     dietToggle.setAttribute('aria-pressed', String(filters.diet === 'vegetarian'));
     linkedToggle.setAttribute('aria-pressed', String(filters.linked === 'available'));
+    recipeToggle.setAttribute('aria-pressed', String(filters.recipe === 'available'));
     const active = Object.values(filters).filter(value => value !== 'all').length + Number(Boolean(search.value.trim()));
     clearButton.hidden = active === 0;
     clearButton.textContent = 'Xóa lọc (' + active + ')';
@@ -63,6 +66,7 @@
       (filters.meal === 'all' || d.meals.includes(filters.meal)) &&
       (filters.diet === 'all' || isVegetarian(d)) &&
       (filters.linked === 'all' || d.linkedRestaurantCount > 0) &&
+      (filters.recipe === 'all' || hasRecipe(d)) &&
       (!search.value.trim() || normalize(d.name).includes(normalize(search.value))));
 
     count.textContent = `(${dishes.length})`;
@@ -77,13 +81,14 @@
         <span class="dish__meta">${App.cuisineLabel(d.cuisine)}</span>
         <span class="dish__meals" role="group" aria-label="Bữa ăn phù hợp">${meals}</span>
         ${d.linkedRestaurantCount ? `<span class="dish__linked">${d.linkedRestaurantCount} địa điểm liên quan <span aria-hidden="true">→</span></span>` : ''}
-        ${RECIPES[d.id] ? `<a class="dish__recipe-link" href="recipe.html?dish=${d.id}">Xem công thức →</a>` : ''}
+        ${hasRecipe(d) ? `<a class="dish__recipe-link" href="recipe.html?dish=${d.id}">Xem công thức →</a>` : ''}
       </article></li>`;
     }).join('');
   }
 
   dietToggle.addEventListener('click', () => { filters.diet = filters.diet === 'all' ? 'vegetarian' : 'all'; render(); });
   linkedToggle.addEventListener('click', () => { filters.linked = filters.linked === 'all' ? 'available' : 'all'; render(); });
+  recipeToggle.addEventListener('click', () => { filters.recipe = filters.recipe === 'all' ? 'available' : 'all'; render(); });
   function resetFilters() {
     search.value = '';
     Object.keys(filters).forEach(key => { filters[key] = 'all'; });

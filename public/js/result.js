@@ -10,7 +10,8 @@
   const card = $('result');
   const meal = App.getMeal();
 
-  let pool = FOOD.DISHES;
+  const spinOptions = SpinFilters.parse(params);
+  let pool = SpinFilters.apply(FOOD.DISHES,spinOptions);
   let spinId = 0;
   const photoCache = new Map();
 
@@ -90,6 +91,7 @@
   async function spin() {
     document.dispatchEvent(new Event('dishspinstart'));
     const id = ++spinId;
+    if (!pool.length) return showEmpty('Chưa có món phù hợp', 'Bạn hãy quay lại Tùy chọn và bỏ bớt điều kiện.');
     const dish = App.pickDish(pool);
     document.getElementById('result-nutrition')?.remove();
     $('dish-save')?.remove();
@@ -140,6 +142,15 @@
   }
 
   function init() {
+    if (!qDish && spinOptions.invalid) { const back=$('empty').querySelector('a');back.href='index.html';back.textContent='Chọn lại tùy chọn';return showEmpty('Tùy chọn chưa hợp lệ','Bạn hãy quay lại trang chủ để chọn lại điều kiện.'); }
+    if (SpinFilters.count(spinOptions)) {
+      const summary = document.createElement('div'); summary.className='spin-result-options';
+      const text = document.createElement('p');text.textContent='Đang lọc: '+SpinFilters.labels(spinOptions).join(' · ');
+      const edit = document.createElement('a');edit.textContent='Chỉnh tùy chọn →';edit.href=(params.get('from')==='slot'?'cuisines.html?':'index.html?')+SpinFilters.params(spinOptions)+(params.get('from')==='slot'?'#surprise':'');
+      summary.append(text,edit);card.before(summary);
+      const emptyLink=$('empty').querySelector('a');if(emptyLink){emptyLink.href=edit.href;emptyLink.textContent='Chỉnh tùy chọn';}
+    }
+
     if (qDish) {
       const dish = FOOD.DISHES.find((d) => d.id === qDish);
       if (!dish) return showEmpty('Món này chưa có trong thực đơn', 'Có thể đường dẫn bị sai. Để tụi mình chọn cho bạn món khác nhé.');
@@ -147,7 +158,7 @@
     } else if (qCuisine) {
       if (!Object.hasOwn(FOOD.CUISINES, qCuisine)) return showEmpty('Chưa có nền ẩm thực này', 'Trong lúc chờ, bạn thử chọn bất kỳ món nào nhé.');
       document.body.dataset.cuisine = qCuisine;
-      pool = FOOD.DISHES.filter((d) => d.cuisine === qCuisine);
+      pool = SpinFilters.apply(FOOD.DISHES.filter((d) => d.cuisine === qCuisine),spinOptions);
       spin();
     } else {
       spin();

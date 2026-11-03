@@ -5,6 +5,12 @@
   document.getElementById('greet').textContent = meal.greet;
   document.getElementById('greet-sub').textContent = meal.sub;
 
+  const spinUI = SpinOptionsUI.mount({ button: document.getElementById('surprise-button'), label: 'Bất ngờ đi' });
+  document.getElementById('surprise-button').addEventListener('click',()=>{
+    if(!spinUI.pool().length)return;
+    const query=SpinFilters.params(spinUI.options);query.set('mode','any');location.assign('result.html?'+query);
+  });
+
   const REEL_LENGTH = 5;
   const fit = FOOD.DISHES.filter((d) => d.meals.includes(mealKey)).sort(() => Math.random() - 0.5);
   document.getElementById('hero-reels').innerHTML = [0, 1, 2].map((reel) => {

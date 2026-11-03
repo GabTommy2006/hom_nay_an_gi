@@ -1159,3 +1159,53 @@ a.restaurant-card__title { display: inline-block; text-decoration: none; }
 .dish__recipe-link { position: relative; z-index: 1; width: fit-content; display: inline-block; padding-block: .625rem; color: var(--accent); font-size: .8125rem; text-underline-offset: .2em; }
 
 .favorites-page .restaurant-grid { margin-top: 1.25rem; }
+
+#filter-recipe { --filter-color: #2c4a7c; }
+:root[data-theme="dark"] #filter-recipe { --filter-color: #94b4f0; }
+
+/* Optional surprise conditions stay secondary to the main action. */
+.spin-options { margin-top: .875rem; max-width: 480px; }
+.spin-options__trigger { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: .5rem .75rem; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--muted); font: 500 .8125rem var(--font-body); cursor: pointer; }
+.spin-options__trigger:hover, .spin-options__trigger[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb,var(--accent) 5%,var(--bg)); }
+.spin-options__chevron { width: 16px; height: 16px; transition: transform .18s; }
+.spin-options__trigger[aria-expanded="true"] .spin-options__chevron { transform: rotate(180deg); }
+.spin-options__panel { margin-top: .875rem; padding-top: 1rem; border-top: 1px solid var(--line); animation: spin-options-in .2s var(--ease); }
+.spin-options__panel[hidden] { display: none; }
+.spin-options__label { display: block; font-size: .75rem; font-weight: 500; color: var(--muted); margin-bottom: .5rem; }
+.spin-options .catalog-dropdown__list { width: 100%; min-width: min(300px,100%); }
+.spin-options .catalog-option { line-height: 1.5; }
+.spin-options__quick { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+#spin-recipe { --filter-color: #2c4a7c; }
+#spin-linked { --filter-color: var(--brand); }
+:root[data-theme="dark"] #spin-recipe { --filter-color: #94b4f0; }
+[data-nutrition="vegetarian"] { --filter-color: #285a32; }
+:root[data-theme="dark"] [data-nutrition="vegetarian"] { --filter-color: #b4dfae; }
+.spin-options__status { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem 1rem; margin-top: .875rem; font-size: .8125rem; }
+#spin-count[data-empty="true"] { color: var(--accent); }
+.spin-options__help { font-size: .75rem; color: var(--muted); line-height: 1.65; margin-top: .5rem; }
+.spin-result-options { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; padding-block: .75rem; margin-bottom: 1rem; border-block: 1px solid var(--line); font-size: .8125rem; }
+.spin-result-options p { color: var(--muted); }
+@keyframes spin-options-in { from { opacity: .7; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 600px) { .spin-options { max-width: none; } .spin-options__quick .catalog-toggle { flex: 1 1 135px; } }
+@media (prefers-reduced-motion: reduce) { .spin-options__panel { animation: none; } .spin-options__chevron { transition: none; } }
+
+@media (max-width: 600px) {
+  .hero > div:first-child { display: flex; flex-direction: column; }
+  .hero__cta { display: contents; }
+  .hero__cta .btn { flex: none; }
+  #surprise-button { order: 1; margin-top: 2rem; }
+  .hero .spin-options { order: 2; }
+  .hero__cta > a { order: 3; margin-top: .875rem; }
+}
+
+.slot { max-height: calc(100dvh - 2rem); overflow-y: auto; overscroll-behavior: contain; }
+.slot .spin-options { margin-top: 0; width: 100%; max-width: none; }
+.slot .spin-options__panel { padding-bottom: .25rem; }
+.slot .catalog-dropdown__list { position: static; margin-top: .5rem; max-height: 230px; box-shadow: none; }
+.slot .spin-options__quick .catalog-toggle { flex: 1 1 135px; }
+.slot .slot__close { z-index: 2; }
+
+.slot .catalog-select { display: block; min-width: 0; }
+.slot .catalog-dropdown__list { width: 100%; min-width: 0; max-width: 100%; }
+.slot__body { min-width: 0; }
+.slot .spin-options__quick { min-width: 0; }
