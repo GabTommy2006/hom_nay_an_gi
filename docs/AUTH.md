@@ -51,7 +51,7 @@ Không đưa mật khẩu vào tham số lệnh, file SQL, chat hoặc repo. Ema
 - GET `/api/admin/me`: admin hiện tại; chưa đăng nhập 401, thiếu quyền 403.
 - GET `/api/admin/users?page=1`: tối đa 20 tài khoản/trang, chỉ id/email/name/role/createdAt, không có hash/token.
 
-Chưa có đăng ký công khai, gửi mail, quên mật khẩu, OAuth, API sửa vai trò, hoặc API ghi nội dung món/quán. Admin hiện cho xem dữ liệu thật, danh sách tài khoản và lưu bản nháp cục bộ. Không tuyên bố nút Lưu bản nháp đã cập nhật MySQL.
+Chưa có đăng ký công khai, gửi mail, quên mật khẩu, OAuth, API sửa vai trò, hoặc API ghi món/công thức. Admin đã thêm/sửa quán vào MySQL theo RESTAURANT-ADMIN.md; các mục khác vẫn lưu bản nháp cục bộ.
 
 ## Quyền database cho ứng dụng
 

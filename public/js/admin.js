@@ -16,7 +16,7 @@
   const icon = kind => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths[kind] + '</svg>';
   const sections = {
     overview:['Tổng quan','Ưu tiên hoàn thiện dữ liệu trước khi mở rộng tính năng.'],
-    restaurants:['Quán ăn','Thông tin địa điểm và từng chi nhánh. Các thay đổi chưa xuất hiện trên website.'],
+    restaurants:['Quán ăn','Thêm và sửa thông tin quán trên website. Thay đổi được hiển thị trên website sau khi lưu.'],
     dishes:['Món ăn','Quản lý tên món, nền ẩm thực và các bữa ăn gợi ý.'],
     links:['Món tại quán','Liên kết món với đúng địa điểm; giá từng món độc lập với khoảng giá của quán.'],
     recipes:['Công thức','Nguyên liệu, khẩu phần, bước nấu và nguồn tham khảo.'],
@@ -31,13 +31,15 @@
   const baseline = structuredClone(model);
   let draftState = AdminDrafts.read();
   function applyDrafts() {
-    for (const kind of AdminDrafts.kinds) model[kind] = AdminDrafts.merge(baseline[kind], draftState.drafts[kind]);
-    const total = Object.values(draftState.drafts).reduce((count,items) => count + items.length,0);
+    for (const kind of AdminDrafts.kinds) model[kind] = kind==='restaurants'?structuredClone(baseline[kind]):AdminDrafts.merge(baseline[kind], draftState.drafts[kind]);
+    const total = Object.entries(draftState.drafts).filter(([kind])=>kind!=='restaurants').reduce((count,[,items]) => count + items.length,0);
     $('admin-draft-status').textContent = draftState.error || (total ? total + ' bản nháp đã lưu trên trình duyệt. Chưa cập nhật website.' : 'Chưa có bản nháp đã lưu. Thêm/sửa để lưu riêng trên trình duyệt này.');
-    $('admin-draft-reset').hidden = !total && !draftState.error;
+    const legacyVenues=draftState.drafts.restaurants.length;
+    if(legacyVenues)$('admin-draft-status').textContent+=' Có '+legacyVenues+' bản nháp quán cũ trên thiết bị; chưa tự nhập vào MySQL.';
+    $('admin-draft-reset').hidden = !total && !legacyVenues && !draftState.error;
   }
   let section = 'overview', page = 1, loaded = false, loadError = false, linkError = false;
-  let editing, editorOpener;
+  let editing, editorOpener, savingRestaurant=false;
   const pageSize = 12;
   const nameOf = id => model.dishes.find(d => d.id === id)?.name || id;
   const venueOf = id => model.restaurants.find(r => r.id === id)?.name || id;
@@ -53,7 +55,7 @@
   }
   function row(kind, record) {
     const title = '<strong>' + esc(record.name) + '</strong><small>' + esc(record.id) + '</small>';
-    if (kind === 'restaurants') return [title, esc(record.address || 'Chưa có địa chỉ'), esc(record.category), esc(record.priceLabel || 'Chưa có'), badge(record), editButton(kind, record)];
+    if (kind === 'restaurants') return [title, esc(record.address || 'Chưa có địa chỉ'), esc(record.category), esc(record.priceLabel || 'Chưa có'), '<span class="admin-badge">Đã lưu</span>', editButton(kind, record)];
     if (kind === 'dishes') return [title, esc(FOOD.CUISINES[record.cuisine]?.name || record.cuisine), esc(record.meals.map(key => FOOD.MEALS[key]?.label || key).join(', ')), badge(record), editButton(kind, record)];
     if (kind === 'recipes') return [title, esc(record.servings) + ' người', record.ingredients.length + ' nguyên liệu · ' + record.steps.length + ' bước', esc(record.source?.label || 'Chưa có nguồn'), badge(record), editButton(kind, record)];
     if (kind === 'links') return ['<strong>' + esc(nameOf(record.dishId)) + '</strong>', esc(venueOf(record.restaurantId)), esc(record.price || 'Chưa xác nhận'), esc(record.offering || nameOf(record.dishId)), badge(record), editButton(kind, record)];
@@ -79,7 +81,7 @@
     document.querySelectorAll('#admin-nav a').forEach(a => { if (a.hash === '#' + section) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     $('admin-content').setAttribute('aria-busy', 'false');
     $('admin-add').hidden = !['restaurants','dishes','links','recipes'].includes(section);
-    $('admin-add').disabled = (section === 'links' && !loaded);
+    $('admin-add').disabled = (['links','restaurants'].includes(section) && !loaded);
     $('admin-add').textContent = 'Thêm ' + ({restaurants:'quán',dishes:'món',links:'liên kết',recipes:'công thức'}[section] || '');
     $('admin-toolbar').hidden = ['overview','users'].includes(section);
     $('admin-pagination').hidden = true;
@@ -108,27 +110,49 @@
   };
   function openEditor(kind, id, opener) {
     const record = model[kind].find(item => item.id === id);
-    editing = { kind, id }; editorOpener = opener;
+    editing = { kind, id, requestId:crypto.randomUUID() }; editorOpener = opener;
     const current = record || {};
     $('editor-title').textContent = kind === 'reviews' ? 'Căn cứ · ' + current.name : (record ? 'Chỉnh sửa ' : 'Thêm ') + ({restaurants:'quán ăn',dishes:'món ăn',links:'liên kết món–quán',recipes:'công thức'}[kind]);
-    $('editor-error').hidden = true; $('editor-note').textContent = 'Bản nháp được giữ trên trình duyệt này sau khi tải lại. Không cập nhật dữ liệu công khai của website.';
+    $('editor-error').hidden = true; $('editor-save').textContent=kind==='restaurants'?'Lưu thay đổi':'Lưu bản nháp';
+    $('editor-note').textContent=kind==='restaurants'?'Lưu sẽ cập nhật thông tin quán trên website. Chỉ nhập thông tin có căn cứ. Trường không đánh dấu * có thể để trống.':'Bản nháp được giữ trên trình duyệt này sau khi tải lại. Không cập nhật dữ liệu công khai của website.';
     let fields = '';
-    if (kind === 'restaurants') fields = field('name','Tên địa điểm *',current.name) + field('address','Địa chỉ / chi nhánh',current.address) + field('category','Nhóm món',current.category || 'Món chính','text', [...new Set([...model.restaurants.map(r=>r.category),'Món chính'])].map(c=>[c,c])) + field('priceLabel','Khoảng giá tham khảo (không phải giá từng món)',current.priceLabel) + field('website','Website chính thức (https)',current.website,'url') + field('phone','Số điện thoại (chưa biết thì để trống)',current.phone,'tel') + field('hours','Giờ mở cửa — chỉ nhập khi có nguồn',current.hours) + field('imageUrl','URL ảnh thay thế được phép sử dụng (https)',current.imageUrl,'url') + field('grabFoodUrl','GrabFood đúng chi nhánh (https)',current.grabFoodUrl,'url') + field('shopeeFoodUrl','ShopeeFood đúng chi nhánh (https)',current.shopeeFoodUrl,'url') + field('partnership','Tình trạng hợp tác',current.partnership || 'unknown','text',[['unknown','Chưa xác minh hợp tác'],['draft-partner','Đề xuất đối tác — bản nháp']]) + field('note','Nguồn / ghi chú cần xác minh',current.note,'textarea');
+    if (kind === 'restaurants') fields = field('name','Tên địa điểm *',current.name) + field('address','Địa chỉ / chi nhánh *',current.address) + field('area','Khu vực / tỉnh thành *',current.area) + field('category','Nhóm món *',current.category || 'Món chính','text', [...new Set([...model.restaurants.map(r=>r.category),'Món chính'])].map(c=>[c,c])) + field('priceLabel','Khoảng giá tham khảo (không phải giá từng món)',current.priceLabel) + field('priceTier','Mức giá để lọc',current.priceTier || '','text',[['','Chưa có thông tin'],...[...new Set(model.restaurants.map(r=>r.priceTier).filter(Boolean))].map(value=>[value,value])]) + field('meals','Bữa gợi ý: Sáng, Trưa, Chiều, Tối, Khuya; chưa biết để trống',current.suggestedMeals?.includes('Cả ngày')?'Sáng, Trưa, Chiều, Tối, Khuya':current.suggestedMeals?.join(', ')) + field('website','Website chính thức (https)',current.website,'url') + field('phone','Số điện thoại (chưa biết thì để trống)',current.phone,'tel') + field('hours','Giờ mở cửa — chỉ nhập khi có nguồn',current.hours) + field('imageUrl','URL ảnh thay thế được phép sử dụng (https)',current.imageUrl,'url') + field('grabFoodUrl','GrabFood đúng chi nhánh (https)',current.grabFoodUrl,'url') + field('shopeeFoodUrl','ShopeeFood đúng chi nhánh (https)',current.shopeeFoodUrl,'url') + field('partnership','Tình trạng hợp tác',current.partnership || 'unknown','text',[['unknown','Chưa xác minh hợp tác'],['draft-partner','Đề xuất đối tác — chưa xác minh']]) + field('note','Nguồn / ghi chú cần xác minh',current.note,'textarea');
     if (kind === 'dishes') fields = field('name','Tên món *',current.name) + field('cuisine','Ẩm thực',current.cuisine || 'viet','text',Object.entries(FOOD.CUISINES).map(([key,value])=>[key,value.name])) + field('meals','Bữa ăn: nhập mã sang, trua, chieu, toi, khuya',current.meals?.join(', ') || 'trua') + field('desc','Mô tả phiên bản món',current.desc,'textarea') + field('imageUrl','URL ảnh thay thế được phép sử dụng (https)',current.imageUrl,'url') + field('visibility','Đề xuất hiển thị',current.visibility || 'unchanged','text',[['unchanged','Giữ hiện trạng'],['hide','Đề xuất ẩn — bản nháp'],['show','Đề xuất hiển thị — bản nháp']]);
     if (kind === 'links') fields = field('dishId','Món ăn *',current.dishId || model.dishes[0].id,'text',model.dishes.map(d=>[d.id,d.name])) + field('restaurantId','Địa điểm *',current.restaurantId || model.restaurants[0]?.id,'text',model.restaurants.map(r=>[r.id,r.name])) + field('offering','Tên phiên bản tại quán',current.offering) + field('price','Giá riêng / món (để trống khi chưa biết)',current.price) + field('note','Nguồn thực đơn / ngày đối chiếu',current.note,'textarea');
     if (kind === 'recipes') fields = field('dishId','Món ăn liên quan *',current.dishId || (FOOD.DISHES.some(d=>d.id===current.id)?current.id:model.dishes[0].id),'text',model.dishes.map(d=>[d.id,d.name])) + field('name','Tên công thức *',current.name) + field('servings','Khẩu phần gốc *',current.servings || 2,'number') + field('ingredients','Nguyên liệu — mỗi dòng một mục',current.ingredientText || current.ingredients?.map(i=>[i.text || (Array.isArray(i.amount)?i.amount.join('–'):i.amount),i.unit,i.name].filter(Boolean).join(' ')).join('\n'),'textarea') + field('steps','Các bước — mỗi dòng một bước',current.stepText || current.steps?.map(step=>step.join(': ')).join('\n'),'textarea') + field('sourceLabel','Tên nguồn',current.source?.label) + field('sourceUrl','URL nguồn (https)',current.source?.url,'url');
     if (kind === 'reviews') {
       fields = '<section class="admin-evidence"><h3>' + esc(current.label) + ' · ' + esc(current.status) + '</h3><p>' + esc(current.basis) + '</p><p>' + esc(current.condition) + '</p>' + (current.source?.startsWith('https://') ? '<a href="' + esc(current.source) + '" target="_blank" rel="noopener noreferrer">Đọc nguồn tham khảo ↗</a>' : '<p>Chưa có nguồn độc lập; không xem đây là xác minh của quán.</p>') + '</section>' + field('note','Ghi chú rà soát (không đổi nhãn đang hiển thị)',current.note,'textarea');
     }
-    $('editor-fields').innerHTML = fields; $('admin-editor').showModal(); document.body.classList.add('admin-editor-open');
+    $('editor-fields').innerHTML = fields;
+    if(kind==='restaurants'){for(const key of ['address','area'])$('field-'+key).required=true;$('field-priceTier').required=false;const limits={name:255,address:500,area:120,phone:40,hours:500,note:3000,website:2000,imageUrl:2000,grabFoodUrl:2000,shopeeFoodUrl:2000};for(const [key,max]of Object.entries(limits))$('field-'+key).maxLength=max;}
+    $('admin-editor').showModal(); document.body.classList.add('admin-editor-open');
     $('editor-fields').querySelector('input,textarea,select')?.focus();
   }
-  $('admin-form').addEventListener('submit', event => {
-    event.preventDefault(); const {kind,id} = editing; const old = model[kind].find(record=>record.id===id); const values = Object.fromEntries(new FormData(event.currentTarget));
+  $('admin-form').addEventListener('submit', async event => {
+    event.preventDefault(); if(savingRestaurant)return; const {kind,id} = editing; const old = model[kind].find(record=>record.id===id); const values = Object.fromEntries(new FormData(event.currentTarget));
     Object.keys(values).forEach(key=>{values[key]=values[key].trim();});
     const error = message => { $('editor-error').hidden = false; $('editor-error').textContent = message; };
     if ('name' in values && !values.name) return error('Tên không được chỉ gồm khoảng trắng.');
     for (const key of ['website','sourceUrl','imageUrl','grabFoodUrl','shopeeFoodUrl']) if (values[key] && !values[key].startsWith('https://')) return error('Đường dẫn nguồn phải bắt đầu bằng https://.');
+    if(kind==='restaurants'){
+      const normalizeMeal=text=>text.trim().toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      values.meals=[...new Set(values.meals.split(',').map(m=>m.trim()).filter(Boolean).map(label=>Object.keys(FOOD.MEALS).find(key=>key===label||normalizeMeal(FOOD.MEALS[key].label)===normalizeMeal(label))))];
+      if(values.meals.some(m=>!Object.hasOwn(FOOD.MEALS,m)))return error('Bữa gợi ý chỉ dùng: Sáng, Trưa, Chiều, Tối, Khuya.');
+      const original=baseline.restaurants.find(r=>r.id===id);
+      if(original)values.revision=original.revision;else values.requestId=editing.requestId;
+      savingRestaurant=true;
+      const controls=[...$('admin-form').querySelectorAll('input,textarea,select,button')];const disabled=controls.map(c=>c.disabled);controls.forEach(c=>c.disabled=true);$('admin-form').setAttribute('aria-busy','true');$('editor-save').textContent='Đang lưu…';
+      try{
+        const response=await fetch(original?'/api/admin/restaurants/'+encodeURIComponent(id):'/api/admin/restaurants',{method:original?'PUT':'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(values),signal:AbortSignal.timeout(15000)});
+        const result=await response.json();
+        if(!response.ok){error(result.message||'Chưa lưu được quán. Vui lòng thử lại.');if(response.status===401||response.status===403)await AdminSession.check();return;}
+        if(!result.record?.id)throw new Error();
+        const index=baseline.restaurants.findIndex(r=>r.id===result.record.id);if(index>=0)baseline.restaurants[index]=result.record;else baseline.restaurants.push(result.record);
+        applyDrafts();$('admin-editor').close();render();$('admin-status').textContent='Đã lưu '+result.record.name+'. Thông tin mới đã có trên website.';
+      }catch{error('Chưa xác nhận được kết quả lưu. Nội dung form vẫn được giữ; hãy thử Lưu lại hoặc tải lại danh sách để kiểm tra.');}
+      finally{savingRestaurant=false;controls.forEach((c,i)=>c.disabled=disabled[i]);$('admin-form').removeAttribute('aria-busy');$('editor-save').textContent='Lưu thay đổi';}
+      return;
+    }
     if (kind === 'dishes') { values.meals = [...new Set(values.meals.split(',').map(m=>m.trim()).filter(Boolean))]; if (!values.meals.length || values.meals.some(m=>!FOOD.MEALS[m])) return error('Nhập ít nhất một mã bữa hợp lệ, cách nhau bằng dấu phẩy: sang, trua, chieu, toi, khuya.'); }
     if (kind === 'links' && model.links.some(link=>link.id!==id && link.dishId===values.dishId && link.restaurantId===values.restaurantId)) return error('Món này đã được liên kết với quán. Hãy chỉnh sửa dòng hiện có.');
     if (kind === 'recipes') {
@@ -145,13 +169,14 @@
     draftState = saved; applyDrafts();
     $('admin-editor').close(); render(); $('admin-status').textContent = 'Đã lưu bản nháp trên trình duyệt. Chưa cập nhật website.';
   });
+  $('admin-editor').addEventListener('cancel',event=>{if(savingRestaurant)event.preventDefault();});
   $('admin-editor').addEventListener('keydown',event=>{
     if(event.key!=='Tab')return;const items=[...event.currentTarget.querySelectorAll('button:not([disabled]),input,textarea,select,a[href]')];
     if(event.shiftKey && document.activeElement===items[0]){event.preventDefault();items.at(-1)?.focus();}
     else if(!event.shiftKey && document.activeElement===items.at(-1)){event.preventDefault();items[0]?.focus();}
   });
   $('admin-editor').addEventListener('close',()=>{ document.body.classList.remove('admin-editor-open'); draftState=AdminDrafts.read();applyDrafts();render(); if(editorOpener?.isConnected) editorOpener.focus(); else { const replacement=[...document.querySelectorAll('[data-edit]')].find(button=>button.dataset.edit===editing?.kind && button.dataset.id===editing?.id); if(replacement)replacement.focus();else if(!$('admin-add').hidden)$('admin-add').focus();else $('admin-search').focus(); } });
-  $('admin-editor').addEventListener('click',event=>{if(event.target!==$('admin-editor'))return;const r=event.target.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)event.target.close();});
+  $('admin-editor').addEventListener('click',event=>{if(savingRestaurant||event.target!==$('admin-editor'))return;const r=event.target.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)event.target.close();});
   $('editor-close').addEventListener('click',()=>$('admin-editor').close()); $('editor-cancel').addEventListener('click',()=>$('admin-editor').close());
   $('admin-add').addEventListener('click',event=>openEditor(section,null,event.currentTarget));
   document.addEventListener('click',event=>{const edit=event.target.closest('[data-edit]');if(edit)openEditor(edit.dataset.edit,edit.dataset.id,edit);if(event.target.closest('[data-retry]'))load();if(event.target.closest('[data-clear]'))clear();});
@@ -177,8 +202,8 @@
     loaded=false;loadError=false;render();
     try {
       const read=async url=>{const response=await fetch(url);if(!response.ok)throw new Error();return response.json();};
-      const first=await read('/api/restaurants?pageSize=48&page=1');
-      const rest=await Promise.all(Array.from({length:first.totalPages-1},(_,i)=>read('/api/restaurants?pageSize=48&page='+(i+2))));
+      const first=await read('/api/admin/restaurants?pageSize=48&page=1');
+      const rest=await Promise.all(Array.from({length:first.totalPages-1},(_,i)=>read('/api/admin/restaurants?pageSize=48&page='+(i+2))));
       baseline.restaurants=[...first.items,...rest.flatMap(data=>data.items)];
       const links=FOOD.DISHES.flatMap(dish=>(dish.source?.restaurantIds||[]).map(restaurantId=>({id:restaurantId+':'+dish.id,restaurantId,dishId:dish.id,offering:dish.name})));
       const originals=FOOD.DISHES.filter(d=>!d.source?.restaurantIds && d.linkedRestaurantCount>0);

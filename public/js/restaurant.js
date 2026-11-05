@@ -41,11 +41,11 @@
     facts.replaceChildren();
     const fact = (label, value) => facts.append(make('dt', '', label), make('dd', '', value));
     fact('Khoảng giá tham khảo', record.priceLabel || 'Chưa có thông tin');
-    fact('Giờ mở cửa', 'Chưa có thông tin được xác nhận');
-    fact('Liên hệ', 'Chưa có số điện thoại được xác nhận');
+    fact('Giờ mở cửa', record.hours || 'Chưa có thông tin được xác nhận');
+    fact('Liên hệ', record.phone || 'Chưa có số điện thoại được xác nhận');
     const source = $('venue-source');
-    source.replaceChildren(make('p', '', record.photo.kind === 'official-page' ? 'Ảnh từ website chính thức; không xác nhận hiện trạng địa điểm.' : 'Ảnh minh họa, không phải ảnh xác nhận của quán.'));
-    if (safeLink(record.photo.sourceUrl)) source.append(external(record.photo.kind === 'official-page' ? 'Xem nguồn ảnh ↗' : 'Nguồn ảnh · Unsplash ↗', record.photo.sourceUrl));
+    source.replaceChildren(make('p', '', record.photo.kind === 'admin-provided' ? 'Ảnh do quản trị viên cung cấp; chưa được đối chiếu độc lập.' : record.photo.kind === 'official-page' ? 'Ảnh từ website chính thức; không xác nhận hiện trạng địa điểm.' : 'Ảnh minh họa, không phải ảnh xác nhận của quán.'));
+    if (safeLink(record.photo.sourceUrl)) source.append(external(record.photo.kind === 'admin-provided' ? 'Nguồn ảnh được cung cấp ↗' : record.photo.kind === 'official-page' ? 'Xem nguồn ảnh ↗' : 'Nguồn ảnh · Unsplash ↗', record.photo.sourceUrl));
     $('venue-content').hidden = false;
     $('venue-status').hidden = true;
   }
@@ -102,7 +102,7 @@
     $('venue-status').hidden = false;
     $('venue-status').textContent = 'Đang tải thông tin quán…';
     $('venue-dishes-empty').hidden = $('venue-dishes-error').hidden = true;
-    if (!id || !/^dn-\d{3}$/.test(id)) return showError(true);
+    if (!id || !/^[a-z0-9-]{1,100}$/.test(id)) return showError(true);
     try {
       const record = await json('/api/restaurants/' + encodeURIComponent(id), controller.signal);
       if (controller.signal.aborted) return;

@@ -139,3 +139,7 @@ Sau đó đổi DB_USER/DB_PASSWORD trong `.env` sang tài khoản này, khởi 
 ## Migration đăng nhập quản trị
 
 `npm run db:setup` hiện áp dụng thêm `database/migrations/002-admin-auth.sql`: giữ bảng users và dữ liệu cũ, bổ sung các trường Better Auth, cho cột password_hash cũ nhận NULL, thêm auth_accounts/auth_sessions/auth_verifications/auth_rate_limits. Tổng 22 bảng. Không có tài khoản/mật khẩu được seed sẵn. Xem [docs/AUTH.md](../docs/AUTH.md) để tạo admin và cấp quyền runtime; tài khoản SELECT-only không đủ cho đăng nhập/đăng xuất.
+
+## Migration thêm/sửa quán
+
+`003-restaurant-writes` thêm admin_details, revision, updated_at vào restaurants và bảng restaurant_audit. Tổng 23 bảng. Không thay các liên kết cũ hoặc nguồn gốc. Xem [hướng dẫn quản trị quán](../docs/RESTAURANT-ADMIN.md) để cấp quyền cần thiết và chạy API ghi; các chức năng khác chưa ghi danh mục thật.

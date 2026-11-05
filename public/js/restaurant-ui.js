@@ -21,8 +21,9 @@ const RestaurantUI = (() => {
     const figure = make('figure', 'restaurant-photo');
     const image = make('img');
     const genuine = record.photo.kind === 'official-page';
-    image.src = record.photo.local?.startsWith('/images/restaurants/') ? record.photo.local : placeholder;
-    image.alt = genuine ? `Ảnh từ website của ${record.name}` : 'Ảnh minh họa ẩm thực, không phải ảnh của quán';
+    const supplied=record.photo.kind==='admin-provided'&&safeLink(record.photo.url);
+    image.src = record.photo.local?.startsWith('/images/restaurants/') ? record.photo.local : supplied || placeholder;
+    image.alt = supplied ? 'Ảnh do quản trị viên cung cấp cho '+record.name : genuine ? `Ảnh từ website của ${record.name}` : 'Ảnh minh họa ẩm thực, không phải ảnh của quán';
     image.width = 600;
     image.height = 400;
     image.loading = 'lazy';
@@ -30,7 +31,7 @@ const RestaurantUI = (() => {
       if (!image.src.endsWith('placeholder.svg')) image.src = placeholder;
       figure.querySelector('figcaption').textContent = 'Chưa có ảnh phù hợp';
     });
-    figure.append(image, make('figcaption', genuine ? 'restaurant-photo__label restaurant-photo__label--source' : 'restaurant-photo__label', genuine ? 'Ảnh từ website quán' : record.photo.local ? 'Ảnh minh họa' : 'Chưa có ảnh phù hợp'));
+    figure.append(image, make('figcaption', genuine ? 'restaurant-photo__label restaurant-photo__label--source' : 'restaurant-photo__label', supplied ? 'Ảnh được cung cấp' : genuine ? 'Ảnh từ website quán' : record.photo.local ? 'Ảnh minh họa' : 'Chưa có ảnh phù hợp'));
     return figure;
   }
   const mapsUrl = record => `https://www.google.com/maps/search/?${new URLSearchParams({ api: '1', query: `${record.name}, ${record.address}, ${record.area}` })}`;

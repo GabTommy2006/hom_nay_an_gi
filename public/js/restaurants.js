@@ -131,7 +131,7 @@
       if (safeLink(record.website)) actions.append(external('Website quán ↗', safeLink(record.website), 'btn'));
       const note = make('p', 'restaurant-detail__note', 'Giá và thực đơn có thể thay đổi. Chưa có liên kết đặt món trực tiếp. Vui lòng kiểm tra lại trước khi ghé.');
       const source = make('p', 'restaurant-detail__source');
-      const photoSource = record.photo.kind === 'official-page' ? record.photo.sourceLabel : 'Ảnh minh họa · Unsplash';
+      const photoSource = record.photo.kind === 'admin-provided' ? 'Ảnh do quản trị viên cung cấp' : record.photo.kind === 'official-page' ? record.photo.sourceLabel : 'Ảnh minh họa · Unsplash';
       if (safeLink(record.photo.sourceUrl)) source.append(external(`${photoSource} ↗`, safeLink(record.photo.sourceUrl)));
       content.append(make('p', 'restaurant-card__category', record.category), heading, info, actions, note, source);
       body.replaceChildren(photo(record), content);

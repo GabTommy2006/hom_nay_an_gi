@@ -53,7 +53,7 @@ Bổ sung đợt 03/11/2026: bún chả bản áp chảo, bánh xèo tôm thịt
 
 Đã có đăng nhập thật bằng Better Auth + MySQL, cookie HttpOnly và kiểm tra role admin ở server. Xem [docs/AUTH.md](docs/AUTH.md) để thiết lập secret, migration, quyền MySQL và tạo admin đầu tiên. Chạy `npm run admin:create -- email-cua-ban@example.com` trong terminal tương tác, hoặc thêm `--desktop` trên Windows; không có mật khẩu mẫu.
 
-Trang `admin.html` và API `/api/admin/*` yêu cầu admin. Tab Tài khoản đọc danh sách thật từ MySQL, không lộ password hash/token. Nội dung món/quán/công thức vẫn chỉ lưu bản nháp trên trình duyệt, tách theo ID tài khoản; chưa có API ghi danh mục. Đăng xuất thu hồi phiên trong MySQL.
+Trang `admin.html` và API `/api/admin/*` yêu cầu admin. Tab Tài khoản đọc danh sách thật từ MySQL, không lộ password hash/token. Mục Quán ăn thêm/sửa và lưu thật vào MySQL; xem [hướng dẫn quản trị quán](docs/RESTAURANT-ADMIN.md). Các mục món ăn/liên kết/công thức vẫn lưu bản nháp trên trình duyệt, tách theo ID tài khoản. Đăng xuất thu hồi phiên trong MySQL.
 
 ### Tùy chọn quay bất ngờ
 
@@ -83,9 +83,13 @@ Frontend giữ nguyên giao diện; Model/API và các script dữ liệu độn
 ### Lấy branch backend về máy thành viên
 
 ```powershell
-git clone --branch Update-web-4.0 https://github.com/GabTommy2006/hom_nay_an_gi.git
+git clone --branch Update-web-5.0 https://github.com/GabTommy2006/hom_nay_an_gi.git
 cd hom_nay_an_gi
 npm ci
 ```
 
-Nếu đã clone repo, dùng `git fetch origin` rồi chuyển sang `Update-web-4.0`; giữ lại hoặc commit thay đổi cá nhân trước khi chuyển branch. Sau đó làm theo [hướng dẫn database](database/README.md): tạo database/tài khoản, sao chép `.env.example` thành `.env`, điền mật khẩu riêng và chạy `npm run db:setup`. Khi hoàn tất, chạy `npm start`.
+Nếu đã clone repo, dùng `git fetch origin` rồi chuyển sang `Update-web-5.0`; giữ lại hoặc commit thay đổi cá nhân trước khi chuyển branch. Sau đó làm theo [hướng dẫn database](database/README.md): tạo database/tài khoản, sao chép `.env.example` thành `.env`, điền mật khẩu riêng và chạy `npm run db:setup`. Khi hoàn tất, chạy `npm start`.
+
+## Thêm/sửa quán thật
+
+Trên Update-web-5.0, chạy `npm run db:setup` để áp dụng migration 003, cấp quyền thay liên kết bữa và thao tác theo [docs/RESTAURANT-ADMIN.md](docs/RESTAURANT-ADMIN.md). Chỉ admin được ghi; dữ liệu được kiểm tra ở server, có revision chống ghi đè và lịch sử sửa. Chưa có chức năng xóa quán.

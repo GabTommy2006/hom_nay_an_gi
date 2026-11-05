@@ -2,7 +2,7 @@ import { rows } from '../config/database.js';
 import { getDocument, ordered, optional } from './catalog-data.model.js';
 
 export const normalize = value => value.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
-export async function getRestaurantData() {
+export async function getRestaurantData({admin=false}={}) {
   const [restaurants,mealLinks,meals,metadata,order]=await Promise.all([
     rows('SELECT * FROM restaurants'),
     rows('SELECT restaurant_id,meal_id FROM restaurant_meals ORDER BY sort_order'),
@@ -13,7 +13,12 @@ export async function getRestaurantData() {
     const keys=mealLinks.filter(m=>m.restaurant_id===r.id).map(m=>m.meal_id);
     const allDay=r.source_record.suggestedMeals?.includes('Cả ngày')&&keys.length===meals.length&&meals.every(m=>keys.includes(m.id));
     const result={id:r.id,sourceNumber:r.source_record.sourceNumber,name:r.name,category:r.category,originalCategory:r.original_category,suggestedMeals:allDay?['Cả ngày']:keys.map(key=>labels.get(key)),priceLabel:r.price_label,priceTier:r.price_tier,address:r.address,area:r.area,verification:r.verification,photo:r.photo,source:r.provenance};
-    optional(result,'website',r.website);return result;
+    optional(result,'website',r.website);
+    const details=r.admin_details||{};
+    for(const key of ['phone','hours'])if(details[key])result[key]=details[key];
+    if(details.imageUrl)result.photo={url:details.imageUrl,kind:'admin-provided',sourceLabel:'Ảnh do quản trị viên cung cấp',sourceUrl:details.imageUrl};
+    if(admin)Object.assign(result,{revision:r.revision,phone:details.phone||'',hours:details.hours||'',imageUrl:details.imageUrl||'',grabFoodUrl:details.grabFoodUrl||'',shopeeFoodUrl:details.shopeeFoodUrl||'',partnership:details.partnership||'unknown',note:details.note||''});
+    return result;
   })};
 }
 export async function getDishRestaurantLinks() {
@@ -21,8 +26,8 @@ export async function getDishRestaurantLinks() {
   const records=links.map(r=>optional({id:r.dish_id+'/'+r.restaurant_id,dishId:r.dish_id,restaurantId:r.restaurant_id,type:r.match_type,offering:r.offering},'evidence',r.source_record.evidence));
   return {...metadata,links:ordered(records,order.links).map(({id,...record})=>record)};
 }
-export async function findRestaurants({ q = '', category = '', meal = '', priceTier = '', dishId = '', nutrition = '', page = 1, pageSize = 12 } = {}) {
-  const { restaurants, importedAt } = await getRestaurantData();
+export async function findRestaurants({ q = '', category = '', meal = '', priceTier = '', dishId = '', nutrition = '', page = 1, pageSize = 12, admin=false } = {}) {
+  const { restaurants, importedAt } = await getRestaurantData({admin});
   const associations = dishId ? (await getDishRestaurantLinks()).links.filter(link => link.dishId === dishId) : [];
   const query = normalize(q.trim());
   const filtered = restaurants.filter(r =>
@@ -38,13 +43,13 @@ export async function findRestaurants({ q = '', category = '', meal = '', priceT
     items: filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize).map(r => dishId ? { ...r, dishMatch: associations.find(link => link.restaurantId === r.id) } : r),
     total: filtered.length, totalRecords: restaurants.length, page: currentPage, pageSize, totalPages, importedAt,
     facets: {
-      categories: [...new Set(restaurants.map(r => r.category))].sort((a, b) => a.localeCompare(b, 'vi')),
+      categories: [...new Set(restaurants.map(r => r.category).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'vi')),
       meals: ['Sáng', 'Trưa', 'Chiều', 'Tối', 'Khuya'],
-      priceTiers: [...new Set(restaurants.map(r => r.priceTier))].sort((a, b) => a.localeCompare(b, 'vi')),
+      priceTiers: [...new Set(restaurants.map(r => r.priceTier).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'vi')),
     },
   };
 }
-export async function findRestaurantById(id) {
-  const { restaurants } = await getRestaurantData();
+export async function findRestaurantById(id,{admin=false}={}) {
+  const { restaurants } = await getRestaurantData({admin});
   return restaurants.find(r => r.id === id);
 }
