@@ -51,7 +51,7 @@ const Nutrition = (() => {
     condition.id = 'nutrition-dialog-scope';
     body.append(label, make('h3', '', 'Mức độ xác minh'), condition);
     body.append(make('h3', '', 'Nguyên liệu'));
-    if (reviewed && review.ingredients?.length) {
+    if (review.ingredients?.length) {
       const ingredients = make('ul', 'vegetarian-dialog__ingredients');
       review.ingredients.forEach(ingredient => ingredients.append(make('li', '', ingredient)));
       body.append(ingredients);
@@ -74,10 +74,13 @@ const Nutrition = (() => {
       if (source) body.append(source);
       const recipe = make('a', 'nutrition-dialog__source', 'Xem phiên bản công thức trên website →');
       recipe.href = 'recipe.html?dish=' + encodeURIComponent(record.id);
-      body.append(recipe, make('p', 'nutrition-dialog__note', 'Công thức trên website có điều chỉnh; nguồn tham khảo không phải xác nhận món tại quán.'));
+      if(typeof RECIPES!=='undefined'&&Object.hasOwn(RECIPES,record.id))body.append(recipe);
+      body.append(make('p', 'nutrition-dialog__note', 'Nguồn tham khảo chỉ áp dụng cho phiên bản đã đối chiếu; không phải xác nhận món tại quán.'));
       if (review.reviewedAt) body.append(make('p', 'nutrition-dialog__checked', 'Rà soát công thức: ' + review.reviewedAt.split('-').reverse().join('/')));
     } else {
-      body.append(make('p', '', 'Thông tin tên món và phân loại chay trong danh mục địa điểm của website. Chưa có đường dẫn công thức hay bảng thành phần được quán xác nhận.'));
+      const suppliedSource=sourceLink('Nguồn thành phần đã đối chiếu',review.source);
+      if(suppliedSource)body.append(suppliedSource);
+      body.append(make('p', '', suppliedSource?'Nhãn dựa trên nguồn thành phần đã cung cấp; chưa phải xác minh độc lập hoặc chứng nhận món tại quán.':'Thông tin tên món và phân loại chay trong danh mục địa điểm của website. Chưa có đường dẫn công thức hay bảng thành phần được quán xác nhận.'));
       const venues = make('a', 'nutrition-dialog__source', 'Xem các địa điểm giới thiệu món này →');
       venues.href = 'restaurants.html?dish=' + encodeURIComponent(record.id);
       body.append(venues);

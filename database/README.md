@@ -123,7 +123,7 @@ Test kiểm tra DDL trên MySQL 8.4, nhập đủ dữ liệu/Unicode/nguồn, �
 
 Model/API đã đọc các cột/bảng quan hệ MySQL; không lấy lại giá trị vận hành từ source_record cũ. Dữ liệu provenance/greeting/sourceNumber chưa có cột riêng được lấy từ metadata JSON trong MySQL. Danh mục 105 bản ghi vẫn lọc/phân trang trong Model để giữ hành vi tìm không dấu hiện có; khi danh mục lớn hơn sẽ chuyển tìm kiếm/phân trang sang SQL.
 
-Đã có xác thực/phân quyền; bước tiếp theo là API ghi. Admin hiện vẫn chỉ lưu bản nháp localStorage, chưa cập nhật database. Không tự nhập yêu thích hoặc bản nháp của trình duyệt.
+Đã có xác thực/phân quyền và API thêm/sửa quán, món ăn lưu thật. Liên kết, công thức và căn cứ nhãn cũng đã có API lưu thật. Không tự nhập yêu thích hoặc bản nháp của trình duyệt.
 
 ## Tài khoản chỉ đọc danh mục
 
@@ -142,4 +142,8 @@ Sau đó đổi DB_USER/DB_PASSWORD trong `.env` sang tài khoản này, khởi 
 
 ## Migration thêm/sửa quán
 
-`003-restaurant-writes` thêm admin_details, revision, updated_at vào restaurants và bảng restaurant_audit. Tổng 23 bảng. Không thay các liên kết cũ hoặc nguồn gốc. Xem [hướng dẫn quản trị quán](../docs/RESTAURANT-ADMIN.md) để cấp quyền cần thiết và chạy API ghi; các chức năng khác chưa ghi danh mục thật.
+`003-restaurant-writes` thêm admin_details, revision, updated_at vào restaurants và bảng restaurant_audit. Tổng 23 bảng. Không thay các liên kết cũ hoặc nguồn gốc. Xem [hướng dẫn quản trị quán](../docs/RESTAURANT-ADMIN.md) để cấp quyền cần thiết và chạy API ghi; xem thêm các mục quản trị trong docs/ADMIN-CATALOG.md.
+
+`004-dish-writes` bổ sung revision, admin_image_url, updated_at vào dishes và bảng dish_audit, tổng 24 bảng. Xem [hướng dẫn quản trị món](../docs/DISH-ADMIN.md). Áp dụng trên từng database bằng `npm run db:setup`; sửa món giữ nguyên liên kết quán, công thức và căn cứ nhãn.
+
+`005-admin-catalog` thêm admin_catalog_versions và admin_catalog_audit, tổng 26 bảng. Xem [hướng dẫn quản trị danh mục](../docs/ADMIN-CATALOG.md) để cấp quyền, nhập công thức có định lượng, công bố/thu hồi liên kết và đối chiếu nhãn.

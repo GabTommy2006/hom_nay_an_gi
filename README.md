@@ -36,7 +36,7 @@ Có thể chép `.env.example` thành `.env` để đổi HOST/PORT.
 
 Khi chạy Node.js, `/js/data.js` và `/js/recipes.js` được tạo từ MySQL, giữ các biến FOOD/RECIPES để frontend không phải đổi. Các file JSON và bản JS trong public chỉ là nguồn seed/bản xem tĩnh; sửa chúng không cập nhật dữ liệu website chạy qua Node. Không có fallback JSON khi database lỗi; API trả HTTP 503 với thông báo chung.
 
-Danh mục món/quán, liên kết, bữa ăn, nhãn và 14 công thức đã đọc từ MySQL 8.4 LTS qua backend MVC. Đã có đăng nhập và phân quyền admin bằng MySQL; chưa có API ghi danh mục hoặc tích hợp đơn hàng.
+Danh mục món/quán, liên kết, bữa ăn, nhãn và 14 công thức đã đọc từ MySQL 8.4 LTS qua backend MVC. Đã có đăng nhập và phân quyền admin bằng MySQL; đã có API ghi cho các mục quản trị; chưa tích hợp đơn hàng.
 
 
 ### Yêu thích và công thức (frontend)
@@ -53,7 +53,7 @@ Bổ sung đợt 03/11/2026: bún chả bản áp chảo, bánh xèo tôm thịt
 
 Đã có đăng nhập thật bằng Better Auth + MySQL, cookie HttpOnly và kiểm tra role admin ở server. Xem [docs/AUTH.md](docs/AUTH.md) để thiết lập secret, migration, quyền MySQL và tạo admin đầu tiên. Chạy `npm run admin:create -- email-cua-ban@example.com` trong terminal tương tác, hoặc thêm `--desktop` trên Windows; không có mật khẩu mẫu.
 
-Trang `admin.html` và API `/api/admin/*` yêu cầu admin. Tab Tài khoản đọc danh sách thật từ MySQL, không lộ password hash/token. Mục Quán ăn thêm/sửa và lưu thật vào MySQL; xem [hướng dẫn quản trị quán](docs/RESTAURANT-ADMIN.md). Các mục món ăn/liên kết/công thức vẫn lưu bản nháp trên trình duyệt, tách theo ID tài khoản. Đăng xuất thu hồi phiên trong MySQL.
+Trang `admin.html` và API `/api/admin/*` yêu cầu admin. Tab Tài khoản đọc danh sách thật từ MySQL, không lộ password hash/token. Mục Quán ăn thêm/sửa và lưu thật vào MySQL; xem [hướng dẫn quản trị quán](docs/RESTAURANT-ADMIN.md). Món ăn, liên kết, công thức và căn cứ nhãn cũng lưu thật; xem [hướng dẫn quản trị danh mục](docs/ADMIN-CATALOG.md). Bản nháp cũ được giữ riêng để đối chiếu, không tự nhập. Đăng xuất thu hồi phiên trong MySQL.
 
 ### Tùy chọn quay bất ngờ
 
@@ -93,3 +93,10 @@ Nếu đã clone repo, dùng `git fetch origin` rồi chuyển sang `Update-web-
 ## Thêm/sửa quán thật
 
 Trên Update-web-5.0, chạy `npm run db:setup` để áp dụng migration 003, cấp quyền thay liên kết bữa và thao tác theo [docs/RESTAURANT-ADMIN.md](docs/RESTAURANT-ADMIN.md). Chỉ admin được ghi; dữ liệu được kiểm tra ở server, có revision chống ghi đè và lịch sử sửa. Chưa có chức năng xóa quán.
+## Quản trị món ăn
+
+Admin đã có thể thêm/sửa món và bữa gợi ý, lưu thật vào MySQL. Xem [hướng dẫn món ăn](docs/DISH-ADMIN.md) để áp dụng migration và cấp quyền cho database riêng. Các cấu hình Aiven và mật khẩu chỉ nằm trong `.env` riêng, không đi kèm repository.
+
+## Quản trị danh mục đầy đủ
+
+Xem [hướng dẫn liên kết, công thức và căn cứ nhãn](docs/ADMIN-CATALOG.md). Chạy `npm run db:setup` trên database riêng sau khi lấy code để áp dụng đủ 26 bảng; cấu hình và dữ liệu Aiven không tự đi theo Git. Tài khoản người dùng/đồng bộ Yêu thích và triển khai Vercel để giai đoạn sau.

@@ -1,10 +1,14 @@
 import {requireAdmin,send} from '../middleware/auth.js';
 import {rows} from '../config/database.js';
 import {adminRestaurants} from '../controllers/admin-restaurant.controller.js';
+import {adminDishes} from '../controllers/admin-dish.controller.js';
+import {adminCatalog} from '../controllers/admin-catalog.controller.js';
 export async function handleAdmin(req,res,url){
  if(!url.pathname.startsWith('/api/admin/'))return false;
  const user=await requireAdmin(req,res);if(!user)return true;
  if(await adminRestaurants(req,res,url,user))return true;
+ if(await adminDishes(req,res,url,user))return true;
+ if(await adminCatalog(req,res,url,user))return true;
  if(req.method!=='GET'){send(res,405,{message:'Phương thức không được hỗ trợ.'},{Allow:'GET'});return true;}
  if(url.pathname==='/api/admin/me'){send(res,200,{user});return true;}
  if(url.pathname==='/api/admin/users'){

@@ -23,7 +23,11 @@ export async function getRestaurantData({admin=false}={}) {
 }
 export async function getDishRestaurantLinks() {
   const [links,metadata,order]=await Promise.all([rows('SELECT dish_id,restaurant_id,match_type,offering,source_record FROM restaurant_dishes'),getDocument('associations'),getDocument('catalog-order-v1')]);
-  const records=links.map(r=>optional({id:r.dish_id+'/'+r.restaurant_id,dishId:r.dish_id,restaurantId:r.restaurant_id,type:r.match_type,offering:r.offering},'evidence',r.source_record.evidence));
+  const edits=await rows("SELECT entity_key,last_payload FROM admin_catalog_versions WHERE kind='links'");
+  const updated=new Map(edits.map(e=>[e.entity_key,e.last_payload]));
+  const prices=await rows('SELECT dish_id,restaurant_id,price_vnd FROM restaurant_dishes');
+  const amounts=new Map(prices.map(r=>[r.dish_id+'/'+r.restaurant_id,r.price_vnd]));
+  const records=links.map(r=>{const key=r.dish_id+'/'+r.restaurant_id,edit=updated.get(key);const record=optional({id:key,dishId:r.dish_id,restaurantId:r.restaurant_id,type:r.match_type,offering:r.offering},'evidence',edit?.note||r.source_record.evidence);if(edit?.sourceUrl)record.sourceUrl=edit.sourceUrl;if(amounts.get(key)!==null)record.priceVnd=Number(amounts.get(key));return record;});
   return {...metadata,links:ordered(records,order.links).map(({id,...record})=>record)};
 }
 export async function findRestaurants({ q = '', category = '', meal = '', priceTier = '', dishId = '', nutrition = '', page = 1, pageSize = 12, admin=false } = {}) {

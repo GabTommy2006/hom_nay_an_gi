@@ -73,7 +73,11 @@ const RestaurantUI = (() => {
     } else detail.href = button.href;
     actions.append(detail);
     content.append(category, heading);
-    if (record.dishMatch) content.append(make('p', 'restaurant-match', record.dishMatch.offering));
+    if (record.dishMatch) {
+      const match=record.dishMatch;
+      content.append(make('p', 'restaurant-match',match.offering+(match.priceVnd!=null?' · '+new Intl.NumberFormat('vi-VN').format(match.priceVnd)+' ₫ / phần':'')));
+      if(match.sourceUrl&&safeLink(match.sourceUrl))content.append(external('Nguồn thực đơn ↗',match.sourceUrl,'restaurant-info-link'));
+    }
     content.append(address, price, make('p', 'restaurant-card__price-note', 'Khoảng giá tham khảo'), meals, actions);
     article.append(photo(record), content);
     const save = make('div', 'restaurant-card__save'); save.innerHTML = Favorites.button('restaurants', record.id, record.name); article.append(save);

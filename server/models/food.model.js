@@ -5,7 +5,7 @@ export async function getFood() {
   const [meals,cuisines,dishes,mealLinks,reviews,profiles,links,order]=await Promise.all([
     rows('SELECT id,label,source_record FROM meals'),
     rows('SELECT id,name,description,cover_dish_id,icon FROM cuisines'),
-    rows('SELECT id,cuisine_id,name,description,image_url,photo_id,photo_author,photo_crop,image_source,provenance FROM dishes'),
+    rows('SELECT id,cuisine_id,name,description,image_url,admin_image_url,photo_id,photo_author,photo_crop,image_source,provenance FROM dishes'),
     rows('SELECT dish_id,meal_id FROM dish_meals ORDER BY sort_order'),
     rows('SELECT dish_id,review_key,status,evidence FROM dish_reviews'),
     rows('SELECT dish_id,profile FROM dish_nutrition_profiles'),
@@ -20,6 +20,7 @@ export async function getFood() {
     const direct=links.filter(l=>l.dish_id===r.id).map(l=>l.restaurant_id);
     const result={id:r.id,name:r.name,cuisine:r.cuisine_id,meals:mealLinks.filter(l=>l.dish_id===r.id).map(l=>l.meal_id),desc:r.description,linkedRestaurantCount:direct.length};
     for(const [key,value] of Object.entries({photo:r.photo_id,by:r.photo_author,crop:r.photo_crop,imageUrl:r.image_url,imageSource:r.image_source,source:r.provenance}))optional(result,key,value);
+    if(r.admin_image_url){result.imageUrl=r.admin_image_url;result.imageSource={kind:'admin-provided',label:'Ảnh do quản trị viên cung cấp',url:r.admin_image_url};delete result.by;}
     // Do not retain evidence or labels from the immutable source_record snapshot.
     for(const review of ordered(reviews.filter(review=>review.dish_id===r.id),['vegetarian',...(order.reviews?.[r.id]||[])],'review_key')){
       if(review.review_key==='vegetarian')result.vegetarianReview={...review.evidence,status:review.status};
