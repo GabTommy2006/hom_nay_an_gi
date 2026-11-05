@@ -27,6 +27,7 @@ async function writeRestaurant({values,revision,requestId},{id,actorId}={}){
    const sourceRecord={id:target,name:values.name,address:values.address,area:values.area,category:values.category,originalCategory:values.category,suggestedMeals:[],priceLabel:values.priceLabel||null,priceTier:values.priceTier||null,verification:'admin-entered',photo,source};
    await c.execute('INSERT INTO restaurants (id,name,category,original_category,address,area,price_label,price_tier,website,verification,photo,provenance,source_record,admin_details) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[target,values.name,values.category,values.category,values.address,values.area,values.priceLabel||null,values.priceTier||null,values.website||null,'admin-entered',json(photo),json(source),json(sourceRecord),json(details)]);
   }
+  await c.execute('UPDATE restaurants SET is_visible=? WHERE id=?',[values.isVisible??(current?!!current.is_visible:true),target]);
   const [oldMeals]=await c.execute('SELECT meal_id FROM restaurant_meals WHERE restaurant_id=? ORDER BY sort_order',[target]);
   if(!isDeepStrictEqual(oldMeals.map(r=>r.meal_id),values.meals)){
    await c.execute('DELETE FROM restaurant_meals WHERE restaurant_id=?',[target]);

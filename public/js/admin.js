@@ -41,7 +41,7 @@
   const pageSize = 12;
   const nameOf = id => model.dishes.find(d => d.id === id)?.name || id;
   const venueOf = id => model.restaurants.find(r => r.id === id)?.name || id;
-  const badge = record => '<span class="admin-badge' + (record.draft ? ' admin-badge--draft' : '') + '">' + (record.enabled===false ? 'Ngừng công bố' : 'Đã lưu') + '</span>';
+  const badge = record => '<span class="admin-badge' + (record.draft ? ' admin-badge--draft' : '') + '">' + (record.enabled===false ? 'Ngừng công bố' : record.parentHidden?'Ẩn theo món/quán':'Đã lưu') + '</span>';
   const editButton = (kind, record, label = 'Chỉnh sửa') => '<button class="admin-row-action" data-edit="' + kind + '" data-id="' + esc(record.id) + '" aria-label="' + esc(label + ' ' + (record.name || nameOf(record.dishId))) + '">' + label + '</button>';
   function renderOverview() {
     const venues = loaded ? model.restaurants.length : '—';
@@ -53,8 +53,8 @@
   }
   function row(kind, record) {
     const title = '<strong>' + esc(record.name) + '</strong><small>' + esc(record.id) + '</small>';
-    if (kind === 'restaurants') return [title, esc(record.address || 'Chưa có địa chỉ'), esc(record.category), esc(record.priceLabel || 'Chưa có'), '<span class="admin-badge">Đã lưu</span>', editButton(kind, record)];
-    if (kind === 'dishes') return [title, esc(FOOD.CUISINES[record.cuisine]?.name || record.cuisine), esc(record.meals.map(key => FOOD.MEALS[key]?.label || key).join(', ')), '<span class="admin-badge">Đã lưu</span>', editButton(kind, record)];
+    if (kind === 'restaurants') return [title, esc(record.address || 'Chưa có địa chỉ'), esc(record.category), esc(record.priceLabel || 'Chưa có'), '<span class="admin-badge'+(record.isVisible===false?' admin-badge--draft':'')+'">'+(record.isVisible===false?'Đang ẩn':'Đang hiện')+'</span>', editButton(kind, record)];
+    if (kind === 'dishes') return [title, esc(FOOD.CUISINES[record.cuisine]?.name || record.cuisine), esc(record.meals.map(key => FOOD.MEALS[key]?.label || key).join(', ')), '<span class="admin-badge'+(record.isVisible===false?' admin-badge--draft':'')+'">'+(record.isVisible===false?'Đang ẩn':'Đang hiện')+'</span>', editButton(kind, record)];
     if (kind === 'recipes') return [title, esc(record.servings) + ' người', record.ingredients.length + ' nguyên liệu · ' + record.steps.length + ' bước', esc(record.source?.label || 'Chưa có nguồn'), badge(record), editButton(kind, record)];
     if (kind === 'links') return ['<strong>' + esc(nameOf(record.dishId)) + '</strong>', esc(venueOf(record.restaurantId)), esc(record.price==null?'Chưa xác nhận':new Intl.NumberFormat('vi-VN').format(record.price)+' ₫'), esc(record.offering || nameOf(record.dishId)), badge(record), editButton(kind, record)];
     return [title, esc(record.label), esc(record.status), (record.vegetarianReview?.source||record.nutritionProfile?.source) ? 'Có nguồn tham khảo' : 'Chưa có nguồn độc lập', badge(record), editButton(kind, record, 'Rà soát')];
@@ -87,9 +87,15 @@
     if (section === 'users') { renderUsers(); return; }
     if (['restaurants','links','dishes','recipes','reviews'].includes(section) && !loaded) { $('admin-content').innerHTML = '<section class="admin-empty"><h2>' + (loadError ? 'Chưa tải đủ dữ liệu quản trị' : 'Đang tải danh mục…') + '</h2><p>Chờ danh mục tải xong trước khi chỉnh sửa. Nếu lỗi, kiểm tra kết nối rồi thử lại.</p>' + (loadError ? '<button class="btn" data-retry>Thử tải lại</button>' : '') + '</section>'; return; }
     const normalize = value => value.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
-    $('admin-filter').hidden=section!=='reviews';
-    const query = normalize($('admin-search').value.trim()); const filter = section==='reviews'?$('admin-filter').value:'all';
-    const records = model[section].filter(record => (filter === 'all' || (filter === 'reviewed' ? !!(record.vegetarianReview||record.nutritionReviews?.length) : !(record.vegetarianReview||record.nutritionReviews?.length))) && (!query || normalize([record.name, record.address, record.category, record.source?.label, record.label, record.offering, record.dishId && nameOf(record.dishId), record.restaurantId && venueOf(record.restaurantId)].filter(Boolean).join(' ')).includes(query)));
+    const visibilitySection=['dishes','restaurants'].includes(section);
+    const filterScope=visibilitySection?'visibility':section==='reviews'?'reviews':'none';
+    if($('admin-filter').dataset.scope!==filterScope){
+      $('admin-filter').innerHTML=filterScope==='visibility'?'<option value="all">Tất cả hiển thị</option><option value="visible">Đang hiện</option><option value="hidden">Đang ẩn</option>':'<option value="all">Tất cả trạng thái</option><option value="reviewed">Có căn cứ nhãn</option><option value="unreviewed">Chưa gán nhãn</option>';
+      $('admin-filter').dataset.scope=filterScope;
+    }
+    $('admin-filter').hidden=filterScope==='none';
+    const query = normalize($('admin-search').value.trim()); const filter = filterScope==='none'?'all':$('admin-filter').value;
+    const records = model[section].filter(record => (filter === 'all' || (visibilitySection?(filter==='visible'?record.isVisible!==false:record.isVisible===false):(filter === 'reviewed' ? !!(record.vegetarianReview||record.nutritionReviews?.length) : !(record.vegetarianReview||record.nutritionReviews?.length)))) && (!query || normalize([record.name, record.address, record.category, record.source?.label, record.label, record.offering, record.dishId && nameOf(record.dishId), record.restaurantId && venueOf(record.restaurantId)].filter(Boolean).join(' ')).includes(query)));
     const pages = Math.max(1, Math.ceil(records.length / pageSize)); page = Math.min(page, pages);
     $('admin-status').textContent = records.length + ' / ' + model[section].length + ' mục';
     $('admin-content').innerHTML = records.length ? table(columns[section], records.slice((page-1)*pageSize,page*pageSize).map(record => row(section,record))) : '<section class="admin-empty"><h2>Chưa có mục phù hợp</h2><p>Thử từ khóa khác hoặc bỏ bộ lọc.</p><button class="btn" data-clear>Bỏ lọc</button></section>';
@@ -118,6 +124,7 @@
     if (kind === 'restaurants') fields = field('name','Tên địa điểm *',current.name) + field('address','Địa chỉ / chi nhánh *',current.address) + field('area','Khu vực / tỉnh thành *',current.area) + field('category','Nhóm món *',current.category || 'Món chính','text', [...new Set([...model.restaurants.map(r=>r.category),'Món chính'])].map(c=>[c,c])) + field('priceLabel','Khoảng giá tham khảo (không phải giá từng món)',current.priceLabel) + field('priceTier','Mức giá để lọc',current.priceTier || '','text',[['','Chưa có thông tin'],...[...new Set(model.restaurants.map(r=>r.priceTier).filter(Boolean))].map(value=>[value,value])]) + field('meals','Bữa gợi ý: Sáng, Trưa, Chiều, Tối, Khuya; chưa biết để trống',current.suggestedMeals?.includes('Cả ngày')?'Sáng, Trưa, Chiều, Tối, Khuya':current.suggestedMeals?.join(', ')) + field('website','Website chính thức (https)',current.website,'url') + field('phone','Số điện thoại (chưa biết thì để trống)',current.phone,'tel') + field('hours','Giờ mở cửa — chỉ nhập khi có nguồn',current.hours) + field('imageUrl','URL ảnh thay thế được phép sử dụng (https)',current.imageUrl,'url') + field('grabFoodUrl','GrabFood đúng chi nhánh (https)',current.grabFoodUrl,'url') + field('shopeeFoodUrl','ShopeeFood đúng chi nhánh (https)',current.shopeeFoodUrl,'url') + field('partnership','Tình trạng hợp tác',current.partnership || 'unknown','text',[['unknown','Chưa xác minh hợp tác'],['draft-partner','Đề xuất đối tác — chưa xác minh']]) + field('note','Nguồn / ghi chú cần xác minh',current.note,'textarea');
     if (kind === 'dishes') fields = field('name','Tên món *',current.name) + field('cuisine','Ẩm thực',current.cuisine || 'viet','text',Object.entries(FOOD.CUISINES).map(([key,value])=>[key,value.name])) + field('meals','Bữa ăn *: Sáng, Trưa, Chiều, Tối, Khuya',current.meals?.map(key=>FOOD.MEALS[key]?.label||key).join(', ') || 'Trưa') + field('desc','Mô tả phiên bản món',current.desc,'textarea') + field('imageUrl','URL ảnh thay thế được phép sử dụng (https)',current.imageUrl,'url');
     if(['links','recipes','reviews'].includes(kind))fields=AdminCatalog.fields(kind,current,field,model);
+    if(['dishes','restaurants'].includes(kind))fields=field('isVisible','Hiển thị trên website *',current.isVisible===false?'false':'true','text',[['true','Hiện — cho phép khách tìm và xem'],['false','Ẩn — chỉ admin xem và chỉnh sửa']])+'<p class="admin-help">Ẩn không xóa công thức, căn cứ hay liên kết. Món bị ẩn không xuất hiện trong lượt quay mới; quán bị ẩn không xuất hiện trong gợi ý. Bạn có thể hiện lại khi cần.</p>'+fields;
     $('editor-fields').innerHTML = fields;
     if(kind==='restaurants'){for(const key of ['address','area'])$('field-'+key).required=true;$('field-priceTier').required=false;const limits={name:255,address:500,area:120,phone:40,hours:500,note:3000,website:2000,imageUrl:2000,grabFoodUrl:2000,shopeeFoodUrl:2000};for(const [key,max]of Object.entries(limits))$('field-'+key).maxLength=max;}
     if(kind==='dishes'){for(const [key,max] of Object.entries({name:255,desc:5000,imageUrl:2000}))$('field-'+key).maxLength=max;$('field-meals').required=true;}
@@ -137,6 +144,7 @@
     for (const key of ['website','sourceUrl','imageUrl','grabFoodUrl','shopeeFoodUrl']) if (values[key] && !values[key].startsWith('https://')) return error('Đường dẫn nguồn phải bắt đầu bằng https://.');
     if(['restaurants','dishes','links','recipes','reviews'].includes(kind)){
       if(['restaurants','dishes'].includes(kind)){
+      values.isVisible=values.isVisible==='true';
       const normalizeMeal=text=>text.trim().toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
       values.meals=[...new Set(values.meals.split(',').map(m=>m.trim()).filter(Boolean).map(label=>Object.keys(FOOD.MEALS).find(key=>key===label||normalizeMeal(FOOD.MEALS[key].label)===normalizeMeal(label))))];
       if(values.meals.some(m=>!Object.hasOwn(FOOD.MEALS,m)))return error('Bữa gợi ý chỉ dùng: Sáng, Trưa, Chiều, Tối, Khuya.');
@@ -160,7 +168,7 @@
           const refresh=await fetch('/api/admin/reviews',{credentials:'same-origin',cache:'no-store'});
           if(refresh.ok)baseline.reviews=(await refresh.json()).items;
         }
-        applyDrafts();$('admin-editor').close();render();$('admin-status').textContent='Đã lưu '+result.record.name+'. Thông tin mới đã có trên website.';
+        applyDrafts();$('admin-editor').close();render();$('admin-status').textContent=(['dishes','restaurants'].includes(kind)&&result.record.isVisible===false)?'Đã ẩn '+result.record.name+'. Dữ liệu được giữ nguyên trong admin.':'Đã lưu '+result.record.name+'. Tải lại trang công khai để xem trạng thái mới.';
       }catch{error('Chưa xác nhận được kết quả lưu. Nội dung form vẫn được giữ; hãy thử Lưu lại hoặc tải lại danh sách để kiểm tra.');}
       finally{savingRestaurant=false;controls.forEach((c,i)=>c.disabled=disabled[i]);$('admin-form').removeAttribute('aria-busy');$('editor-save').textContent='Lưu thay đổi';}
       return;
@@ -199,7 +207,7 @@
     loaded=false;loadError=false;render();
     try {
       const read=async url=>{const response=await fetch(url);if(!response.ok)throw new Error();return response.json();};
-      const dishes=await read('/api/admin/dishes');baseline.dishes=dishes.items;
+      const dishes=await read('/api/admin/dishes');baseline.dishes=dishes.items;Object.assign(FOOD.CUISINES,dishes.cuisines);Object.assign(FOOD.MEALS,dishes.meals);
       const first=await read('/api/admin/restaurants?pageSize=48&page=1');
       const rest=await Promise.all(Array.from({length:first.totalPages-1},(_,i)=>read('/api/admin/restaurants?pageSize=48&page='+(i+2))));
       baseline.restaurants=[...first.items,...rest.flatMap(data=>data.items)];

@@ -1,8 +1,9 @@
 import {HttpError} from '../utils/http.js';
 const fields={name:255,address:500,area:120,category:120,priceLabel:255,priceTier:120,website:2000,phone:40,hours:500,imageUrl:2000,grabFoodUrl:2000,shopeeFoodUrl:2000,partnership:40,note:3000};
 export function validateRestaurant(input,{update=false}={}){
- if(Object.keys(input).some(key=>!Object.hasOwn(fields,key)&&!['meals','revision','requestId'].includes(key)))throw new HttpError(400,'Có trường dữ liệu không được phép cập nhật.');
+ if(Object.keys(input).some(key=>!Object.hasOwn(fields,key)&&!['meals','revision','requestId','isVisible'].includes(key)))throw new HttpError(400,'Có trường dữ liệu không được phép cập nhật.');
  const result={};
+ if(Object.hasOwn(input,'isVisible')){if(typeof input.isVisible!=='boolean')throw new HttpError(400,'Trạng thái hiển thị phải là đúng hoặc sai.');result.isVisible=input.isVisible;}
  for(const [key,max] of Object.entries(fields)){
   const raw=input[key]??'';if(typeof raw!=='string')throw new HttpError(400,'Trường '+key+' phải là văn bản.');
   const value=raw.trim();if(value.length>max||/[\u0000-\u0008\u000b\u000c\u000e-\u001f<>]/.test(value))throw new HttpError(400,'Trường '+key+' quá dài hoặc chứa ký tự không hợp lệ.');result[key]=value;

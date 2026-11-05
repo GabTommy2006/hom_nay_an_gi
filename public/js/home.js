@@ -12,7 +12,9 @@
   });
 
   const REEL_LENGTH = 5;
-  const fit = FOOD.DISHES.filter((d) => d.meals.includes(mealKey)).sort(() => Math.random() - 0.5);
+  const preferred = FOOD.DISHES.filter((d) => d.meals.includes(mealKey));
+  const fit = (preferred.length ? preferred : FOOD.DISHES).slice().sort(() => Math.random() - 0.5);
+  if(!fit.length){document.getElementById('hero-reels').innerHTML='<p class="admin-help">Danh mục đang được cập nhật. Bạn quay lại sau nhé.</p>';return;}
   document.getElementById('hero-reels').innerHTML = [0, 1, 2].map((reel) => {
     const photos = Array.from({ length: REEL_LENGTH }, (_, row) => fit[(reel * 3 + row) % fit.length]);
     return `<div class="reel" style="--i:${reel}">

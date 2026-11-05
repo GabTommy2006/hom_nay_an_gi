@@ -29,15 +29,6 @@ export const server = http.createServer(async (req, res) => {
       res.writeHead(405, { Allow: 'GET, HEAD' });
       return res.end();
     }
-    // Keep existing synchronous frontend scripts working from the shared data source.
-    if (url.pathname === '/js/data.js' || url.pathname === '/js/recipes.js') {
-      const isFood = url.pathname === '/js/data.js';
-      const data = await (isFood ? getFood() : getRecipes());
-      res.writeHead(200, { 'Content-Type': mime['.js'] });
-      // Escape HTML delimiters without changing the synchronous frontend contract.
-      const serialized = JSON.stringify(data).replace(/</g, '\\u003c');
-      return res.end(req.method === 'HEAD' ? undefined : `const ${isFood ? 'FOOD' : 'RECIPES'} = ${serialized};`);
-    }
     const relative = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname);
     const filename = path.resolve(publicDir, '.' + relative);
     const within = path.relative(publicDir, filename);
@@ -45,7 +36,18 @@ export const server = http.createServer(async (req, res) => {
       res.writeHead(403);
       return res.end('Forbidden');
     }
-    if (filename === path.join(publicDir, 'admin.html')) {
+    const fileKey = value => process.platform==='win32'?value.toLowerCase():value;
+    const isFood = fileKey(filename)===fileKey(path.join(publicDir,'js','data.js'));
+    const isRecipe = fileKey(filename)===fileKey(path.join(publicDir,'js','recipes.js'));
+    // Resolve aliases before serving: encoded paths must not expose the static seed snapshots.
+    if (isFood || isRecipe) {
+      const data = await (isFood ? getFood() : getRecipes());
+      res.writeHead(200, { 'Content-Type': mime['.js'], 'Cache-Control':'no-store' });
+      // Escape HTML delimiters without changing the synchronous frontend contract.
+      const serialized = JSON.stringify(data).replace(/</g, '\\u003c');
+      return res.end(req.method === 'HEAD' ? undefined : `const ${isFood ? 'FOOD' : 'RECIPES'} = ${serialized};`);
+    }
+    if (fileKey(filename) === fileKey(path.join(publicDir, 'admin.html'))) {
       if (!await requireAdmin(req, res, { page: true })) return;
       res.setHeader?.('Cache-Control', 'no-store');
     }

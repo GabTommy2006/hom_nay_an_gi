@@ -5,18 +5,20 @@ import {getRecipes} from './recipe.model.js';
 import {HttpError} from '../utils/http.js';
 const json=JSON.stringify;
 export async function getAdminCatalog(kind){
- const [versions,food]=await Promise.all([rows('SELECT * FROM admin_catalog_versions WHERE kind=?',[kind]),getFood()]);
+ const [versions,food]=await Promise.all([rows('SELECT * FROM admin_catalog_versions WHERE kind=?',[kind]),getFood({admin:true})]);
  const version=new Map(versions.map(v=>[v.entity_key,v.revision]));const names=new Map(food.DISHES.map(d=>[d.id,d.name]));let records;
  if(kind==='links'){
   const links=await rows('SELECT * FROM restaurant_dishes');const meta=new Map(versions.map(v=>[v.entity_key,v.last_payload]));
   records=links.map(r=>{const id=r.dish_id+'/'+r.restaurant_id,m=meta.get(id);return {id,dishId:r.dish_id,restaurantId:r.restaurant_id,name:names.get(r.dish_id),type:r.match_type,offering:r.offering,price:r.price_vnd===null?null:Number(r.price_vnd),sourceUrl:m?.sourceUrl||'',note:m?.note||r.source_record.evidence||''};});
- }else if(kind==='recipes')records=Object.entries(await getRecipes()).map(([id,r])=>({id,dishId:id,name:names.get(id),...r}));
+ }else if(kind==='recipes')records=Object.entries(await getRecipes({admin:true})).map(([id,r])=>({id,dishId:id,name:names.get(id),...r}));
  else records=food.DISHES.map(d=>({id:d.id,dishId:d.id,name:d.name,vegetarianReview:d.vegetarianReview||null,nutritionProfile:d.nutritionProfile||null,nutritionKeys:(d.nutritionReviews||[]).map(r=>r.key),nutritionReviews:d.nutritionReviews||[],label:[...(d.vegetarianReview?['Ăn chay']:[]),...(d.nutritionReviews||[]).map(r=>r.key==='low-sugar'?'Ít đường':r.key==='low-energy'?'Ít năng lượng':'Ít tinh bột')].join(', ')||'Chưa gán nhãn',status:d.vegetarianReview||d.nutritionReviews?.length?'Có căn cứ':'Chưa gán nhãn'}));
  if(kind!=='reviews'){
   records=records.map(r=>({...r,enabled:true}));
   for(const v of versions)if(v.last_payload?.enabled===false&&!records.some(r=>r.id===v.entity_key))records.push({id:v.entity_key,name:names.get(v.last_payload.dishId),...v.last_payload});
  }
- return records.map(r=>({...r,revision:version.get(r.id)||1}));
+ const hiddenDishes=new Set(food.DISHES.filter(d=>!d.isVisible).map(d=>d.id));
+ const hiddenVenues=new Set(kind==='links'?(await rows('SELECT id FROM restaurants WHERE is_visible=FALSE')).map(r=>r.id):[]);
+ return records.map(r=>({...r,parentHidden:hiddenDishes.has(r.dishId)||hiddenVenues.has(r.restaurantId),revision:version.get(r.id)||1}));
 }
 export async function saveCatalog(kind,{values,revision,requestId},{id,actorId}={}){
  const key=kind==='links'?values.dishId+'/'+values.restaurantId:values.dishId;

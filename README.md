@@ -100,3 +100,5 @@ Admin đã có thể thêm/sửa món và bữa gợi ý, lưu thật vào MySQL
 ## Quản trị danh mục đầy đủ
 
 Xem [hướng dẫn liên kết, công thức và căn cứ nhãn](docs/ADMIN-CATALOG.md). Chạy `npm run db:setup` trên database riêng sau khi lấy code để áp dụng đủ 26 bảng; cấu hình và dữ liệu Aiven không tự đi theo Git. Tài khoản người dùng/đồng bộ Yêu thích và triển khai Vercel để giai đoạn sau.
+
+Món ăn và quán hỗ trợ [ẩn/hiện trong admin](docs/VISIBILITY.md), lưu thật và có bộ lọc trạng thái. Migration `006-catalog-visibility` giữ mặc định hiện cho dữ liệu cũ; không xóa công thức, nhãn, liên kết hoặc mục yêu thích khi ẩn.

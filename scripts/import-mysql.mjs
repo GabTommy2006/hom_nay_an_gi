@@ -5,6 +5,7 @@ import {migrateAuth} from './lib/auth-migration.mjs';
 import {migrateRestaurants} from './lib/restaurant-migration.mjs';
 import {migrateDishes} from './lib/dish-migration.mjs';
 import {migrateCatalog} from './lib/catalog-migration.mjs';
+import {migrateVisibility} from './lib/visibility-migration.mjs';
 import { loadSeed, seedCounts, seedHash } from './mysql-seed-data.mjs';
 
 export const TABLES = ['schema_versions','seed_imports','dataset_documents','meals','cuisines','dishes','dish_meals','restaurants','restaurant_meals','restaurant_dishes','recipes','recipe_ingredients','recipe_steps','dish_reviews','dish_nutrition_profiles','users','favorite_dishes','favorite_restaurants','auth_sessions','auth_accounts','auth_verifications','auth_rate_limits','restaurant_audit','dish_audit','admin_catalog_versions','admin_catalog_audit'];
@@ -32,6 +33,7 @@ export async function applySchema(connection) {
   await migrateRestaurants(connection);
   await migrateDishes(connection);
   await migrateCatalog(connection);
+  await migrateVisibility(connection);
 }
 async function insert(connection, table, columns, values) {
   if (!TABLES.includes(table) || columns.some(c => !/^[a-z_]+$/.test(c))) throw new Error('Invalid SQL identifier');

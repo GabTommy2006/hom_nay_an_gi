@@ -4,7 +4,7 @@ import { getDocument, ordered, optional } from './catalog-data.model.js';
 export const normalize = value => value.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
 export async function getRestaurantData({admin=false}={}) {
   const [restaurants,mealLinks,meals,metadata,order]=await Promise.all([
-    rows('SELECT * FROM restaurants'),
+    rows('SELECT * FROM restaurants'+(admin?'':' WHERE is_visible=TRUE')),
     rows('SELECT restaurant_id,meal_id FROM restaurant_meals ORDER BY sort_order'),
     rows('SELECT id,label FROM meals'),getDocument('restaurants'),getDocument('catalog-order-v1'),
   ]);
@@ -17,12 +17,12 @@ export async function getRestaurantData({admin=false}={}) {
     const details=r.admin_details||{};
     for(const key of ['phone','hours'])if(details[key])result[key]=details[key];
     if(details.imageUrl)result.photo={url:details.imageUrl,kind:'admin-provided',sourceLabel:'Ảnh do quản trị viên cung cấp',sourceUrl:details.imageUrl};
-    if(admin)Object.assign(result,{revision:r.revision,phone:details.phone||'',hours:details.hours||'',imageUrl:details.imageUrl||'',grabFoodUrl:details.grabFoodUrl||'',shopeeFoodUrl:details.shopeeFoodUrl||'',partnership:details.partnership||'unknown',note:details.note||''});
+    if(admin)Object.assign(result,{isVisible:!!r.is_visible,revision:r.revision,phone:details.phone||'',hours:details.hours||'',imageUrl:details.imageUrl||'',grabFoodUrl:details.grabFoodUrl||'',shopeeFoodUrl:details.shopeeFoodUrl||'',partnership:details.partnership||'unknown',note:details.note||''});
     return result;
   })};
 }
 export async function getDishRestaurantLinks() {
-  const [links,metadata,order]=await Promise.all([rows('SELECT dish_id,restaurant_id,match_type,offering,source_record FROM restaurant_dishes'),getDocument('associations'),getDocument('catalog-order-v1')]);
+  const [links,metadata,order]=await Promise.all([rows('SELECT rd.dish_id,rd.restaurant_id,rd.match_type,rd.offering,rd.source_record FROM restaurant_dishes rd JOIN dishes d ON d.id=rd.dish_id JOIN restaurants r ON r.id=rd.restaurant_id WHERE d.is_visible=TRUE AND r.is_visible=TRUE'),getDocument('associations'),getDocument('catalog-order-v1')]);
   const edits=await rows("SELECT entity_key,last_payload FROM admin_catalog_versions WHERE kind='links'");
   const updated=new Map(edits.map(e=>[e.entity_key,e.last_payload]));
   const prices=await rows('SELECT dish_id,restaurant_id,price_vnd FROM restaurant_dishes');

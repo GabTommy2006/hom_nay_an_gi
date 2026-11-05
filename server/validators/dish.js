@@ -1,8 +1,9 @@
 import {HttpError} from '../utils/http.js';
 export function validateDish(input,{update=false}={}){
  const limits={name:255,cuisine:32,desc:5000,imageUrl:2000};
- if(Object.keys(input).some(k=>!Object.hasOwn(limits,k)&&!['meals','revision','requestId'].includes(k)))throw new HttpError(400,'Có trường không được phép cập nhật.');
+ if(Object.keys(input).some(k=>!Object.hasOwn(limits,k)&&!['meals','revision','requestId','isVisible'].includes(k)))throw new HttpError(400,'Có trường không được phép cập nhật.');
  const values={};
+ if(Object.hasOwn(input,'isVisible')){if(typeof input.isVisible!=='boolean')throw new HttpError(400,'Trạng thái hiển thị phải là đúng hoặc sai.');values.isVisible=input.isVisible;}
  for(const [key,max] of Object.entries(limits)){
   const raw=input[key]??'';
   if(typeof raw!=='string'||raw.trim().length>max||/[\u0000-\u0008\u000b\u000c\u000e-\u001f<>]/.test(raw))throw new HttpError(400,'Trường '+key+' không hợp lệ hoặc quá dài.');

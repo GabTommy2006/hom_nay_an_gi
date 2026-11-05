@@ -36,7 +36,7 @@ const App = (() => {
     return randomItem(tiers.find((t) => t.length));
   }
 
-  const photo = (dish, w, h) => dish.imageUrl || (!dish.photo ? '/images/restaurants/placeholder.svg' : null) ||
+  const photo = (dish, w, h) => !dish ? '/images/restaurants/placeholder.svg' : dish.imageUrl || (!dish.photo ? '/images/restaurants/placeholder.svg' : null) ||
     `https://images.unsplash.com/${dish.photo}?auto=format&fit=crop&w=${w}&h=${h}&q=70${dish.crop || ''}`;
   const dishUrl = (dish) => `result.html?dish=${dish.id}`;
   const mapsUrl = (dish) =>

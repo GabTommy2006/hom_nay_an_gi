@@ -3,9 +3,9 @@ import {getPool,rows} from '../config/database.js';
 import {getFood} from './food.model.js';
 import {HttpError} from '../utils/http.js';
 export async function getAdminDishes(){
- const [food,versions]=await Promise.all([getFood(),rows('SELECT id,revision,admin_image_url FROM dishes')]);
+ const [food,versions]=await Promise.all([getFood({admin:true}),rows('SELECT id,revision,admin_image_url,is_visible FROM dishes')]);
  const revisions=new Map(versions.map(r=>[r.id,r]));
- return food.DISHES.map(d=>({...d,revision:revisions.get(d.id).revision,imageUrl:revisions.get(d.id).admin_image_url||''}));
+ return food.DISHES.map(d=>({...d,revision:revisions.get(d.id).revision,imageUrl:revisions.get(d.id).admin_image_url||'',isVisible:!!revisions.get(d.id).is_visible}));
 }
 export async function saveDish({values,revision,requestId},{id,actorId}={}){
  const target=id||'d-'+requestId,c=await getPool().getConnection();let created=false;
@@ -28,6 +28,7 @@ export async function saveDish({values,revision,requestId},{id,actorId}={}){
     const source={type:'admin-entry',createdAt:new Date().toISOString()};
     await c.execute('INSERT INTO dishes (id,name,cuisine_id,description,admin_image_url,provenance,source_record) VALUES (?,?,?,?,?,?,?)',[target,values.name,values.cuisine,values.desc,values.imageUrl||null,JSON.stringify(source),JSON.stringify({id:target,...values,source})]);created=true;
    }
+   await c.execute('UPDATE dishes SET is_visible=? WHERE id=?',[values.isVisible??(current?!!current.is_visible:true),target]);
    await c.execute('DELETE FROM dish_meals WHERE dish_id=?',[target]);
    for(const [index,meal] of values.meals.entries())await c.execute('INSERT INTO dish_meals (dish_id,meal_id,sort_order) VALUES (?,?,?)',[target,meal,index+1]);
    await c.execute('INSERT INTO dish_audit (dish_id,actor_user_id,action,before_data,after_data) VALUES (?,?,?,?,?)',[target,actorId,current?'update':'create',current?JSON.stringify(current):null,JSON.stringify(values)]);

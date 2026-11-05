@@ -17,7 +17,7 @@
     $('favorite-dishes').replaceChildren(...state.dishes.map(id => {
       const dish = FOOD.DISHES.find(item => item.id === id);
       const li = make('li'); const article = make('article', 'dish');
-      if (!dish) { article.append(make('p', '', 'Món không còn trong danh mục')); article.insertAdjacentHTML('beforeend', Favorites.button('dishes', id, 'món đã lưu', true)); }
+      if (!dish) { article.append(make('p', '', 'Món hiện chưa có trong danh mục công khai')); article.insertAdjacentHTML('beforeend', Favorites.button('dishes', id, 'món đã lưu', true)); }
       else {
         const photo = make('span', 'dish__photo'); const image = make('img'); image.src = App.photo(dish, 560, 420); image.alt = dish.name; image.width = 560; image.height = 420; image.loading = 'lazy'; photo.append(image);
         const heading = make('span', 'dish__heading'); const link = make('a', 'dish__name dish__main-link', dish.name); link.href = App.dishUrl(dish); heading.append(link); heading.insertAdjacentHTML('beforeend', Nutrition.vegetarianBadge(dish) + Nutrition.badges(dish));
@@ -40,7 +40,7 @@
     const records = items.flatMap((result, i) => {
       if (result.status === 'fulfilled' && !result.value.missing) return [RestaurantUI.renderCard(result.value)];
       const li = make('li', 'favorite-unavailable');
-      li.append(make('p', '', result.status === 'fulfilled' ? 'Quán không còn trong danh mục' : 'Chưa tải được thông tin quán đã lưu'));
+      li.append(make('p', '', result.status === 'fulfilled' ? 'Quán hiện chưa có trong danh mục công khai' : 'Chưa tải được thông tin quán đã lưu'));
       li.insertAdjacentHTML('beforeend', Favorites.button('restaurants', state.restaurants[i], 'quán đã lưu', true)); return [li];
     });
     $('favorite-restaurants').replaceChildren(...records);

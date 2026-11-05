@@ -147,3 +147,5 @@ Sau đó đổi DB_USER/DB_PASSWORD trong `.env` sang tài khoản này, khởi 
 `004-dish-writes` bổ sung revision, admin_image_url, updated_at vào dishes và bảng dish_audit, tổng 24 bảng. Xem [hướng dẫn quản trị món](../docs/DISH-ADMIN.md). Áp dụng trên từng database bằng `npm run db:setup`; sửa món giữ nguyên liên kết quán, công thức và căn cứ nhãn.
 
 `005-admin-catalog` thêm admin_catalog_versions và admin_catalog_audit, tổng 26 bảng. Xem [hướng dẫn quản trị danh mục](../docs/ADMIN-CATALOG.md) để cấp quyền, nhập công thức có định lượng, công bố/thu hồi liên kết và đối chiếu nhãn.
+
+`006-catalog-visibility` thêm is_visible vào dishes/restaurants, mặc định TRUE cho dữ liệu cũ, không thêm bảng và không xóa liên kết. Xem [ẩn/hiện món và quán](../docs/VISIBILITY.md). Chạy migration trên từng database riêng, không tự đổi MySQL local dự phòng khi cập nhật Aiven.
