@@ -14,7 +14,7 @@ import { requireAdmin } from './middleware/auth.js';
 const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
 
-export const server = http.createServer(async (req, res) => {
+export async function handleRequest(req, res) {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (await handleAuth(req, res, url)) return;
@@ -70,7 +70,9 @@ export const server = http.createServer(async (req, res) => {
     res.writeHead(missing ? 404 : invalid ? 400 : 500, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end(missing ? 'Không tìm thấy trang.' : invalid ? 'Đường dẫn không hợp lệ.' : 'Lỗi máy chủ.');
   }
-});
+}
+
+export const server = http.createServer(handleRequest);
 
 function urlIsDatabaseRequest(rawUrl) {
   const pathname = rawUrl.split('?')[0];

@@ -1,5 +1,6 @@
 import {authOrigin,getAuth} from '../config/auth.js';
 import {currentUser,send} from '../middleware/auth.js';
+import {clientIp} from '../utils/client-ip.js';
 
 async function readBody(req){
  let bytes=0,chunks=[];
@@ -25,7 +26,7 @@ export async function handleAuth(req,res,url){
  if(req.headers.cookie)headers.set('cookie',req.headers.cookie);
  if(req.headers['user-agent'])headers.set('user-agent',req.headers['user-agent'].slice(0,1000));
  // Do not trust browser-supplied forwarded IP headers on the local Node server.
- headers.set('x-hnag-client-ip',req.socket?.remoteAddress||'127.0.0.1');
+ headers.set('x-hnag-client-ip',clientIp(req));
  const response=await getAuth().handler(new Request(origin+url.pathname,{method:'POST',headers,body:JSON.stringify(login?{email:body.email.trim().toLowerCase(),password:body.password,rememberMe:false}:{} )}));
  const outgoing={};const cookies=response.headers.getSetCookie();if(cookies.length)outgoing['Set-Cookie']=cookies;
  const retry=response.headers.get('retry-after');if(retry)outgoing['Retry-After']=retry;

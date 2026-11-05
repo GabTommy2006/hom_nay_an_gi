@@ -11,12 +11,14 @@
     "db:setup": "node --env-file-if-exists=.env scripts/import-mysql.mjs --apply-schema",
     "db:import": "node --env-file-if-exists=.env scripts/import-mysql.mjs",
     "test:db": "node scripts/test-mysql.mjs",
-    "admin:create": "node --env-file-if-exists=.env scripts/create-admin.mjs"
+    "admin:create": "node --env-file-if-exists=.env scripts/create-admin.mjs",
+    "build:vercel": "node scripts/build-vercel.mjs"
   },
   "engines": {
-    "node": ">=22.9.0"
+    "node": "24.x"
   },
   "dependencies": {
+    "@vercel/functions": "^3.10.6",
     "better-auth": "^1.7.16",
     "mysql2": "^3.24.6"
   }

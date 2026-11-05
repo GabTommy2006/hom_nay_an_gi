@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import {attachDatabasePool} from '@vercel/functions';
 
 export function databaseName(value) {
   if (typeof value !== 'string' || !/^[a-z][a-z0-9_]{0,63}$/.test(value)) throw new Error('DB_NAME must use lowercase ASCII letters, digits or underscores and start with a letter (max 64).');
@@ -15,7 +16,7 @@ export function connectionConfig(env = process.env) {
 let pool;
 export function getPool() {
   if (!pool) {
-    try { pool=mysql.createPool({...connectionConfig(),connectionLimit:5,maxIdle:5,idleTimeout:1000,waitForConnections:true,queueLimit:100,enableKeepAlive:true}); }
+    try { pool=mysql.createPool({...connectionConfig(),connectionLimit:5,maxIdle:5,idleTimeout:1000,waitForConnections:true,queueLimit:100,enableKeepAlive:true});if(process.env.VERCEL==='1')attachDatabasePool(pool.pool); }
     catch { const error=new Error('Database configuration is missing or invalid.');error.code='DB_CONFIG_INVALID';throw error; }
   }
   return pool;
