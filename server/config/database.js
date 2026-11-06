@@ -24,5 +24,14 @@ export function getPool() {
   }
   return pool;
 }
-export async function rows(sql,params=[]) { const [result]=await getPool().execute(sql,params); return result; }
+// A frozen serverless instance can resume with sockets the server already closed.
+// Retry read-only queries once on those transient errors; writes are never retried.
+const TRANSIENT=new Set(['PROTOCOL_CONNECTION_LOST','ECONNRESET','EPIPE','ETIMEDOUT','ECONNREFUSED']);
+export async function rows(sql,params=[]) {
+  try { const [result]=await getPool().execute(sql,params); return result; }
+  catch(error) {
+    if(!TRANSIENT.has(error?.code)||!/^\s*SELECT\b/i.test(sql))throw error;
+    const [result]=await getPool().execute(sql,params); return result;
+  }
+}
 export async function closeDatabase(){const current=pool;pool=undefined;if(current)await current.end();}
