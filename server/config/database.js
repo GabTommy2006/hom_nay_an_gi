@@ -16,7 +16,10 @@ export function connectionConfig(env = process.env) {
 let pool;
 export function getPool() {
   if (!pool) {
-    try { pool=mysql.createPool({...connectionConfig(),connectionLimit:5,maxIdle:5,idleTimeout:1000,waitForConnections:true,queueLimit:100,enableKeepAlive:true});if(process.env.VERCEL==='1')attachDatabasePool(pool.pool); }
+    // mysql2 only starts its idle cleanup timer when maxIdle < connectionLimit.
+    // Release every idle connection so suspended serverless instances do not
+    // exhaust the shared database's connection budget.
+    try { pool=mysql.createPool({...connectionConfig(),connectionLimit:2,maxIdle:0,idleTimeout:1000,waitForConnections:true,queueLimit:100,enableKeepAlive:true});if(process.env.VERCEL==='1')attachDatabasePool(pool.pool); }
     catch { const error=new Error('Database configuration is missing or invalid.');error.code='DB_CONFIG_INVALID';throw error; }
   }
   return pool;

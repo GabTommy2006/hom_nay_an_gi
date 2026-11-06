@@ -17,7 +17,7 @@ Toàn bộ request đi qua Function; thư mục public được đóng gói bằ
 
 Không sao chép HOST/PORT local làm cấu hình mạng của Function. Không đưa DB_PASSWORD hoặc BETTER_AUTH_SECRET vào biến có tiền tố public. NODEJS_HELPERS được cấu hình trong môi trường build/runtime theo [hướng dẫn Node.js của Vercel](https://vercel.com/docs/functions/runtimes/node-js/advanced-node-configuration).
 
-MySQL pool dùng lại theo instance và gắn attachDatabasePool khi chạy trên Vercel. Giữ giới hạn 5 kết nối/instance; nhiều instance cùng dùng chung giới hạn kết nối Aiven. Region bom1 được chọn gần dịch vụ Aiven tại Bangalore. Xem [connection pooling](https://vercel.com/kb/guide/connection-pooling-with-functions).
+MySQL pool dùng lại theo instance và gắn attachDatabasePool khi chạy trên Vercel. Giới hạn 2 kết nối/instance, maxIdle=0 và idleTimeout=1000 để đóng kết nối rảnh. mysql2 chỉ bật bộ dọn kết nối khi maxIdle nhỏ hơn connectionLimit; đặt bằng nhau có thể gây ER_CON_COUNT_ERROR trên Aiven khi các instance tích lũy kết nối. Nhiều instance vẫn cùng dùng chung giới hạn kết nối Aiven. Region bom1 được chọn gần dịch vụ Aiven tại Bangalore. Xem [connection pooling](https://vercel.com/kb/guide/connection-pooling-with-functions).
 
 ## Git và cập nhật
 
