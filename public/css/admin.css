@@ -3,7 +3,8 @@
 :root[data-theme="dark"] :is(.admin-body, .admin-login-body) { --admin-rail: #22201e; --admin-selected: #4a2c1e; --admin-green: #add9b8; }
 .admin-body .btn, .admin-login-body .btn { border-radius: 10px; min-height: 44px; font-size: .8125rem; padding: .625rem 1rem; }
 .admin-shell { display: grid; grid-template-columns: 238px minmax(0,1fr); min-height: 100dvh; }
-.admin-sidebar { position: sticky; top: 0; height: 100dvh; display: flex; flex-direction: column; background: var(--admin-rail); padding: 1.75rem 1rem 1.25rem; border-right: 1px solid var(--line); }
+.admin-sidebar { position: sticky; top: 0; height: 100dvh; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; background: var(--admin-rail); padding: 1.75rem 1rem 1.25rem; border-right: 1px solid var(--line); }
+.admin-sidebar > * { flex-shrink: 0; }
 .admin-sidebar .logo { font-size: 1.25rem; padding-inline: .625rem; }
 .admin-sidebar__caption { color: var(--muted); font-size: .75rem; padding-inline: .625rem; margin-top: .625rem; }
 #admin-nav { display: grid; gap: .25rem; margin-top: 2rem; }
