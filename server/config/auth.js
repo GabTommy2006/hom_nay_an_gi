@@ -1,5 +1,5 @@
 import {betterAuth} from 'better-auth';
-import {getPool} from './database.js';
+import {getAuthDatabase} from './database.js';
 
 export function authOrigin(env=process.env){
  const url=new URL(env.BETTER_AUTH_URL||'http://127.0.0.1:3000');
@@ -13,7 +13,7 @@ export function createAuth({provisioning=false}={}){
  const origin=authOrigin();
  return betterAuth({
   appName:'Hôm nay ăn gì?',baseURL:origin,basePath:'/api/auth',secret,
-  database:getPool(),trustedOrigins:[origin],
+  database:getAuthDatabase(),trustedOrigins:[origin],
   logger:{disabled:true},
   emailAndPassword:{enabled:true,disableSignUp:!provisioning,autoSignIn:false,minPasswordLength:12,maxPasswordLength:128},
   user:{modelName:'users',fields:{name:'display_name',emailVerified:'email_verified',createdAt:'created_at',updatedAt:'updated_at'},additionalFields:{role:{type:'string',required:false,defaultValue:provisioning?'admin':'user',input:false}}},

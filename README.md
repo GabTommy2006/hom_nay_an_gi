@@ -2,6 +2,8 @@
 
 HTML/CSS/JavaScript + Node.js, không dùng EJS. Cần Node.js 24.x.
 
+Website hỗ trợ cả MySQL và Neon PostgreSQL. Với bản đã chuyển sang Neon, cấu hình theo [hướng dẫn PostgreSQL](database/postgres/README.md); không chạy lại seed trên database chung. Hướng dẫn MySQL bên dưới được giữ cho môi trường cũ và dự phòng.
+
 ## Chạy
 
 Lần đầu: `npm install`, tạo database/tài khoản và `.env` theo [database/README.md](database/README.md), rồi chạy `npm run db:setup`.

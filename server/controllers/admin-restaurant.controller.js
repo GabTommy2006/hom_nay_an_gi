@@ -23,7 +23,7 @@ export async function adminRestaurants(req,res,url,user){
   send(res,405,{message:'Phương thức không được hỗ trợ.'},{Allow:allowed});return true;
  }catch(error){
   if(error.status){send(res,error.status,{message:error.message});return true;}
-  if(error.code==='ER_DUP_ENTRY'){send(res,409,{message:'Quán đã được lưu. Hãy tải lại danh sách trước khi thử tiếp.'});return true;}
+  if(['ER_DUP_ENTRY','23505'].includes(error.code)){send(res,409,{message:'Quán đã được lưu. Hãy tải lại danh sách trước khi thử tiếp.'});return true;}
   throw error;
  }
 }

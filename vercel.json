@@ -3,7 +3,7 @@
   "framework": null,
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist",
-  "regions": ["bom1"],
+  "regions": ["sin1"],
   "functions": {
     "api/index.js": {
       "includeFiles": "public/**",

@@ -7,5 +7,5 @@ export async function adminCatalog(req,res,url,user){
   if(!id&&req.method==='GET'){send(res,200,{items:await getAdminCatalog(kind)});return true;}
   if((!id&&req.method==='POST')||(id&&req.method==='PUT')){const data=validateCatalog(kind,await jsonMutation(req,{limit:131072}),{update:!!id});const result=await saveCatalog(kind,data,{id,actorId:user.id});send(res,result.created?201:200,result);return true;}
   send(res,405,{message:'Phương thức không được hỗ trợ.'},{Allow:id?'PUT':'GET, POST'});return true;
- }catch(e){if(e.status){send(res,e.status,{message:e.message});return true;}if(e instanceof URIError){send(res,400,{message:'Đường dẫn không hợp lệ.'});return true;}if(e.code==='ER_DUP_ENTRY'){send(res,409,{message:'Mục đã có. Hãy tải lại trang.'});return true;}throw e;}
+ }catch(e){if(e.status){send(res,e.status,{message:e.message});return true;}if(e instanceof URIError){send(res,400,{message:'Đường dẫn không hợp lệ.'});return true;}if(['ER_DUP_ENTRY','23505'].includes(e.code)){send(res,409,{message:'Mục đã có. Hãy tải lại trang.'});return true;}throw e;}
 }
