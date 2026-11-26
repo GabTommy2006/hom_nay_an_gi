@@ -15,7 +15,7 @@ export async function adminDishes(req,res,url,user){
   send(res,405,{message:'Phương thức không được hỗ trợ.'},{Allow:collection?'GET, POST':'PUT'});return true;
  }catch(e){
   if(e.status){send(res,e.status,{message:e.message});return true;}
-  if(e.code==='ER_DUP_ENTRY'){send(res,409,{message:'Món đã được lưu. Hãy tải lại danh sách.'});return true;}
+  if(['ER_DUP_ENTRY','23505'].includes(e.code)){send(res,409,{message:'Món đã được lưu. Hãy tải lại danh sách.'});return true;}
   throw e;
  }
 }

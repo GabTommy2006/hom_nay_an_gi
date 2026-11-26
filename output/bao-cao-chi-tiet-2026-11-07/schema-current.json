@@ -1,0 +1,1614 @@
+{
+  "columns": [
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "kind",
+      "COLUMN_TYPE": "enum('links','recipes','reviews')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "entity_key",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "actor_user_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "before_data",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "after_data",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(3)",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "admin_catalog_versions",
+      "COLUMN_NAME": "kind",
+      "COLUMN_TYPE": "enum('links','recipes','reviews')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_versions",
+      "COLUMN_NAME": "entity_key",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_versions",
+      "COLUMN_NAME": "revision",
+      "COLUMN_TYPE": "int unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "1",
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_versions",
+      "COLUMN_NAME": "last_request_id",
+      "COLUMN_TYPE": "char(36)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_versions",
+      "COLUMN_NAME": "last_actor_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "admin_catalog_versions",
+      "COLUMN_NAME": "last_payload",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "user_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "account_id",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "provider_id",
+      "COLUMN_TYPE": "varchar(80)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "password",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "access_token",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "refresh_token",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "id_token",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "access_token_expires_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "refresh_token_expires_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "scope",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_rate_limits",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "auth_rate_limits",
+      "COLUMN_NAME": "key",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "UNI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_rate_limits",
+      "COLUMN_NAME": "count",
+      "COLUMN_TYPE": "int",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_rate_limits",
+      "COLUMN_NAME": "last_request",
+      "COLUMN_TYPE": "bigint",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "user_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "token",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "UNI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "expires_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "ip_address",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "user_agent",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_verifications",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "auth_verifications",
+      "COLUMN_NAME": "identifier",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_verifications",
+      "COLUMN_NAME": "value",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_verifications",
+      "COLUMN_NAME": "expires_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_verifications",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "auth_verifications",
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "cuisines",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "varchar(32)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "cuisines",
+      "COLUMN_NAME": "name",
+      "COLUMN_TYPE": "varchar(120)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "cuisines",
+      "COLUMN_NAME": "description",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "cuisines",
+      "COLUMN_NAME": "cover_dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "cuisines",
+      "COLUMN_NAME": "icon",
+      "COLUMN_TYPE": "varchar(32)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "cuisines",
+      "COLUMN_NAME": "source_record",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dataset_documents",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "varchar(80)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dataset_documents",
+      "COLUMN_NAME": "document",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "actor_user_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "action",
+      "COLUMN_TYPE": "enum('create','update')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "before_data",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "after_data",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(3)",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "dish_meals",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_meals",
+      "COLUMN_NAME": "meal_id",
+      "COLUMN_TYPE": "varchar(32)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_meals",
+      "COLUMN_NAME": "sort_order",
+      "COLUMN_TYPE": "smallint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_nutrition_profiles",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_nutrition_profiles",
+      "COLUMN_NAME": "profile",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_reviews",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_reviews",
+      "COLUMN_NAME": "review_key",
+      "COLUMN_TYPE": "varchar(40)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_reviews",
+      "COLUMN_NAME": "status",
+      "COLUMN_TYPE": "enum('reviewed','source-declared','verified')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dish_reviews",
+      "COLUMN_NAME": "evidence",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "cuisine_id",
+      "COLUMN_TYPE": "varchar(32)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "name",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "description",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "image_url",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "photo_id",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "photo_author",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "photo_crop",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "image_source",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "provenance",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "source_record",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "revision",
+      "COLUMN_TYPE": "int unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "1",
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "admin_image_url",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(3)",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "is_visible",
+      "COLUMN_TYPE": "tinyint(1)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "1",
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "favorite_dishes",
+      "COLUMN_NAME": "user_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "favorite_dishes",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "favorite_dishes",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "timestamp",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "favorite_restaurants",
+      "COLUMN_NAME": "user_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "favorite_restaurants",
+      "COLUMN_NAME": "restaurant_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "favorite_restaurants",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "timestamp",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "meals",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "varchar(32)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "meals",
+      "COLUMN_NAME": "label",
+      "COLUMN_TYPE": "varchar(80)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "meals",
+      "COLUMN_NAME": "source_record",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "sort_order",
+      "COLUMN_TYPE": "smallint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "name",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "amount_min",
+      "COLUMN_TYPE": "decimal(12,4)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "amount_max",
+      "COLUMN_TYPE": "decimal(12,4)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "unit",
+      "COLUMN_TYPE": "varchar(80)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "amount_text",
+      "COLUMN_TYPE": "varchar(500)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_steps",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_steps",
+      "COLUMN_NAME": "sort_order",
+      "COLUMN_TYPE": "smallint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_steps",
+      "COLUMN_NAME": "title",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipe_steps",
+      "COLUMN_NAME": "instruction",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "base_servings",
+      "COLUMN_TYPE": "smallint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "prep_time",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "cook_time",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "soak_note",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "tip",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "source_label",
+      "COLUMN_TYPE": "varchar(500)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "source_url",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "source_record",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "restaurant_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "actor_user_id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "action",
+      "COLUMN_TYPE": "enum('create','update')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "before_data",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "after_data",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(3)",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "dish_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "restaurant_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "match_type",
+      "COLUMN_TYPE": "enum('dish','related')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "offering",
+      "COLUMN_TYPE": "varchar(500)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "price_vnd",
+      "COLUMN_TYPE": "decimal(12,0)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "source_record",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_meals",
+      "COLUMN_NAME": "restaurant_id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_meals",
+      "COLUMN_NAME": "meal_id",
+      "COLUMN_TYPE": "varchar(32)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurant_meals",
+      "COLUMN_NAME": "sort_order",
+      "COLUMN_TYPE": "smallint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "name",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "category",
+      "COLUMN_TYPE": "varchar(120)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "original_category",
+      "COLUMN_TYPE": "varchar(120)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "address",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "area",
+      "COLUMN_TYPE": "varchar(120)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "price_label",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "price_tier",
+      "COLUMN_TYPE": "varchar(120)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "MUL",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "website",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "verification",
+      "COLUMN_TYPE": "varchar(80)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "photo",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "provenance",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "source_record",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "admin_details",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "revision",
+      "COLUMN_TYPE": "int unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "1",
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(3)",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "restaurants",
+      "COLUMN_NAME": "is_visible",
+      "COLUMN_TYPE": "tinyint(1)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "1",
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "schema_versions",
+      "COLUMN_NAME": "version",
+      "COLUMN_TYPE": "varchar(40)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "schema_versions",
+      "COLUMN_NAME": "applied_at",
+      "COLUMN_TYPE": "timestamp",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "seed_imports",
+      "COLUMN_NAME": "seed_key",
+      "COLUMN_TYPE": "varchar(80)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "seed_imports",
+      "COLUMN_NAME": "content_hash",
+      "COLUMN_TYPE": "char(64)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "seed_imports",
+      "COLUMN_NAME": "counts",
+      "COLUMN_TYPE": "json",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "seed_imports",
+      "COLUMN_NAME": "imported_at",
+      "COLUMN_TYPE": "timestamp",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "bigint unsigned",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "PRI",
+      "EXTRA": "auto_increment"
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "email",
+      "COLUMN_TYPE": "varchar(254)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "UNI",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "password_hash",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "display_name",
+      "COLUMN_TYPE": "varchar(120)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "role",
+      "COLUMN_TYPE": "enum('user','admin')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "user",
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "timestamp",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "email_verified",
+      "COLUMN_TYPE": "tinyint(1)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "0",
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "image",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": null,
+      "COLUMN_KEY": "",
+      "EXTRA": ""
+    },
+    {
+      "TABLE_NAME": "users",
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "datetime(3)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP(3)",
+      "COLUMN_KEY": "",
+      "EXTRA": "DEFAULT_GENERATED"
+    }
+  ],
+  "foreignKeys": [
+    {
+      "TABLE_NAME": "admin_catalog_audit",
+      "COLUMN_NAME": "actor_user_id",
+      "REFERENCED_TABLE_NAME": "users",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_catalog_actor"
+    },
+    {
+      "TABLE_NAME": "auth_accounts",
+      "COLUMN_NAME": "user_id",
+      "REFERENCED_TABLE_NAME": "users",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_auth_account_user"
+    },
+    {
+      "TABLE_NAME": "auth_sessions",
+      "COLUMN_NAME": "user_id",
+      "REFERENCED_TABLE_NAME": "users",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_auth_session_user"
+    },
+    {
+      "TABLE_NAME": "cuisines",
+      "COLUMN_NAME": "cover_dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_cuisine_cover"
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "actor_user_id",
+      "REFERENCED_TABLE_NAME": "users",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_dish_audit_actor"
+    },
+    {
+      "TABLE_NAME": "dish_audit",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_dish_audit_dish"
+    },
+    {
+      "TABLE_NAME": "dish_meals",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_dm_dish"
+    },
+    {
+      "TABLE_NAME": "dish_meals",
+      "COLUMN_NAME": "meal_id",
+      "REFERENCED_TABLE_NAME": "meals",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_dm_meal"
+    },
+    {
+      "TABLE_NAME": "dish_nutrition_profiles",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_profile_dish"
+    },
+    {
+      "TABLE_NAME": "dish_reviews",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_review_dish"
+    },
+    {
+      "TABLE_NAME": "dishes",
+      "COLUMN_NAME": "cuisine_id",
+      "REFERENCED_TABLE_NAME": "cuisines",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_dish_cuisine"
+    },
+    {
+      "TABLE_NAME": "favorite_dishes",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_fd_dish"
+    },
+    {
+      "TABLE_NAME": "favorite_dishes",
+      "COLUMN_NAME": "user_id",
+      "REFERENCED_TABLE_NAME": "users",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_fd_user"
+    },
+    {
+      "TABLE_NAME": "favorite_restaurants",
+      "COLUMN_NAME": "restaurant_id",
+      "REFERENCED_TABLE_NAME": "restaurants",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_fr_restaurant"
+    },
+    {
+      "TABLE_NAME": "favorite_restaurants",
+      "COLUMN_NAME": "user_id",
+      "REFERENCED_TABLE_NAME": "users",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_fr_user"
+    },
+    {
+      "TABLE_NAME": "recipe_ingredients",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "recipes",
+      "REFERENCED_COLUMN_NAME": "dish_id",
+      "CONSTRAINT_NAME": "fk_ingredient_recipe"
+    },
+    {
+      "TABLE_NAME": "recipe_steps",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "recipes",
+      "REFERENCED_COLUMN_NAME": "dish_id",
+      "CONSTRAINT_NAME": "fk_step_recipe"
+    },
+    {
+      "TABLE_NAME": "recipes",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_recipe_dish"
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "actor_user_id",
+      "REFERENCED_TABLE_NAME": "users",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_audit_actor"
+    },
+    {
+      "TABLE_NAME": "restaurant_audit",
+      "COLUMN_NAME": "restaurant_id",
+      "REFERENCED_TABLE_NAME": "restaurants",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_audit_restaurant"
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "dish_id",
+      "REFERENCED_TABLE_NAME": "dishes",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_rd_dish"
+    },
+    {
+      "TABLE_NAME": "restaurant_dishes",
+      "COLUMN_NAME": "restaurant_id",
+      "REFERENCED_TABLE_NAME": "restaurants",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_rd_restaurant"
+    },
+    {
+      "TABLE_NAME": "restaurant_meals",
+      "COLUMN_NAME": "meal_id",
+      "REFERENCED_TABLE_NAME": "meals",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_rm_meal"
+    },
+    {
+      "TABLE_NAME": "restaurant_meals",
+      "COLUMN_NAME": "restaurant_id",
+      "REFERENCED_TABLE_NAME": "restaurants",
+      "REFERENCED_COLUMN_NAME": "id",
+      "CONSTRAINT_NAME": "fk_rm_restaurant"
+    }
+  ]
+}

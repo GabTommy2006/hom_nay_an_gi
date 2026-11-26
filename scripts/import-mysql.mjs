@@ -107,6 +107,7 @@ export async function main(args = process.argv.slice(2)) {
   if (args.includes('--help')) { console.log('Use --dry-run to validate without a database; --apply-schema to create schema and import into DB_NAME; no flags imports into an existing schema.');return; }
   const seed = await loadSeed();
   if (args.includes('--dry-run')) {console.log(JSON.stringify({status:'validated',counts:seedCounts(seed),hash:seedHash(seed)},null,2));return;}
+  if(process.env.DB_PROVIDER==='postgres'||(!process.env.DB_PROVIDER&&process.env.DATABASE_URL))throw new Error('This command is for MySQL only. For Neon, follow database/postgres/README.md; do not reseed a migrated database.');
   const config = connectionConfig();
   let connection;
   try {

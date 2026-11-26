@@ -1,5 +1,12 @@
 import mysql from 'mysql2/promise';
 import {attachDatabasePool} from '@vercel/functions';
+import {createPostgresPool} from './postgres.js';
+
+export function databaseProvider(env=process.env){
+ const provider=env.DB_PROVIDER||(env.DATABASE_URL?'postgres':'mysql');
+ if(!['mysql','postgres'].includes(provider))throw new Error('Unsupported database provider.');
+ return provider;
+}
 
 export function databaseName(value) {
   if (typeof value !== 'string' || !/^[a-z][a-z0-9_]{0,63}$/.test(value)) throw new Error('DB_NAME must use lowercase ASCII letters, digits or underscores and start with a letter (max 64).');
@@ -16,6 +23,7 @@ export function connectionConfig(env = process.env) {
 let pool;
 export function getPool() {
   if (!pool) {
+    if(databaseProvider()==='postgres')return pool=createPostgresPool();
     // mysql2 only starts its idle cleanup timer when maxIdle < connectionLimit.
     // Release every idle connection so suspended serverless instances do not
     // exhaust the shared database's connection budget.
@@ -24,5 +32,15 @@ export function getPool() {
   }
   return pool;
 }
-export async function rows(sql,params=[]) { const [result]=await getPool().execute(sql,params); return result; }
+export function getAuthDatabase(){const current=getPool();return current.native||current;}
+// A frozen serverless instance can resume with sockets the server already closed.
+// Retry read-only queries once on those transient errors; writes are never retried.
+const TRANSIENT=new Set(['PROTOCOL_CONNECTION_LOST','ECONNRESET','EPIPE','ETIMEDOUT','ECONNREFUSED']);
+export async function rows(sql,params=[]) {
+  try { const [result]=await getPool().execute(sql,params); return result; }
+  catch(error) {
+    if(!TRANSIENT.has(error?.code)||!/^\s*SELECT\b/i.test(sql))throw error;
+    const [result]=await getPool().execute(sql,params); return result;
+  }
+}
 export async function closeDatabase(){const current=pool;pool=undefined;if(current)await current.end();}

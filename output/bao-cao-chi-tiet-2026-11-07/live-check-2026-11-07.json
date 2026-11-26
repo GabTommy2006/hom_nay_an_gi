@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-06T17:44:14.739Z",
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "location": null,
+      "ms": 594
+    },
+    {
+      "path": "/api/dishes",
+      "status": 200,
+      "location": null,
+      "count": 105,
+      "ms": 395
+    },
+    {
+      "path": "/api/restaurants",
+      "status": 200,
+      "location": null,
+      "count": 105,
+      "ms": 273
+    },
+    {
+      "path": "/admin.html",
+      "status": 302,
+      "location": "/admin-login.html",
+      "ms": 366
+    },
+    {
+      "path": "/api/admin/me",
+      "status": 401,
+      "location": null,
+      "ms": 246
+    },
+    {
+      "path": "/.env",
+      "status": 404,
+      "location": null,
+      "ms": 157
+    }
+  ]
+}
